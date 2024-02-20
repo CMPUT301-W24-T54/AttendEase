@@ -134,7 +134,7 @@ public class Event {
 
 
 
-    // QR code Methods //
+    // QR Code Methods //
     /**
      * Placeholder method for generating and updating the check-in QR code.
      * Actual implementation should create a QR code that, when scanned, marks an attendee as checked in.
