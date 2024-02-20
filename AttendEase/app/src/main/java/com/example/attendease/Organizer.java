@@ -58,7 +58,7 @@ public class Organizer {
         return password;
     }
 
-    // Normally you would not provide a setter for the password without some form of authentication
+    
     public void setPassword(String password) {
         this.password = password;
     }
