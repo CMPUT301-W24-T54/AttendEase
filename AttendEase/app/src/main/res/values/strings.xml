@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">AttendEase</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="remove_photo">Remove Photo</string>
+    <string name="information">Information</string>
+    <string name="name">NAME</string>
+    <string name="phone_number">PHONE NUMBER</string>
+    <string name="email_address">EMAIL ADDRESS</string>
+    <string name="save_changes">Save Changes</string>
 </resources>
