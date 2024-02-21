@@ -4,15 +4,111 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_marginTop="50dp"
+        android:text="Welcome to the Future"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/text2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/animate_human" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginEnd="167dp"
+        android:layout_marginBottom="27dp"
+        android:text="of Event Check-Ins!"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/check_in_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text1" />
+
+    <Button
+        android:id="@+id/check_in_button"
+        android:layout_width="314dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="137dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="137dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/black"
+        android:text="Check-In Now"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/create_event_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text2" />
+
+    <Button
+        android:id="@+id/create_event_button"
+        android:layout_width="314dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="137dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="137dp"
+        android:layout_marginBottom="13dp"
+        android:backgroundTint="@color/white"
+        android:text="Create a New Event"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/admin_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/check_in_button"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1dp" />
+
+    <Button
+        android:id="@+id/admin_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@android:color/transparent"
+        android:text="ADMIN"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/create_event_button" />
+
+    <ImageView
+        android:id="@+id/attend_ease_text_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/animate_human"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/attendeasetext" />
+
+    <ImageView
+        android:id="@+id/animate_human"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        app:layout_constraintBottom_toTopOf="@+id/text1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/attend_ease_text_image"
+        app:srcCompat="@drawable/animate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
