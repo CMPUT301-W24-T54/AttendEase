@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/buttonGoBack"
+        android:layout_width="53dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-2dp"
+        android:layout_marginEnd="105dp"
+        android:layout_toStartOf="@+id/tvNewEventHeader"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/plus"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/tvNewEventHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="New Event"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNewEventHeader"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="26dp"
+        android:src="@drawable/image" />
+
+    <TextView
+        android:id="@+id/tvCoverPhotoHeader"
+        android:layout_width="111dp"
+        android:layout_height="29dp"
+        android:layout_below="@+id/tvNewEventHeader"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="231dp"
+        android:layout_toEndOf="@+id/imageView"
+        android:text="Cover Photo"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/ivCoverPhoto"
+        android:layout_width="245dp"
+        android:layout_height="133dp"
+        android:layout_below="@id/tvNewEventHeader"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="74dp"
+        android:layout_marginEnd="75dp"
+        android:background="@drawable/rounded_corners"
+        android:contentDescription="Event Poster"
+        android:scaleType="centerCrop" />
+
+    <Button
+        android:id="@+id/btnUploadPhoto"
+        android:layout_width="144dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivCoverPhoto"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
+        android:text="Upload Photo"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnRemovePhoto"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivCoverPhoto"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:backgroundTint="@color/black"
+        android:text="Remove Photo"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/InfoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnUploadPhoto"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="17dp"
+        android:src="@drawable/page" />
+
+    <TextView
+        android:id="@+id/tvInfoHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivCoverPhoto"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="89dp"
+        android:layout_toEndOf="@+id/InfoView"
+        android:text="Information"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold" />
+
+<LinearLayout
+    android:id="@+id/linearLayout"
+    android:layout_width="379dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/btnUploadPhoto"
+    android:layout_marginTop="57dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/etNameHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="NAME" />
+
+    <EditText
+        android:id="@+id/etEventName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/etDateHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="DATE" />
+
+    <EditText
+        android:id="@+id/etEventDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/etTimeHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="TIME" />
+
+    <EditText
+        android:id="@+id/etEventTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/etAboutHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="ABOUT" />
+
+    <EditText
+        android:id="@+id/etEventAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+<ImageView
+    android:id="@+id/ivLockIcon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/linearLayout"
+    android:layout_marginTop="7dp"
+    android:src="@drawable/lock" />
+
+<TextView
+    android:id="@+id/etSignUpLimitHeader"
+    android:layout_width="213dp"
+    android:layout_height="21dp"
+    android:layout_below="@+id/linearLayout"
+    android:layout_alignParentEnd="true"
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="13dp"
+    android:layout_marginEnd="152dp"
+    android:layout_toEndOf="@+id/ivLockIcon"
+    android:text="SIGN-UP LIMIT (OPTIONAL)"
+    android:textColor="@color/black"
+    android:textStyle="bold" />
+
+<EditText
+    android:id="@+id/etSignUpLimit"
+    android:layout_width="185dp"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/linearLayout"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentEnd="true"
+    android:layout_marginStart="210dp"
+    android:layout_marginTop="11dp"
+    android:layout_marginEnd="0dp" />
+
+<Button
+    android:id="@+id/btnGenerateEvent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/linearLayout"
+    android:layout_marginTop="137dp"
+    android:backgroundTint="@color/black"
+    android:text="Generate" />
+
+<!-- Bottom action buttons -->
+    <LinearLayout
+        android:id="@+id/bottom_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <ImageButton
+            android:id="@+id/events_dashboard"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/home" />
+
+        <ImageButton
+            android:id="@+id/my_events"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/calender" />
+
+        <ImageButton
+            android:id="@+id/notifications"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/speaker" />
+
+        <ImageButton
+            android:id="@+id/attendance_tracking"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/maps" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
