@@ -168,13 +168,19 @@ public class EditProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             data.put(IMAGE_KEY, uri.toString());
+                            Log.d("DEBUG", "onSuccess: image url should show up in doc");
+                            saveChangesInDatabase(data);
                         }
                     });
                 }
             });
         }
+        else {
+            saveChangesInDatabase(data);
+        }
+    }
 
-
+    private void saveChangesInDatabase(HashMap<String, Object> data){
         attendeesRef.document(user.getDeviceID())
                 .update(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
