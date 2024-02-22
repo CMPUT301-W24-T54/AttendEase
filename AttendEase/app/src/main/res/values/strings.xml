@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">AttendEase</string>
+    <string name="frame_layout_content_description">Main content area</string>
+
+    //Bottom navigation strings
+    <string name="bottom_nav_content_description">Bottom Navigation</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_events">Events</string>
+    <string name="nav_bell">Bell</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_images"></string>
+    <string name="nav_map"></string>
 
 </resources>
