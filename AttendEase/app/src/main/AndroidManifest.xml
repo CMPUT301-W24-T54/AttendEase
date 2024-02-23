@@ -23,6 +23,14 @@
         </activity>
 
         <activity
+            android:name=".NewEventActivity">
+        </activity>
+
+        <activity
+            android:name=".OrganizerDashboardActivity">
+        </activity>
+
+        <activity
             android:name=".AdminAccountActivity"
             android:exported="true">
         </activity>

@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Implement logic to navigate to the organizers
-            }
+                Intent intent = new Intent(MainActivity.this, OrganizerDashboardActivity.class);
+                startActivity(intent);}
         });
 
         adminButton.setOnClickListener(new View.OnClickListener() {

@@ -116,137 +116,171 @@
         android:textSize="15dp"
         android:textStyle="bold" />
 
-<LinearLayout
-    android:id="@+id/linearLayout"
-    android:layout_width="379dp"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/btnUploadPhoto"
-    android:layout_marginTop="57dp"
-    android:orientation="vertical">
+    <!-- Bottom action buttons -->
 
-    <TextView
-        android:id="@+id/etNameHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="NAME" />
-
-    <EditText
-        android:id="@+id/etEventName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tvEventDate"
+    <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etNameHeader"
-        android:drawableRight="@drawable/nav_events"
-        android:gravity="center_vertical"
-        android:padding="16dp"
-        android:hint="Select Date" />
-
-    <TextView
-        android:id="@+id/tvEventTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvEventDate"
-        android:drawableRight="@drawable/time"
-        android:gravity="center_vertical"
-        android:padding="16dp"
-        android:hint="Select Time" />
-
-    <TextView
-        android:id="@+id/etAboutHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="ABOUT" />
-
-    <EditText
-        android:id="@+id/etEventAbout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
-
-    <ImageView
-        android:id="@+id/ivLockIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:layout_marginTop="7dp"
-        android:src="@drawable/limit" />
-
-    <TextView
-        android:id="@+id/etSignUpLimitHeader"
-        android:layout_width="213dp"
-        android:layout_height="21dp"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="152dp"
-        android:layout_toEndOf="@+id/ivLockIcon"
-        android:text="SIGN-UP LIMIT (OPTIONAL)"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etSignUpLimit"
-        android:layout_width="185dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:inputType="number"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="210dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="0dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="355dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="150dp">
 
-    <ImageView
-        android:id="@+id/ivGeoTrackingIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivLockIcon"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="35dp"
-        android:src="@drawable/nav_map" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/etGeoTrackingHeader"
-        android:layout_width="213dp"
-        android:layout_height="21dp"
-        android:layout_below="@+id/etSignUpLimitHeader"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="35dp"
-        android:layout_toEndOf="@+id/ivGeoTrackingIcon"
-        android:text="GEO-TRACKING"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+            <TextView
+                android:id="@+id/etNameHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="NAME" />
 
-    <CheckBox
-        android:id="@+id/cbGeoTracking"
-        android:layout_width="33dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etSignUpLimit"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="11dp"
-        android:buttonTint="@drawable/checkbox_selector"
-        android:textColor="@android:color/black" />
+            <EditText
+                android:id="@+id/etEventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLength="50" />
+
+            <TextView
+                android:id="@+id/etAboutHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="ABOUT" />
+
+            <EditText
+                android:id="@+id/etEventAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLength="1000" />
+
+            <TextView
+                android:id="@+id/etLocationHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="LOCATION" />
+
+            <EditText
+                android:id="@+id/etEventLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLength="100" />
+
+            <TextView
+                android:id="@+id/tvEventDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/etNameHeader"
+                android:drawableRight="@drawable/nav_events"
+                android:gravity="center_vertical"
+                android:hint="Select Date"
+                android:padding="16dp" />
+
+            <TextView
+                android:id="@+id/tvEventTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvEventDate"
+                android:drawableRight="@drawable/time"
+                android:gravity="center_vertical"
+                android:hint="Select Time"
+                android:padding="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="SIGN-UP LIMIT"
+                    android:src="@drawable/limit" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:text="SIGN-UP LIMIT"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etSignUpLimit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:maxLength="7" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="GEO-TRACKING"
+                    android:src="@drawable/nav_map" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:text="GEO-TRACKING"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/cbGeoTracking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:buttonTint="@color/black" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
-    android:id="@+id/btnGenerateEvent"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/linearLayout"
-    android:layout_marginTop="137dp"
-    android:backgroundTint="@color/black"
-    android:text="Generate" />
+        android:id="@+id/btnGenerateEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivCoverPhoto"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="24px"
+        android:layout_marginTop="430dp"
+        android:layout_marginEnd="24px"
+        android:backgroundTint="@color/black"
+        android:text="Generate"
+        android:elevation="4dp"/>
 
-<!-- Bottom action buttons -->
     <LinearLayout
         android:id="@+id/bottom_actions"
         android:layout_width="match_parent"
