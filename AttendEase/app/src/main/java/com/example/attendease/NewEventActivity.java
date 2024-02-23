@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -160,14 +161,13 @@ public class NewEventActivity extends AppCompatActivity {
 
     private Timestamp createTimestamp(String eventDate, String eventTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        // Parses the date and time strings into a Date object
         Date parsedDate = null;
         try {
             parsedDate = dateFormat.parse(eventDate + " " + eventTime);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        // Convert the Date object into a Timestamp
+        // Converts the Date object into a Timestamp
         return new Timestamp(parsedDate);
     }
 
@@ -176,12 +176,12 @@ public class NewEventActivity extends AppCompatActivity {
         String maxAttendeesStr = etSignUpLimit.getText().toString();
         // Check if the EditText is empty or not
         if (maxAttendeesStr.isEmpty()) {
-            return Integer.MAX_VALUE; // Returns null if no input was entered
+            return Integer.MAX_VALUE;
         } else {
             try {
                 return Integer.parseInt(maxAttendeesStr);
             } catch (NumberFormatException e) {
-                return Integer.MAX_VALUE; // Returns null if the input is not a valid integer
+                return Integer.MAX_VALUE;
             }
         }
     }
@@ -191,5 +191,5 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     // TODO add functions to upload and remove images for event poster
-
+    // TODO add funtions to generate QR codes
 }
