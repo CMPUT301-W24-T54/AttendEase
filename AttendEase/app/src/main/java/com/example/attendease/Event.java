@@ -13,10 +13,11 @@ public class Event {
     private String description;
     private String organizerId;
     private Timestamp dateTime;
-    private GeoPoint location; // For geolocation verification after halfway point
+    private String location; // For geolocation verification after halfway point
     private String promoQR;
     private String checkInQR;
     private String posterUrl; // URL to the event poster image
+    private boolean isGeoTrackingEnabled;
     private int maxAttendees; // Optional limit on attendees
 
 
@@ -34,9 +35,10 @@ public class Event {
      * @param promoQR      QR code URL for event promotion.
      * @param checkInQR    QR code URL for event check-in.
      * @param posterUrl    URL of the event poster image.
+     * @param isGeoTrackingEnabled Identifies whether or not the organizer has enabled geo-tracking
      * @param maxAttendees Maximum number of attendees allowed (optional).
      */
-    public Event(String eventId, String title, String description, String organizerId, Timestamp dateTime, GeoPoint location, String promoQR, String checkInQR, String posterUrl, int maxAttendees) {
+    public Event(String eventId, String title, String description, String organizerId, Timestamp dateTime, String location, String promoQR, String checkInQR, String posterUrl, boolean isGeoTrackingEnabled, int maxAttendees) {
         this.eventId = eventId;
         this.title = title;
         this.description = description;
@@ -46,6 +48,7 @@ public class Event {
         this.promoQR = promoQR;
         this.checkInQR = checkInQR;
         this.posterUrl = posterUrl;
+        this.isGeoTrackingEnabled = isGeoTrackingEnabled;
         this.maxAttendees = maxAttendees;
     }
 
@@ -92,11 +95,11 @@ public class Event {
         this.dateTime = dateTime;
     }
 
-    public GeoPoint getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(GeoPoint location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -124,6 +127,12 @@ public class Event {
         this.posterUrl = posterUrl;
     }
 
+    public boolean getisGeoTrackingEnabled() {
+        return isGeoTrackingEnabled;
+    }
+    public void setisGeoTrackingEnabled(boolean isGeoTrackingEnabled) {
+        this.isGeoTrackingEnabled = isGeoTrackingEnabled;
+    }
     public int getMaxAttendees() {
         return maxAttendees;
     }
