@@ -50,8 +50,10 @@
             android:name=".AdminAccountActivity"
             android:exported="true">
         </activity>
-
-
+        <activity
+            android:name=".UserCheckIn"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

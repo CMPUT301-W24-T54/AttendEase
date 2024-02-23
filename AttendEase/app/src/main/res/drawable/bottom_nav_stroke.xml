@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background color of the BottomNavigationView -->
+    <item android:drawable="@android:color/white" />
+
+    <!-- Stroke for the top edge -->
+    <item
+        android:top="1dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:bottom="0dp">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <stroke
+                android:width="1dp"
+                android:color="@android:color/black" />
+        </shape>
+</item>
+    </layer-list>
