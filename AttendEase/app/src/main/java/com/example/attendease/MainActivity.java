@@ -17,17 +17,20 @@ public class MainActivity extends AppCompatActivity {
         Button createEventButton = findViewById(R.id.create_event_button);
         Button adminButton = findViewById(R.id.admin_button);
 
+
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Implement logic to navigate to the attendees
-            }
+                Intent intent = new Intent(MainActivity.this, UserCheckIn.class);
+                startActivity(intent);}
         });
+
 
         createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO: Implement logic to navigate to the organizers
+
             }
         });
 
