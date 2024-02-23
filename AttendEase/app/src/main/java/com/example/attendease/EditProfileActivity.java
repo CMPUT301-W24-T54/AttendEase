@@ -92,7 +92,7 @@ public class EditProfileActivity extends AppCompatActivity {
         saveChanges = findViewById(R.id.edit_profile_save_changes);
 
 
-        // Initialize ActivityResultLauncher
+        // OpenAI, 2024, ChatGPT, User upload profile pic
         mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
                     @Override
@@ -153,6 +153,7 @@ public class EditProfileActivity extends AppCompatActivity {
         data.put(EMAIL_KEY, email);
         data.put(PHONE_KEY, phone);
 
+        // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         // Handle the profile image
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("images/" + user.getDeviceID() + "/profile.png");
@@ -192,6 +193,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private byte[] getImagePng() {
+        // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         try {
             // Load the original image into a Bitmap
             InputStream inputStream = getContentResolver().openInputStream(profileUri);
