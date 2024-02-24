@@ -1,15 +1,25 @@
 package com.example.attendease;
 
+import java.io.Serializable;
+
 /**
  * This class represents and Attendee user
  */
-public class Attendee {
+public class Attendee implements Serializable {
     private String deviceID;  // Uniquely identifies each user, since no login credentials
     private String name;  // Name of the user, can be renamed to username if needed
     private String email;  // Email of the user, can be updated in profile page
     private String phone;  // Phone number of the user, can be update in profile page
     private String image;  // Profile image of the user, must be referenced in images collection
 
+
+    public Attendee(String deviceID, String name, String phone, String email, String image) {
+        this.deviceID = deviceID;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.image = image;
+    }
 
     public void signUp() {}  // TODO Implement signUp functionality on database side
     public void checkIn() {} // TODO Implement checkIn functionality on database side
