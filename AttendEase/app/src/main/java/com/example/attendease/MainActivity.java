@@ -13,14 +13,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent startQRScanner = new Intent(this, QRScannerActivity.class);
-        startActivity(startQRScanner);
-
-
-        Attendee newAttendee = new Attendee("testDevice", "notAaron", "111-111-1111", "notaarondom", "null");
-        Intent startEditIntent = new Intent(this, EditProfileActivity.class);
-        startEditIntent.putExtra("user", newAttendee);
-        startActivity(startEditIntent);
+//        Intent startQRScanner = new Intent(this, QRScannerActivity.class);
+//        startActivity(startQRScanner);
+//
+//
+//        Attendee newAttendee = new Attendee("testDevice", "notAaron", "111-111-1111", "notaarondom", "null");
+//        Intent startEditIntent = new Intent(this, EditProfileActivity.class);
+//        startEditIntent.putExtra("user", newAttendee);
+//        startActivity(startEditIntent);
 
         Button checkInButton = findViewById(R.id.check_in_button);
         Button createEventButton = findViewById(R.id.create_event_button);
