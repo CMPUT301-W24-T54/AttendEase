@@ -48,7 +48,6 @@ public class Organizer {
         for (Event event : eventsOrganized) {
 //            event.notifyAttendees(message); // notifyAttendees will be part of the Event Class
         }
-
     }
 
     // Getters and Setters
