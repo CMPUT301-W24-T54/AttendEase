@@ -34,8 +34,8 @@ public class Organizer {
      * @param dateTime The date and time of the event.
      */
     public void createEvent(String eventName, String location, String dateTime) {
-        //Event newEvent = new Event(eventName, location, dateTime);
-        //this.eventsOrganized.add(newEvent);
+//        Event newEvent = new Event(eventName, location, dateTime);
+//        this.eventsOrganized.add(newEvent);
     }
 
     /**
@@ -44,9 +44,10 @@ public class Organizer {
      * @param message The message to be sent as a notification.
      */
     public void sendNotification(String message) {
-        //for (Event event : eventsOrganized) {
-            //event.notifyAttendees(message); // notifyAttendees will be part of the Event Class
-        //}
+
+        for (Event event : eventsOrganized) {
+//            event.notifyAttendees(message); // notifyAttendees will be part of the Event Class
+        }
     }
 
     // Getters and Setters
