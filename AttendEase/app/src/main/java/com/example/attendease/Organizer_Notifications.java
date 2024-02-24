@@ -1,5 +1,6 @@
 package com.example.attendease;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -24,9 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.UUID;
 
-public class Attendee_Notifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
+public class Organizer_Notifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ArrayList<Msg> dataList;
     private ListView MsgList;
     private ArrayAdapter<Msg> MsgAdapter;
@@ -35,7 +37,7 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.attendee_notification);
+        setContentView(R.layout.activity_organizer_notifications);
         Intent intent=getIntent();
         //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
         //need to implements Serializable in Attendee class
@@ -48,11 +50,33 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
         String[] Title = {};
         String[] Messages = {};
         dataList = new ArrayList<Msg>();
+        eventsRef
+                .whereEqualTo("sentBy", "Name")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                // Document found where fieldName is equal to desiredValue
+                                String Title = doc.getString("title");
+                                String Notification = doc.getString("message");
+                                Msg notif=new Msg(Title, Notification);
+                                notif.setUnique_id(doc.getId());
+                                dataList.add(notif);
+
+                            }
+                            MsgAdapter = new Msg_adapter(Organizer_Notifications.this, dataList);
+                            MsgList.setAdapter(MsgAdapter);
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
         /*for (int i = 0; i < Title.length; i++) {
             dataList.add(new Msg(Title[i], Messages[i]));
         }*/
-        MsgAdapter = new Msg_adapter(this, dataList);
-        MsgList.setAdapter(MsgAdapter);
+
 
 
 
@@ -60,14 +84,33 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
     public void deleteMsg(Msg message, int position){
         MsgAdapter.remove(message);
         MsgAdapter.notifyDataSetChanged();
+        eventsRef.document(message.getUnique_id()).delete();
     }
+
+    //for organizers
     public void addMsg(Msg message){
         MsgAdapter.add(message);
         MsgAdapter.notifyDataSetChanged();
+        String Title= message.getTitle().toString();
+        String Message= message.getMessage().toString();
+        long currentTimeMillis = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String dateString = sdf.format(new Date(currentTimeMillis));
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("title", Title);
+        data.put("message",Message);
+        data.put("timestamp", dateString);
+        //need to get name
+        data.put("sentBy",Title);
+        eventsRef.document(message.getUnique_id()).set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firestore", "DocumentSnapshot successfully written!");
+                    }
+                });
     }
-
-
-
 
     @Override
     protected void onResume() {
@@ -88,7 +131,7 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
             Msg selectedMsg = dataList.get(position);
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
-            Intent intent= new Intent(Attendee_Notifications.this, View_Msg.class);
+            Intent intent= new Intent(Organizer_Notifications.this, View_Msg_Organizer.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
             startActivity(intent);
@@ -100,39 +143,12 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
                     .navigate(R.id.action_FirstFragment_to_SecondFragment,bundle);*/
 
         });
+        //for organizers
 
+        ImageButton adds=findViewById(R.id.AddButton);
+        adds.setOnClickListener(v -> {
+            new ViewMsgDialog().show(getSupportFragmentManager(), "Add Message");
 
-        //forattendee only
-        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (querySnapshots != null) {
-                    //cityDataList.clear();
-                    for (DocumentChange doc: querySnapshots.getDocumentChanges()) {
-                        switch (doc.getType()) {
-                            case ADDED:
-                            case MODIFIED:
-                                String Title = doc.getDocument().getString("title");
-                                String Notification = doc.getDocument().getString("message");
-                                //String sent_by= doc.getDocument().getString("sentBy");
-                                Log.d("Firestore", String.format("City(%s, %s) fetched", Title,
-                                        Notification));
-                                dataList.add(new Msg(Title, Notification));
-                                break;
-                            /*case REMOVED:
-                                Log.d(TAG, "Removed document: " + dc.getDocument().getData());
-                                break;*/
-                        }
-
-                    }
-                    //addCitiesInit();
-                    MsgAdapter.notifyDataSetChanged();
-                }
-            }
         });
 
 

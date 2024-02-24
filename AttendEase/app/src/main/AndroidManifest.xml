@@ -13,6 +13,12 @@
         android:theme="@style/Theme.AttendEase"
         tools:targetApi="31">
         <activity
+            android:name=".View_Msg_Organizer"
+            android:exported="false" />
+        <activity
+            android:name=".Organizer_Notifications"
+            android:exported="false" />
+        <activity
             android:name=".Attendee_Notifications"
             android:exported="false" />
         <activity
