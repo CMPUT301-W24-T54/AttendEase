@@ -81,6 +81,10 @@
             android:name=".UserCheckIn"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".AttendeeDashboardActivity"
+            android:exported="true">
+        </activity>
 
 
     </application>
