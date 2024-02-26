@@ -1,15 +1,12 @@
 <resources>
     <string name="app_name">AttendEase</string>
 
-    <string name="edit_profile">Edit Profile</string>
     <string name="upload_photo">Upload Photo</string>
     <string name="remove_photo">Remove Photo</string>
     <string name="information">Information</string>
     <string name="name">NAME</string>
     <string name="phone_number">PHONE NUMBER</string>
     <string name="email_address">EMAIL ADDRESS</string>
-    <string name="save_changes">Save Changes</string>
-
     <string name="frame_layout_content_description">Main content area</string>
 
     //Header strings
@@ -22,7 +19,7 @@
     <string name="notifications">Notifications</string>
     <string name="details">Details</string>
     <string name="profile">Clear All</string>
-    <string name="edit_profile">Save Changes</string>
+    <string name="edit_profile">Edit Profile</string>
     <string name="account">Read All</string>
     <string name="upcoming_event">Generate</string>
     <string name="new_event">Post</string>
@@ -40,7 +37,6 @@
     <string name="nav_events">Events</string>
     <string name="nav_bell">Bell</string>
     <string name="nav_profile">Profile</string>
-
     <string name="nav_notifications">Notifications</string>
     <string name="nav_image">Images</string>
     <string name="nav_map">Map</string>
