@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class View_Msg_Organizer extends AppCompatActivity {
 
     @Override
@@ -21,7 +19,7 @@ public class View_Msg_Organizer extends AppCompatActivity {
         String Message=intent.getStringExtra("Message");
         TextView TitleText=findViewById(R.id.Title);
         TitleText.setText(Title);
-        TextView MessageText=findViewById(R.id.textview_third);
+        TextView MessageText=findViewById(R.id.body);
         MessageText.setText(Message);
 
 
@@ -34,8 +32,9 @@ public class View_Msg_Organizer extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(View_Msg_Organizer.this,Organizer_Notifications.class);
-                startActivity(intent);
+                finish();
+                /*Intent intent=new Intent(View_Msg_Organizer.this,Organizer_Notifications.class);
+                startActivity(intent);*/
             }
         });
 

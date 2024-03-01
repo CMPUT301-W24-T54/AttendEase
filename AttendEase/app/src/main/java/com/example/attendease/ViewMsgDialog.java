@@ -48,7 +48,7 @@ public class ViewMsgDialog extends DialogFragment {
         View view =
                 LayoutInflater.from(getContext()).inflate(R.layout.viewmsg, null);
         EditText viewTitle=view.findViewById(R.id.Title);
-        EditText viewMessage=view.findViewById(R.id.textview_third);
+        EditText viewMessage=view.findViewById(R.id.body);
         String NegativeButton;
         String Details;
         if(message!=null){
@@ -75,7 +75,7 @@ public class ViewMsgDialog extends DialogFragment {
                         listener.deleteMsg(message,position);
                     }
                     else{
-                        listener.addMsg(new Msg(Titlename,messagename));
+                        listener.addMsg(new Msg(Titlename,messagename,"name"));
                     }
 
                 })

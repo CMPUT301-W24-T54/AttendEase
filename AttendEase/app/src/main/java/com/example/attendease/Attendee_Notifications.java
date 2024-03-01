@@ -6,9 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.lang.ref.Reference;
 import java.text.SimpleDateFormat;
@@ -46,6 +51,13 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_notification);
+        ImageView imageview=findViewById(R.id.backgroundimageview);
+        TextView textview=findViewById(R.id.textView7);
+        TextView textview2=findViewById(R.id.textView8);
+
+        imageview.setVisibility(View.INVISIBLE);
+        textview.setVisibility(View.INVISIBLE);
+        textview2.setVisibility(View.INVISIBLE);
 
         Intent intent=getIntent();
         //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
@@ -81,12 +93,34 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
         newArray.add(message.getUnique_id());
         updates.put("notification_deleted", newArray);*/
         attendee_Ref.update("notification_deleted", FieldValue.arrayUnion(message.getUnique_id()));
+        makeinvisible();
 
 
     }
     public void addMsg(Msg message){
         MsgAdapter.add(message);
         MsgAdapter.notifyDataSetChanged();
+    }
+
+    public void makeinvisible(){
+        if (dataList.isEmpty()){
+            ImageView imageview=findViewById(R.id.backgroundimageview);
+            TextView textview=findViewById(R.id.textView7);
+            TextView textview2=findViewById(R.id.textView8);
+
+            imageview.setVisibility(View.VISIBLE);
+            textview.setVisibility(View.VISIBLE);
+            textview2.setVisibility(View.VISIBLE);
+        }
+        else{
+            ImageView imageview=findViewById(R.id.backgroundimageview);
+            TextView textview=findViewById(R.id.textView7);
+            TextView textview2=findViewById(R.id.textView8);
+
+            imageview.setVisibility(View.INVISIBLE);
+            textview.setVisibility(View.INVISIBLE);
+            textview2.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -128,11 +162,13 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
             Msg selectedMsg = dataList.get(position);
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
+            String sentBy=selectedMsg.getSent_By().toString();
             Intent intent= new Intent(Attendee_Notifications.this, View_Msg.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
+            intent.putExtra("sentBy",sentBy);
             startActivity(intent);
-            new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
+            //new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
             /*Bundle bundle = new Bundle();
             bundle.putString("selectedMsg",selectedMsg.getMessage());
             bundle.putString("selectedTitle", selectedMsg.getTitle());
@@ -168,6 +204,7 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
                             case MODIFIED:
                                 String Title = doc.getDocument().getString("title");
                                 String Notification = doc.getDocument().getString("message");
+                                String sentBy=doc.getDocument().getString("sentBy");
                                 String Unique_id=doc.getDocument().getId().toString();
 
 
@@ -180,7 +217,7 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
                                 //String sent_by= doc.getDocument().getString("sentBy");
                                 Log.d("Firestore", String.format("City(%s, %s) fetched", Title,
                                         Notification));
-                                Msg add_Msg=new Msg(Title, Notification);
+                                Msg add_Msg=new Msg(Title, Notification,sentBy);
                                 add_Msg.setUnique_id(Unique_id);
                                 dataList.add(add_Msg);
                                 break;
@@ -193,6 +230,8 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
                     for (String test : test_array){
                         attendee_Ref.update("notification_deleted",FieldValue.arrayRemove(test));
                     }
+
+                    makeinvisible();
 
                     //addCitiesInit();
                     MsgAdapter.notifyDataSetChanged();

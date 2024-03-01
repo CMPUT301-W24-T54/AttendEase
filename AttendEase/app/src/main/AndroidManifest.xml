@@ -5,8 +5,10 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AttendEase"
         tools:targetApi="31">
+        <activity
+            android:name=".Msg_add"
+            android:exported="false" />
         <activity
             android:name=".View_Msg_Organizer"
             android:exported="false" />
@@ -38,12 +43,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".EditProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -53,40 +58,29 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".CaptureActivityPortraitMode"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".NewEventActivity">
-        </activity>
-
-        <activity
-            android:name=".OrganizerDashboardActivity">
-        </activity>
-
+        <activity android:name=".NewEventActivity"></activity>
+        <activity android:name=".OrganizerDashboardActivity"></activity>
         <activity
             android:name=".AdminAccountActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-
         <activity
             android:name=".UserCheckIn"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".AttendeeDashboardActivity"
-            android:exported="true">
-        </activity>
-
-
+            android:exported="true"></activity>
     </application>
 
 </manifest>
