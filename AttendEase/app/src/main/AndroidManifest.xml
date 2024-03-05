@@ -23,7 +23,8 @@
         </activity>
 
         <activity
-            android:name=".NewEventActivity">
+            android:name=".NewEventActivity"
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity
