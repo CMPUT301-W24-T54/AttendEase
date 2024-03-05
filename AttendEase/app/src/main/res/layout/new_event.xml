@@ -15,7 +15,7 @@
         android:layout_marginEnd="105dp"
         android:layout_toStartOf="@+id/tvNewEventHeader"
         android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/plus"
+        android:src="@drawable/cross"
         android:gravity="center"
         android:padding="10dp" />
 

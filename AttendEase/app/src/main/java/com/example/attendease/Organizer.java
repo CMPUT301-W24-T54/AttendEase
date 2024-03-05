@@ -34,8 +34,8 @@ public class Organizer {
      * @param dateTime The date and time of the event.
      */
     public void createEvent(String eventName, String location, String dateTime) {
-        //Event newEvent = new Event(eventName, location, dateTime);
-        //this.eventsOrganized.add(newEvent);
+//        Event newEvent = new Event(eventName, location, dateTime);
+//        this.eventsOrganized.add(newEvent);
     }
 
     /**
