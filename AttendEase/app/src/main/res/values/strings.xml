@@ -1,16 +1,35 @@
 <resources>
     <string name="app_name">AttendEase</string>
 
-    <string name="edit_profile">Edit Profile</string>
     <string name="upload_photo">Upload Photo</string>
     <string name="remove_photo">Remove Photo</string>
     <string name="information">Information</string>
     <string name="name">NAME</string>
     <string name="phone_number">PHONE NUMBER</string>
     <string name="email_address">EMAIL ADDRESS</string>
-    <string name="save_changes">Save Changes</string>
-
     <string name="frame_layout_content_description">Main content area</string>
+
+    //Header strings
+    <string name="enter_name">Enter Your Name</string>
+    <string name="event_details">Event Details</string>
+    <string name="event">Event</string>
+    <string name="my_events">My Events</string>
+    <string name="all_events">All Events</string>
+    <string name="browse_events">Browse Events</string>
+    <string name="notifications">Notifications</string>
+    <string name="details">Details</string>
+    <string name="profile">Clear All</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="account">Read All</string>
+    <string name="upcoming_event">Generate</string>
+    <string name="new_event">Post</string>
+    <string name="sign_ups">Sign Ups</string>
+    <string name="new_notification">New Notification</string>
+    <string name="attendance">Attendance</string>
+    <string name="map">Map</string>
+    <string name="admin">Admin</string>
+    <string name="all_profiles">All Profiles</string>
+    <string name="all_images">All Images</string>
 
     //Bottom navigation strings
     <string name="bottom_nav_content_description">Bottom Navigation</string>
@@ -18,8 +37,43 @@
     <string name="nav_events">Events</string>
     <string name="nav_bell">Bell</string>
     <string name="nav_profile">Profile</string>
+    <string name="nav_notifications">Notifications</string>
     <string name="nav_image">Images</string>
-    <string name="nav_images"></string>
-    <string name="nav_map"></string>
+    <string name="nav_map">Map</string>
+
+    //Dialog strings
+    <string name="congratulations_attendee_dialog">Congratulations! You’re Checked-In John Doe</string>
+    <string name="congratulations_organizer_dialog">Congratulations! Your Event Has Reached A 1000 Attendants!</string>
+    <string name="new_notifications_dialog">You’ve got New Notifications</string>
+    <string name="no_notifications_dialog">No Notifications Yet</string>
+    <string name="notification_posted_dialog">Notification Posted!</string>
+    <string name="event_removed_dialog">Event Removed Successfully</string>
+    <string name="photo_removed_dialog">Photo Removed Successfully</string>
+    <string name="profile_removed_dialog">Profile Removed Successfully</string>
+
+
+    //Button strings
+    <string name="check_in_now">Check In Now</string>
+    <string name="check_in">Check In</string>
+    <string name="create_event">Create a New Event</string>
+    <string name="okay">Okay</string>
+    <string name="view">View</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="read_all">Read All</string>
+    <string name="see_all">See All</string>
+    <string name="clear_all">Clear All</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="generate">Generate</string>
+    <string name="view_event_details">View Event Details</string>
+    <string name="send_notification">Send Notification</string>
+    <string name="share_event_qr_code">Share Event QR Code</string>
+    <string name="post">Post</string>
+    <string name="remove_cover_photo">Remove Cover Photo</string>
+    <string name="remove_profile_photo">Remove Profile Photo</string>
+    <string name="remove_images">Remove Images</string>
+    <string name="remove_event">Remove Event</string>
+    <string name="remove_profile">Remove Profile</string>
+    <string name="plus">New Event</string>
+    <string name="event_cover">Event Cover</string>
 
 </resources>
