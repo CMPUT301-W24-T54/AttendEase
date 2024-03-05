@@ -16,8 +16,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -33,7 +36,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
- * This class represents the Edit Profile screen for an Attendee
+ * This class represents the Edit Profile screen for an Attendee.
+ * It allows users to edit their profile information and upload a profile picture.
  */
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -57,6 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     // Attendee User declaration
     private Attendee user;
+    private String deviceID;
 
     // ActivityLauncher to get image from gallery
     private ActivityResultLauncher<String> mGetContent;
@@ -73,7 +78,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Jeremy Logan, 2009, Stack Overflow, Bundle Args in intent
         // https://stackoverflow.com/questions/768969/passing-a-bundle-on-startactivity
-        user = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("user");
+        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
 
         profileImage = findViewById(R.id.edit_profile_pic);
         uploadProfileImage = findViewById(R.id.edit_profile_upload_button);
@@ -82,6 +87,8 @@ public class EditProfileActivity extends AppCompatActivity {
         editProfilePhone = findViewById(R.id.edit_profile_phone);
         editProfileEmail = findViewById(R.id.edit_profile_email);
         saveChanges = findViewById(R.id.edit_profile_save_changes);
+
+        populateViews();
 
 
         // OpenAI, 2024, ChatGPT, User upload profile pic
@@ -102,7 +109,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     /**
-     * This methods adds listeners to Button views
+     * This method adds listeners to Button views for user interactions.
      */
     private void addListeners(){
         saveChanges.setOnClickListener(v -> {
@@ -119,14 +126,50 @@ public class EditProfileActivity extends AppCompatActivity {
         removeProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                profileImage.setImageURI(null);
+                profileUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.splash);
+                profileImage.setImageURI(profileUri);
+            }
+        });
+    }
+
+    /**
+     * This method retrieves the profile information of the current Attendee user and populates the corresponding views.
+     */
+    private void populateViews() {
+        attendeesRef.document(deviceID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.get(NAME_KEY) != null ? String.valueOf(documentSnapshot.get(NAME_KEY)) : "";
+                    String phone = documentSnapshot.get(PHONE_KEY) != null ? String.valueOf(documentSnapshot.get(PHONE_KEY)) : "";
+                    String email = documentSnapshot.get(EMAIL_KEY) != null ? String.valueOf(documentSnapshot.get(EMAIL_KEY)) : "";
+
+                    editProfileName.setText(name);
+                    editProfilePhone.setText(phone);
+                    editProfileEmail.setText(email);
+                }
+            }
+        });
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
+
+        imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Successfully downloaded data to bytes array
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                // Set the bitmap to ImageView
+                profileImage.setImageBitmap(bitmap);
             }
         });
     }
 
 
     /**
-     * This method updates the Attendee user's profile locally and remotely
+     * This method updates the Attendee user's profile remotely.
+     * It collects user input data, handles profile image uploading, and saves changes to the database.
      */
     private void updateProfile() {
         String name = editProfileName.getText().toString();
@@ -148,7 +191,7 @@ public class EditProfileActivity extends AppCompatActivity {
         // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         // Handle the profile image
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child("images/" + user.getDeviceID() + "/profile.png");
+        StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
         String downloadUri;
 
         byte[] pngImageData = getImagePng();
@@ -173,8 +216,14 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method saves the changes made to the Attendee user's profile data in the database.
+     * It updates the document corresponding to the user's device ID with the new profile data.
+     *
+     * @param data A HashMap containing the updated profile data to be saved in the database.
+     */
     private void saveChangesInDatabase(HashMap<String, Object> data){
-        attendeesRef.document(user.getDeviceID())
+        attendeesRef.document(deviceID)
                 .update(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -184,6 +233,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * This method retrieves the PNG image data from the selected profile picture and converts it into a byte array.
+     * It handles the conversion process and error handling.
+     *
+     * @return The PNG image data as a byte array, or null if there was an error.
+     */
     private byte[] getImagePng() {
         // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         try {
