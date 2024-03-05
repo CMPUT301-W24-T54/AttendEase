@@ -62,6 +62,9 @@
             android:name=".UserCheckIn"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".SignupsListActivity">
+        </activity>
     </application>
 
 </manifest>
