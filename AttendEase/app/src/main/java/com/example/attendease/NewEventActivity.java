@@ -1,16 +1,23 @@
 package com.example.attendease;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -23,11 +30,24 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -116,7 +136,7 @@ public class NewEventActivity extends AppCompatActivity {
         // TODO generate promoQR
         String promoQR = "null";
         // TODO generate checkInQR
-        String checkInQR = "null";
+        String checkInQR = generateCheckInQRCode(eventID);
         // TODO add image upload functionality to the upload image button in onCreate and then fetch the image here
         String posterUrl = "null";
         boolean isGeoTrackingEnabled = ((CheckBox) findViewById(R.id.cbGeoTracking)).isChecked();
@@ -191,5 +211,115 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     // TODO add functions to upload and remove images for event poster
+
     // TODO add funtions to generate QR codes
+    private String generateCheckInQRCode(String data) {
+        // Set dimensions for the QR Code
+        int width = 500;
+        int height = 500;
+
+        // Encode the string into a QR Code
+        try {
+            Bitmap bitmap = endcodeAsBitmap(data, width, height);
+            writeQRtoDatabase(bitmap, data);
+            return null;
+        } catch (WriterException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Could not generate QR Code. Please try again.", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    private Bitmap endcodeAsBitmap(String data, int width, int height) throws WriterException {
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, width, height);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bitmap.setPixel(x, y, bitMatrix.get(x, y) ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white));
+            }
+        }
+
+        return bitmap;
+    }
+
+    private void writeQRtoDatabase(Bitmap bitmap, String data) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child("qr_codes/" + data + "/check_in_qr.png");
+        String downloadUri;
+
+        byte[] pngImageData = getImagePng(bitmap);
+
+        if (pngImageData != null) {
+            // Does Storage transaction asynchronously
+            imageRef.putBytes(pngImageData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            HashMap<String, Object> imageUri = new HashMap<>();
+                            imageUri.put("checkInQR", uri.toString());
+                            Query query = db.collection("events").whereEqualTo("eventId", data);
+                            query.get().addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        // Get the document reference
+                                        DocumentReference eventDocRef = document.getReference();
+
+                                        // Update the document with the imageUri
+                                        eventDocRef.update(imageUri)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // Document successfully updated
+                                                    Log.d("DEBUG", "Document updated successfully");
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // Handle failure
+                                                    Log.e("ERROR", "Error updating document", e);
+                                                });
+                                    }
+                                } else {
+                                    // Handle unsuccessful query
+                                    Log.e("ERROR", "Error getting documents: ", task.getException());
+                                }
+                            });
+                            Log.d("DEBUG", "onSuccess: image url should show up in doc");
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    public byte[] getImagePng(Bitmap bitmap) {
+        // Create a ByteArrayOutputStream to hold the PNG image data
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        // Compress the Bitmap into PNG format with 100% quality
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+        // Convert the ByteArrayOutputStream to byte array
+        return outputStream.toByteArray();
+    }
+
+
+    private void showQRCodeDialog(Bitmap bitmap) {
+        // Inflate the dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_new_event_qr_code, null);
+
+        // Set the QR code bitmap to the ImageView
+        ImageView imageViewQRCode = view.findViewById(R.id.new_event_qr_code);
+        imageViewQRCode.setImageBitmap(bitmap);
+
+        // Create and show the dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        Dialog dialog = builder.create();
+        dialog.show();
+    }
+
+
 }
