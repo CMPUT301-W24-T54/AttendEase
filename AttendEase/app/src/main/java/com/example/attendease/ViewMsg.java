@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class View_Msg_Organizer extends AppCompatActivity {
+public class ViewMsg extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +17,14 @@ public class View_Msg_Organizer extends AppCompatActivity {
         Intent intent=getIntent();
         String Title=intent.getStringExtra("Title");
         String Message=intent.getStringExtra("Message");
+        String sentBy=intent.getStringExtra("sentBy");
         TextView TitleText=findViewById(R.id.Title);
         TitleText.setText(Title);
         TextView MessageText=findViewById(R.id.body);
         MessageText.setText(Message);
+        TextView sentByText=findViewById(R.id.textView9);
+        sentByText.setText(sentBy);
+
 
 
     }
@@ -32,11 +36,9 @@ public class View_Msg_Organizer extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                /*Intent intent=new Intent(View_Msg_Organizer.this,Organizer_Notifications.class);
-                startActivity(intent);*/
+                Intent intent=new Intent(ViewMsg.this, AttendeeNotifications.class);
+                startActivity(intent);
             }
         });
-
     }
 }

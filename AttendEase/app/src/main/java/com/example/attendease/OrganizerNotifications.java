@@ -1,11 +1,8 @@
 package com.example.attendease;
 
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -22,10 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -37,7 +31,7 @@ import java.util.Locale;
 
 
 
-public class Organizer_Notifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
+public class OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ActivityResultLauncher<Intent> addMsgLauncher;
     private ArrayList<Msg> dataList;
     private ListView MsgList;
@@ -95,7 +89,7 @@ public class Organizer_Notifications extends AppCompatActivity implements ViewMs
                                 dataList.add(notif);
 
                             }
-                            MsgAdapter = new Msg_adapter(Organizer_Notifications.this, dataList);
+                            MsgAdapter = new Msgadapter(OrganizerNotifications.this, dataList);
                             MsgList.setAdapter(MsgAdapter);
                         } else {
                             //Log.d(TAG, "Error getting documents: ", task.getException());
@@ -184,7 +178,7 @@ public class Organizer_Notifications extends AppCompatActivity implements ViewMs
             Msg selectedMsg = dataList.get(position);
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
-            Intent intent= new Intent(Organizer_Notifications.this, View_Msg_Organizer.class);
+            Intent intent= new Intent(OrganizerNotifications.this, ViewMsgOrganizer.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
             startActivity(intent);
@@ -201,7 +195,7 @@ public class Organizer_Notifications extends AppCompatActivity implements ViewMs
         ImageButton adds=findViewById(R.id.AddButton);
         adds.setOnClickListener(v -> {
             //new ViewMsgDialog().show(getSupportFragmentManager(), "Add Message");
-            Intent intent= new Intent(Organizer_Notifications.this,Msg_add.class);
+            Intent intent= new Intent(OrganizerNotifications.this, MsgAdd.class);
             addMsgLauncher.launch(intent);
 
             /*Bundle extras = getIntent().getExtras();

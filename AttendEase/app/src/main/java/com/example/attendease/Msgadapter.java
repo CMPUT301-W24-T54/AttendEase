@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class Msg_adapter extends ArrayAdapter<Msg> {
-    public Msg_adapter(Context context, ArrayList<Msg> Messages) {
+public class Msgadapter extends ArrayAdapter<Msg> {
+    public Msgadapter(Context context, ArrayList<Msg> Messages) {
         super(context, 0, Messages);
     }
 

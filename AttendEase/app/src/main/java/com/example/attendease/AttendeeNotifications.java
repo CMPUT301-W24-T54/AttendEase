@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -23,22 +21,11 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Text;
-
-import java.lang.ref.Reference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
 
-public class Attendee_Notifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
+public class AttendeeNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ArrayList<Msg> dataList;
     private ListView MsgList;
     private ArrayAdapter<Msg> MsgAdapter;
@@ -79,7 +66,7 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
         /*for (int i = 0; i < Title.length; i++) {
             dataList.add(new Msg(Title[i], Messages[i]));
         }*/
-        MsgAdapter = new Msg_adapter(this, dataList);
+        MsgAdapter = new Msgadapter(this, dataList);
         MsgList.setAdapter(MsgAdapter);
 
 
@@ -163,7 +150,7 @@ public class Attendee_Notifications extends AppCompatActivity implements ViewMsg
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
             String sentBy=selectedMsg.getSent_By().toString();
-            Intent intent= new Intent(Attendee_Notifications.this, View_Msg.class);
+            Intent intent= new Intent(AttendeeNotifications.this, ViewMsg.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
             intent.putExtra("sentBy",sentBy);
