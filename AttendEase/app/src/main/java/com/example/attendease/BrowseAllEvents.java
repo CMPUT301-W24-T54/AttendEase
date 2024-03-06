@@ -22,6 +22,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * This class represents the Browse Events screen where
+ * an Attendee can browse all events in the future
+ */
 public class BrowseAllEvents extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView EventList;
@@ -76,6 +80,14 @@ public class BrowseAllEvents extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates the data list by listening to changes in the Firestore events collection.
+     * This method attaches a snapshot listener to the events collection, which triggers
+     * whenever there are changes to the documents in the collection. The method retrieves
+     * relevant information about each event such as title, description, date and time, location,
+     * and other details. It then constructs Event objects and adds them to the data list.
+     * Finally, it notifies the adapter to update the UI with the new data.
+     */
     private void update_datalist(){
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

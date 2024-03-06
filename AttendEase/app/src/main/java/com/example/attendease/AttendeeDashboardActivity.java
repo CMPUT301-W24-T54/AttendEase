@@ -18,6 +18,10 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.Objects;
 
+
+/**
+ * This class represents the Attendee's home dashboard activity
+ */
 public class AttendeeDashboardActivity extends AppCompatActivity {
 
     private ImageButton checkInButton;
@@ -42,6 +46,14 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         addListeners();
     }
 
+    /**
+     * Sets up listeners for various UI elements in the Attendee Dashboard activity.
+     * These listeners handle user interactions such as button clicks and navigation item selections.
+     * - The check-in button listener starts the QR Scanner activity to facilitate attendee check-in.
+     * - The "See All Events" button listener navigates to the Browse All Events activity.
+     * - The bottom navigation listener handles clicks on navigation items (Home, Events, Bell, Profile),
+     *   logging debug information and initiating corresponding activities when items are clicked.
+     */
     private void addListeners() {
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override

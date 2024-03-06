@@ -25,6 +25,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
+/**
+ * This class represents the Event details screen
+ * where an attendee can view the details of an event
+ * and sign up or check in
+ */
 public class EventDetails extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference signUpsRef;
@@ -76,6 +81,14 @@ public class EventDetails extends AppCompatActivity {
         hideSignUp();
     }
 
+    /**
+     * Sets up listeners for UI elements in the Event Details activity.
+     * - The backButton listener finishes the current activity when clicked.
+     * - The interactButton listener handles interactions such as check-in or sign-up for the event.
+     *   It captures the current time, generates a unique ID, and writes relevant data (event ID, attendee ID,
+     *   timestamp) to Firestore based on whether the attendee can check in or sign up for the event.
+     *   Upon successful completion, it hides the interactButton and displays a toast message accordingly.
+     */
     private void addListeners() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +138,13 @@ public class EventDetails extends AppCompatActivity {
         });
     }
 
+    /**
+     * Hides the sign-up button if the attendee has already signed up for the event.
+     * This method checks if the attendee has signed up for the event by querying Firestore
+     * for sign-up documents matching the attendee's device ID and the event ID. If such documents
+     * exist, indicating that the attendee has already signed up, the sign-up button is hidden
+     * and made unclickable.
+     */
     private void hideSignUp() {
         if (!canCheckIn) {
             signUpsRef
