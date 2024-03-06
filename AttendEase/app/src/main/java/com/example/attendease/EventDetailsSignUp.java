@@ -20,30 +20,40 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
-public class ViewBrowsedEvent extends AppCompatActivity {
+public class EventDetailsSignUp extends AppCompatActivity {
     private FirebaseFirestore db;
-    private CollectionReference signupRef;
+    private CollectionReference signUpsRef;
+    private CollectionReference checkInsRef;
     private Intent intent;
+
+    private TextView titleText;
+    private TextView locationText;
+
+    private TextView descriptionText;
+    private TextView dateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_browsed_event);
-        intent=getIntent();
-        TextView event_title=findViewById(R.id.EventTitle);
-        event_title.setText(intent.getStringExtra("Title"));
-        TextView description=findViewById(R.id.description);
-        description.setText(intent.getStringExtra("description"));
-        TextView location=findViewById(R.id.Location);
-        location.setText(intent.getStringExtra("location"));
-        TextView Date=findViewById(R.id.DateTime);
-        Date.setText(intent.getStringExtra("dateTime"));
+
+        intent = getIntent();
+
+
+        titleText = findViewById(R.id.EventTitle);
+        descriptionText = findViewById(R.id.description);
+        locationText = findViewById(R.id.Location);
+        dateText = findViewById(R.id.DateTime);
+
+        titleText.setText(intent.getStringExtra("Title"));
+        descriptionText.setText(intent.getStringExtra("description"));
+        locationText.setText(intent.getStringExtra("location"));
+        dateText.setText(intent.getStringExtra("dateTime"));
 
 
         db = FirebaseFirestore.getInstance();
-        signupRef = db.collection("signIns");
-
-
+        signUpsRef = db.collection("signIns");
+        checkInsRef = db.collection("checkIns");
     }
 
     @Override
@@ -67,12 +77,12 @@ public class ViewBrowsedEvent extends AppCompatActivity {
                 long currentTimeMillis = System.currentTimeMillis();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                 String dateString = sdf.format(new Date(currentTimeMillis));
-                String unique_id=UUID.randomUUID().toString();
+                String unique_id = UUID.randomUUID().toString();
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventID", eventID);
                 data.put("attendeeID",attendeeID);
                 data.put("timeStamp", dateString);
-                signupRef.document(unique_id).set(data)
+                signUpsRef.document(unique_id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
@@ -82,6 +92,5 @@ public class ViewBrowsedEvent extends AppCompatActivity {
 
             }
         });
-
     }
 }
