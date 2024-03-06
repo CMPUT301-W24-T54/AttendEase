@@ -21,7 +21,9 @@
         android:theme="@style/Theme.AttendEase"
         tools:targetApi="31">
         <activity
-            android:name=".EventDetails"
+            android:name=".EventDetails" />
+        <activity
+            android:name=".BrowseMyEvent"
             android:exported="false" />
         <activity
             android:name=".BrowseAllEvents"
@@ -92,10 +94,20 @@
 
         <activity
             android:name=".UserCheckIn"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".SignupsListActivity">
+        </activity>
+
         <activity
             android:name=".AttendeeDashboardActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".AttendanceListActivity">
+        </activity>
+
     </application>
 
 </manifest>
