@@ -14,17 +14,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.CaptureActivity;
 
 import java.util.Collections;
 
@@ -125,7 +122,7 @@ public class QRScannerActivity extends AppCompatActivity {
                                 String eventID = document.getId();
                                 Timestamp dateTime = document.getTimestamp("dateTime");
 
-                                Intent intent = new Intent(QRScannerActivity.this, EventDetails.class);
+                                Intent intent = new Intent(QRScannerActivity.this, EventDetailsAttendee.class);
                                 intent.putExtra("deviceID", deviceID);
                                 intent.putExtra("eventID", eventID);
                                 intent.putExtra("title",title);
