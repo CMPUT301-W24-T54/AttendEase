@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AttendEase</string>
-
     <string name="edit_profiles">Edit Profile</string>
     <string name="upload_photo">Upload Photo</string>
     <string name="remove_photo">Remove Photo</string>
