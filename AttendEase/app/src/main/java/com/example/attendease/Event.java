@@ -13,7 +13,7 @@ public class Event {
     private String description;
     private String organizerId;
     private Timestamp dateTime;
-    private String location; // For geolocation verification after halfway point
+    private String location;
     private String promoQR;
     private String checkInQR;
     private String posterUrl; // URL to the event poster image
@@ -52,7 +52,9 @@ public class Event {
         this.maxAttendees = maxAttendees;
     }
 
-
+    public Event() {
+        // Default constructor required for calls to DataSnapshot.getValue(Event.class)
+    }
 
     // Getters/Setters //
     public String getEventId() {

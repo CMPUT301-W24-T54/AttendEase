@@ -304,7 +304,6 @@ public class NewEventActivity extends AppCompatActivity {
         return outputStream.toByteArray();
     }
 
-
 //    private void showQRCodeDialog(Bitmap bitmap) {
 //        // Inflate the dialog layout
 //        LayoutInflater inflater = LayoutInflater.from(this);
@@ -320,6 +319,5 @@ public class NewEventActivity extends AppCompatActivity {
 //        Dialog dialog = builder.create();
 //        dialog.show();
 //    }
-
 
 }

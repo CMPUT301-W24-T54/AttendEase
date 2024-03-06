@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -71,8 +72,16 @@
         <activity
             android:name=".CaptureActivityPortraitMode"
             android:screenOrientation="portrait" />
-        <activity android:name=".NewEventActivity" />
-        <activity android:name=".OrganizerDashboardActivity" />
+
+        <activity
+            android:name=".NewEventActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+
+        <activity
+            android:name=".OrganizerDashboardActivity">
+        </activity>
+
         <activity
             android:name=".AdminAccountActivity"
             android:exported="true" />
