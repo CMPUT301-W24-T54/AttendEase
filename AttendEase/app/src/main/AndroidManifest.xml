@@ -48,6 +48,7 @@
             android:name=".CaptureActivityPortraitMode"
             android:screenOrientation="portrait" />
         <activity
+
             android:name=".NewEventActivity"
             android:windowSoftInputMode="adjustPan">
         </activity>

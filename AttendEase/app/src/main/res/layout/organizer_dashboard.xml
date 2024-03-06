@@ -21,14 +21,14 @@
 
     <TextView
         android:id="@+id/tvUpcomingEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="357dp"
+        android:layout_height="36dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="24px"
+        android:layout_marginTop="141px"
         android:text="Upcoming Event"
         android:textColor="@color/black"
-        android:layout_marginTop="141px"
-        android:layout_marginLeft="24px"
         android:textSize="28dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,8 +44,6 @@
         app:layout_constraintTop_toBottomOf="@id/tvUpcomingEvent"
         tools:listitem="@layout/event_card_large" />
 
-        <!-- TODO: build out with a RecyclerView to list event closest to current date -->
-
     <TextView
         android:id="@+id/tvMyEvents"
         android:layout_width="wrap_content"
@@ -53,7 +51,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="24px"
-        android:layout_marginTop="456px"
+        android:layout_marginTop="1000px"
         android:text="My Events"
         android:textColor="@color/black"
         android:textSize="28dp"
@@ -68,24 +66,26 @@
         android:id="@+id/rvMyEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tvUpcomingEvent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tvMyEvents"
         tools:listitem="@layout/event_card_small" />
 
 
-    <!-- TODO: build out with a RecyclerView to list all other events -->
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageButton
         android:id="@+id/fabCreateEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="648px"
-        android:layout_marginRight="24px"
-        android:backgroundTint="#DEFF81"
-        app:fabSize="auto"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="1450px"
+        android:background="@drawable/rounded_button_background"
+        android:clickable="true"
+        android:contentDescription="@string/plus"
+        android:elevation="4dp"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:ignore="MissingConstraints" />
+        app:srcCompat="@drawable/plus" />
 
     <LinearLayout
         android:id="@+id/bottom_actions"

@@ -4,7 +4,11 @@
     android:layout_width="109dp"
     android:layout_height="100dp"
     app:cardElevation="24dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/event_cover"
-            android:src="@tools:sample/avatars"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

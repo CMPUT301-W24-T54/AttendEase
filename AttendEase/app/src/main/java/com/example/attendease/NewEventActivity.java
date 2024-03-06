@@ -308,15 +308,15 @@ public class NewEventActivity extends AppCompatActivity {
     private void showQRCodeDialog(Bitmap bitmap) {
         // Inflate the dialog layout
         LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.dialog_new_event_qr_code, null);
+        // View view = inflater.inflate(R.layout.dialog_new_event_qr_code, null);
 
         // Set the QR code bitmap to the ImageView
-        ImageView imageViewQRCode = view.findViewById(R.id.new_event_qr_code);
-        imageViewQRCode.setImageBitmap(bitmap);
+        // ImageView imageViewQRCode = view.findViewById(R.id.new_event_qr_code);
+        // imageViewQRCode.setImageBitmap(bitmap);
 
         // Create and show the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view);
+        // builder.setView(view);
         Dialog dialog = builder.create();
         dialog.show();
     }
