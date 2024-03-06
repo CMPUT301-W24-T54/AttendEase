@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.Manifest;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class QRScannerActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
+    private String deviceID;
 
 
     @Override
@@ -41,6 +43,10 @@ public class QRScannerActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+
+        Intent intent = getIntent();
+        deviceID = intent.getStringExtra("deviceID");
+
 
         // OpenAI, 2024, ChatGPT, ScanQR code using zxing IntentIntegrator
 
@@ -75,7 +81,7 @@ public class QRScannerActivity extends AppCompatActivity {
                 String scannedData = result.getContents();
                 landOnEventDetails(scannedData);
                 // Handle the scanned QR code data as needed
-                Toast.makeText(this, "Scanned: " + scannedData, Toast.LENGTH_LONG).show();
+                // Toast.makeText(this, "Scanned: " + scannedData, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_SHORT).show();
             }
@@ -101,22 +107,36 @@ public class QRScannerActivity extends AppCompatActivity {
 
     private void landOnEventDetails(String docID) {
         // Scanned data should be the eventID
-//        eventsRef
-//                .whereEqualTo("eventID",docID)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            DocumentSnapshot document = task.getResult();
-//                            if (document.exists()) {
-//                            String title = documentSnapshot.getString("title");
-//                            String description = documentSnapshot.getString("description");
-//                            Timestamp dateTime=documentSnapshot.getTimestamp("dateTime");
-//
-//                            String location=documentSnapshot.getString("location");
-//                        }
-//                    }
-//                });
+        eventsRef.whereEqualTo("eventId", docID)
+                .limit(1) // Limit the number of documents
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                // Loop through the result set if needed
+                                Log.d("DEBUG", String.format("onComplete: %s", docID));
+                                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                                String title = document.getString("title");
+                                String description = document.getString("description");
+                                String location = document.getString("location");
+                                String eventID = document.getId();
+                                Timestamp dateTime = document.getTimestamp("dateTime");
+
+                                Intent intent = new Intent(QRScannerActivity.this, EventDetails.class);
+                                intent.putExtra("deviceID", deviceID);
+                                intent.putExtra("eventID", eventID);
+                                intent.putExtra("title",title);
+                                intent.putExtra("description",description);
+                                intent.putExtra("dateTime",dateTime.toDate().toString());
+                                intent.putExtra("location",location);
+                                intent.putExtra("canCheckIn", true);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                });
     }
 }

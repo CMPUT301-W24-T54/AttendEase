@@ -57,15 +57,16 @@ public class BrowseAllEvents extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=dataList.get(position);
-                Intent intent=new Intent(BrowseAllEvents.this, EventDetailsSignUp.class);
+                Intent intent=new Intent(BrowseAllEvents.this, EventDetails.class);
                 intent.putExtra("deviceID", deviceID);
                 intent.putExtra("eventID", event.getEventId());
-                intent.putExtra("Title",event.getTitle());
+                intent.putExtra("title",event.getTitle());
                 intent.putExtra("QR",event.getCheckInQR());
                 intent.putExtra("description",event.getDescription());
                 intent.putExtra("dateTime",event.getDateTime().toDate().toString());
                 intent.putExtra("location",event.getLocation());
                 intent.putExtra("posterUrl",event.getPosterUrl());
+                intent.putExtra("canCheckIn", false);
                 startActivity(intent);
 
 

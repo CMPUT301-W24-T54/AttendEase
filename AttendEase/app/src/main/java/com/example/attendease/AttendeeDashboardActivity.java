@@ -48,6 +48,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
+                intent.putExtra("deviceID", deviceID);
                 startActivity(intent);
             }
         });
