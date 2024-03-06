@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AttendEase</string>
+    <string name="edit_profiles">Edit Profile</string>
     <string name="upload_photo">Upload Photo</string>
     <string name="remove_photo">Remove Photo</string>
     <string name="information">Information</string>
@@ -8,8 +9,6 @@
     <string name="email_address">EMAIL ADDRESS</string>
     <string name="save_changess">Save Changes</string>
 
-=======
->>>>>>> 565e4e6f03837a0134486dc7ba2d2bea84e8b751
     <string name="frame_layout_content_description">Main content area</string>
 
     //Header strings
