@@ -12,6 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.CaptureActivity;
@@ -22,9 +31,16 @@ public class QRScannerActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
 
+    private FirebaseFirestore db;
+    private CollectionReference eventsRef;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
 
         // OpenAI, 2024, ChatGPT, ScanQR code using zxing IntentIntegrator
 
@@ -57,6 +73,7 @@ public class QRScannerActivity extends AppCompatActivity {
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedData = result.getContents();
+                landOnEventDetails(scannedData);
                 // Handle the scanned QR code data as needed
                 Toast.makeText(this, "Scanned: " + scannedData, Toast.LENGTH_LONG).show();
             } else {
@@ -80,5 +97,26 @@ public class QRScannerActivity extends AppCompatActivity {
                 finish();  // Close activity if user doesn't want to scan. what's the point
             }
         }
+    }
+
+    private void landOnEventDetails(String docID) {
+        // Scanned data should be the eventID
+//        eventsRef
+//                .whereEqualTo("eventID",docID)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            DocumentSnapshot document = task.getResult();
+//                            if (document.exists()) {
+//                            String title = documentSnapshot.getString("title");
+//                            String description = documentSnapshot.getString("description");
+//                            Timestamp dateTime=documentSnapshot.getTimestamp("dateTime");
+//
+//                            String location=documentSnapshot.getString("location");
+//                        }
+//                    }
+//                });
     }
 }

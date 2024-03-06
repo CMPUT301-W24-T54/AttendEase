@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BrowseAllEvents extends AppCompatActivity {
     private ArrayList<Event> dataList;
@@ -27,12 +28,15 @@ public class BrowseAllEvents extends AppCompatActivity {
     private ArrayAdapter<Event> EventAdapter;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
+    private String deviceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_all_events);
-        Intent intent=getIntent();
+
+        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
 
@@ -54,6 +58,7 @@ public class BrowseAllEvents extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=dataList.get(position);
                 Intent intent=new Intent(BrowseAllEvents.this, EventDetailsSignUp.class);
+                intent.putExtra("deviceID", deviceID);
                 intent.putExtra("eventID", event.getEventId());
                 intent.putExtra("Title",event.getTitle());
                 intent.putExtra("QR",event.getCheckInQR());
@@ -86,9 +91,9 @@ public class BrowseAllEvents extends AppCompatActivity {
                             case ADDED:
                             case MODIFIED:
 
-                                String Title = doc.getDocument().getString("title");
+                                String title = doc.getDocument().getString("title");
                                 String eventId=doc.getDocument().getId().toString();
-                                String QR = doc.getDocument().getString("checkInQR");
+                                String qr = doc.getDocument().getString("checkInQR");
                                 String description = doc.getDocument().getString("description");
 
                                 String organizerId=doc.getDocument().getString("organizerId");
@@ -103,9 +108,9 @@ public class BrowseAllEvents extends AppCompatActivity {
 
 
                                 //String sent_by= doc.getDocument().getString("sentBy");
-                                Log.d("Firestore", String.format("Event(%s, %s) fetched", Title,
+                                Log.d("Firestore", String.format("Event(%s, %s) fetched", title,
                                         description));
-                                Event new_event= new Event(eventId,Title,description,organizerId,dateTime,location,null,QR,posterUrl,isGeoTrackingEnabled,0);
+                                Event new_event= new Event(eventId,title,description,organizerId,dateTime,location,null,qr,posterUrl,isGeoTrackingEnabled,0);
                                 dataList.add(new_event);
 
                                 break;

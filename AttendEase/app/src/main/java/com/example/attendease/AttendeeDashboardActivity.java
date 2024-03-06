@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,8 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
 
     private ImageButton checkInButton;
     private BottomNavigationView bottomNav;
+    private TextView seeAllEvents;
+    private TextView seeMyEvents;
 
     private String deviceID;
     @Override
@@ -33,6 +36,9 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
 
+        seeMyEvents = findViewById(R.id.see_all);
+        seeAllEvents = findViewById(R.id.see_all2);
+
         addListeners();
     }
 
@@ -42,6 +48,15 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        seeAllEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class);
+                intent.putExtra("deviceID", deviceID);
                 startActivity(intent);
             }
         });
