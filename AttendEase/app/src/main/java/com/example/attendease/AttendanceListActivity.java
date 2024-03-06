@@ -14,35 +14,35 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SignupsListActivity extends AppCompatActivity {
+public class AttendanceListActivity extends AppCompatActivity {
     private TextView eventName;
-    private ListView signUpsListView;
-    private TextView signUpsCount;
+    private ListView attendanceListView;
+    private TextView attendanceCount;
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
-    private CollectionReference signInsRef;
+    private CollectionReference checkInsRef;
     private CollectionReference attendeesRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signups_list);
+        setContentView(R.layout.attendance_list);
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
-        signInsRef = db.collection("signIns");
+        checkInsRef = db.collection("checkIns");
         attendeesRef = db.collection("attendees");
 
         // Initialize UI components
         eventName = findViewById(R.id.event_textview);
-        signUpsListView = findViewById(R.id.signupslist);
-        signUpsCount = findViewById(R.id.signupscount);
+        attendanceListView = findViewById(R.id.attendancelist);
+        attendanceCount = findViewById(R.id.attendancecount);
 
         // Call the function
         setUpEventName(); //MAYBE ADD A PARAMETER FOR A SPECIFIC EVENT VS HARDCODED IN THIS FUNC ITSELF
-        //setUpSignUpsListView();
+        //setUpCheckInsListView();
 
     }
 
@@ -52,11 +52,11 @@ public class SignupsListActivity extends AppCompatActivity {
             String eventTitle = documentSnapshot.getString("title");
             eventName.setText(eventTitle);
         });
-        setUpSignUpsListView(event);
+        setUpCheckInsListView(event);
     }
 
-    private void setUpSignUpsListView(String event) {
-        signInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+    private void setUpCheckInsListView(String event) {
+        checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> attendeeIDs = new ArrayList<>();
 
             // Retrieves the attendeeIDs associated with the event!
@@ -77,11 +77,11 @@ public class SignupsListActivity extends AppCompatActivity {
 
                     // Updates the ListView with attendee names
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeNames);
-                    signUpsListView.setAdapter(adapter);
+                    attendanceListView.setAdapter(adapter);
 
-                    // Updates the signupscount TextView with the count of attendees
+                    // Updates the attendanceCount TextView with the count of attendees
                     String totalCountText = "Total: " + attendeeNames.size(); // OR GET THE COUNT FROM THE LISTVIEW ITSELF
-                    signUpsCount.setText(totalCountText);
+                    attendanceCount.setText(totalCountText);
                 });
             }
         });
