@@ -39,6 +39,12 @@ public class EventDetailsSignUp extends AppCompatActivity {
 
         intent = getIntent();
 
+        if(intent.getStringExtra("showbutton")!=null){
+            Button signup_button=findViewById(R.id.signup);
+            signup_button.setVisibility(View.INVISIBLE);
+            signup_button.setEnabled(false);
+        }
+
 
         titleText = findViewById(R.id.EventTitle);
         descriptionText = findViewById(R.id.description);

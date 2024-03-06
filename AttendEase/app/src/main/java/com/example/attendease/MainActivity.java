@@ -28,9 +28,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent= new Intent(MainActivity.this,OrganizerNotifications.class);
-        //Intent intent= new Intent(MainActivity.this,BrowseAllEvents.class);
-        startActivity(intent);
 
         Button checkInButton = findViewById(R.id.check_in_button);
         Button createEventButton = findViewById(R.id.create_event_button);
