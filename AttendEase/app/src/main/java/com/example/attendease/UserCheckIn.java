@@ -2,8 +2,10 @@ package com.example.attendease;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
@@ -26,6 +28,8 @@ public class UserCheckIn extends AppCompatActivity {
     private EditText attendeeNameEditText; // Assuming initialization in onCreate
     private Button checkInButton; // Assuming initialization in onCreate
     private ImageButton backButton; // For navigating back to MainActivity
+
+    private String deviceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class UserCheckIn extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("HardwareIds")
     private void checkInAttendee() {
         String name = attendeeNameEditText.getText().toString().trim();
 
@@ -60,7 +65,10 @@ public class UserCheckIn extends AppCompatActivity {
         }
 
         // Generate a unique deviceID using UUID
-        String deviceID = UUID.randomUUID().toString();
+//        String deviceID = UUID.randomUUID().toString();
+        // Get the Android device ID
+        deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
 
         // Placeholder values for phone, email, and image; adjust as needed
         String phone = ""; // Optional: Collect from user input
@@ -76,14 +84,15 @@ public class UserCheckIn extends AppCompatActivity {
         attendeesRef.document(deviceID) // Use the newly generated unique deviceID
                 .set(attendeeData) // .set() to overwrite or create a new document
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(UserCheckIn.this, "Check-in successful.", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(UserCheckIn.this, "Check-in successful.", Toast.LENGTH_SHORT).show();
                     navigateToAttendeeDashboard();
-                })
-                .addOnFailureListener(e -> Toast.makeText(UserCheckIn.this, "Failed to check in.", Toast.LENGTH_SHORT).show());
+                });
+                //.addOnFailureListener(e -> Toast.makeText(UserCheckIn.this, "Failed to check in.", Toast.LENGTH_SHORT).show());
     }
 
     private void navigateToAttendeeDashboard() {
         Intent intent = new Intent(UserCheckIn.this, AttendeeDashboardActivity.class);
+        intent.putExtra("deviceID", deviceID);
         startActivity(intent);
         finish();
     }
