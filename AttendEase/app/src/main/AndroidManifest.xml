@@ -5,8 +5,10 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,6 +19,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AttendEase"
         tools:targetApi="31">
+        <activity
+            android:name=".EventDetailsSignUp"
+            android:exported="false" />
+        <activity
+            android:name=".BrowseAllEvents"
+            android:exported="false" />
+        <activity
+            android:name=".MsgAdd"
+            android:exported="false" />
+        <activity
+            android:name=".ViewMsgOrganizer"
+            android:exported="false" />
+        <activity
+            android:name=".OrganizerNotifications"
+            android:exported="false" />
+        <activity
+            android:name=".AttendeeNotifications"
+            android:exported="false" />
+        <activity
+            android:name=".ViewMsg"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -31,6 +54,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -40,29 +64,22 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".CaptureActivityPortraitMode"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".NewEventActivity">
-        </activity>
-
-        <activity
-            android:name=".OrganizerDashboardActivity">
-        </activity>
-
+        <activity android:name=".NewEventActivity" />
+        <activity android:name=".OrganizerDashboardActivity" />
         <activity
             android:name=".AdminAccountActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
 
         <activity
             android:name=".UserCheckIn"
