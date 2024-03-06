@@ -2,6 +2,7 @@ package com.example.attendease;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ListActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent= new Intent(MainActivity.this,OrganizerNotifications.class);
-        //Intent intent= new Intent(MainActivity.this,BrowseAllEvents.class);
-        startActivity(intent);
 
         Button checkInButton = findViewById(R.id.check_in_button);
         Button createEventButton = findViewById(R.id.create_event_button);
@@ -75,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
+                // TEMPORARILY NAVIGATES TO SIGNUPS
+                Intent intent = new Intent(MainActivity.this, AttendanceListActivity.class);
                 startActivity(intent);}
         });
-
     }
 }
