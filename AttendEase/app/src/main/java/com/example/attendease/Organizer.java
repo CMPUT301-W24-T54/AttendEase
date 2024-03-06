@@ -46,7 +46,11 @@ public class Organizer {
     public void sendNotification(String message) {
 
         for (Event event : eventsOrganized) {
-//            event.notifyAttendees(message); // notifyAttendees will be part of the Event Class
+            event.sendNotificationToAttendees(message); // notifyAttendees will be part of the Event Class
+        }
+
+        for (Event event : eventsOrganized) {
+            event.sendNotificationToAttendees(message); // notifyAttendees will be part of the Event Class
         }
     }
 

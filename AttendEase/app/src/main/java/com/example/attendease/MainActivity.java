@@ -2,6 +2,7 @@ package com.example.attendease;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ListActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -72,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
+                // TEMPORARILY NAVIGATES TO SIGNUPS
+                Intent intent = new Intent(MainActivity.this, AttendanceListActivity.class);
                 startActivity(intent);}
         });
-
     }
 }
