@@ -20,7 +20,7 @@
         android:theme="@style/Theme.AttendEase"
         tools:targetApi="31">
         <activity
-            android:name=".ViewBrowsedEvent"
+            android:name=".EventDetailsSignUp"
             android:exported="false" />
         <activity
             android:name=".BrowseAllEvents"

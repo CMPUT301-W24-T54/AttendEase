@@ -89,7 +89,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                                 dataList.add(notif);
 
                             }
-                            MsgAdapter = new Msgadapter(OrganizerNotifications.this, dataList);
+                            MsgAdapter = new MsgAdapter(OrganizerNotifications.this, dataList);
                             MsgList.setAdapter(MsgAdapter);
                         } else {
                             //Log.d(TAG, "Error getting documents: ", task.getException());

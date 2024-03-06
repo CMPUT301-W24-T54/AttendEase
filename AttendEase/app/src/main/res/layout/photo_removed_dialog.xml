@@ -28,7 +28,8 @@
                 android:src="@drawable/item_removed_successfully"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="" />
 
             <TextView
                 android:id="@+id/textView5"

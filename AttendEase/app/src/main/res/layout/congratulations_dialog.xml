@@ -25,10 +25,12 @@
                 android:layout_width="218dp"
                 android:layout_height="218dp"
                 android:layout_marginTop="24dp"
-                android:src="@drawable/congratulations"
+                android:contentDescription="@string/congratulations_attendee_dialog"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/congratulations"
+                tools:ignore="ImageContrastCheck,RedundantDescriptionCheck" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -42,7 +44,8 @@
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="TextSizeCheck" />
 
             <Button
                 android:id="@+id/button"

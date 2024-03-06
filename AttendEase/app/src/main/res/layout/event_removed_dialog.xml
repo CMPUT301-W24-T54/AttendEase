@@ -28,7 +28,8 @@
                 android:src="@drawable/item_removed_successfully"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/event_removed_dialog" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -42,12 +43,15 @@
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="TextSizeCheck" />
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="286dp"
                 android:layout_height="49dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/button_black"
                 android:fontFamily="@font/inter_semibold"

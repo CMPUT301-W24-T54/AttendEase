@@ -66,7 +66,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         /*for (int i = 0; i < Title.length; i++) {
             dataList.add(new Msg(Title[i], Messages[i]));
         }*/
-        MsgAdapter = new Msgadapter(this, dataList);
+        MsgAdapter = new MsgAdapter(this, dataList);
         MsgList.setAdapter(MsgAdapter);
 
 

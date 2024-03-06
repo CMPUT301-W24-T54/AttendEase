@@ -25,7 +25,6 @@
                 android:layout_width="218dp"
                 android:layout_height="218dp"
                 android:layout_marginTop="24dp"
-                android:src="@tools:sample/avatars"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />-->
