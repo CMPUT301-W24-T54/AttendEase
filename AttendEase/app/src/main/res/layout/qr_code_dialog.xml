@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="218dp"
                 android:layout_height="218dp"
@@ -28,7 +28,7 @@
                 android:src="@tools:sample/avatars"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/textView5"
