@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventDetailsSignUp">
+    tools:context=".EventDetails">
 
     <TextView
         android:id="@+id/textView13"
@@ -209,7 +209,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/signup"
+        android:id="@+id/signup_or_checkin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

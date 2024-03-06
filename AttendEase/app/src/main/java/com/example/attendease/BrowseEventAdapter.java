@@ -19,10 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BrowseEventAdapter extends ArrayAdapter<Event> {
+
+    /**
+     * Constructor for the BrowseEventAdapter.
+     * @param context The context in which the adapter is being used.
+     * @param Events The list of Event objects to be displayed.
+     */
     public BrowseEventAdapter(@NonNull Context context, ArrayList<Event> Events) {
         super(context, 0,Events);
     }
 
+    /**
+     * Provides a view for each item in the data set.
+     * @param position The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return A View corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

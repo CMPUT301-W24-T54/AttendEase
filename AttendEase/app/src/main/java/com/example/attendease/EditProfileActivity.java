@@ -259,6 +259,8 @@ public class EditProfileActivity extends AppCompatActivity {
             Log.e("ERROR", "Error converting image to PNG: " + e.getMessage());
             Toast.makeText(this, "Error converting image to PNG", Toast.LENGTH_SHORT).show();
             return null;
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 }

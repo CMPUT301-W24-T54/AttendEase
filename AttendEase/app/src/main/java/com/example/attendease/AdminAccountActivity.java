@@ -7,6 +7,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+/**
+ * This class represents the Admin Account Dashboard acitvity
+ */
 public class AdminAccountActivity extends AppCompatActivity {
 
     @Override
