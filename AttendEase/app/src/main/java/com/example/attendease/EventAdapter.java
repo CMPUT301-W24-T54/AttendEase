@@ -20,7 +20,23 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private List<Event> eventList;
     private Context context;
     private int viewType;
+    private OnItemClickListener onItemClickListener;
 
+    /**
+     * Interface definition for a callback to be invoked when an item in the RecyclerView is clicked.
+     */
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    /**
+     * Sets the listener for item click events in the RecyclerView.
+     * @param listener The listener to be set.
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+    
     /**
      * Constructs the EventAdapter.
      * @param context   The context in which the adapter is being used.
@@ -79,6 +95,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
         holder.bind(event);
+
+        // Set the click listener for the itemView
+        holder.itemView.setOnClickListener(view -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(view, position);
+            }
+        });
     }
 
 
