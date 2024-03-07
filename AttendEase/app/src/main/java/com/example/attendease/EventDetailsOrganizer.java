@@ -19,6 +19,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Activity for displaying detailed information about a single event for organizers.
+ * This class retrieves event details from Firestore and populates the UI components with the information.
+ * Organizers can view event details, QR code, and navigate to sign-up and attendance lists.
+ */
 public class EventDetailsOrganizer extends AppCompatActivity {
     private TextView eventName;
     private TextView aboutDescription;

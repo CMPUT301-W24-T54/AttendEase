@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents the List of Attendees that have checked in to an event
+ * Activity for displaying the list of check ins' for a specific event.
+ * This class retrieves and displays attendee information associated with an event from Firestore.
  */
 public class AttendanceListActivity extends AppCompatActivity {
     private TextView eventName;
@@ -64,8 +65,9 @@ public class AttendanceListActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the event name text view
-     * @param eventDocID event ID on the database
+     * Sets up the event name TextView by retrieving the event title from Firestore.
+     * Calls {@link #setUpCheckInsListView(String)} to initialize the list of check-Ins.
+     * @param eventDocID The document ID of the event in Firestore.
      */
     private void setUpEventName(String eventDocID) {
         //String event = "FEPcR599noOVDLWK2lD9";
@@ -77,8 +79,9 @@ public class AttendanceListActivity extends AppCompatActivity {
     }
 
     /**
-     * sets up the Array Adapter for the List View
-     * @param eventDocID event ID on the database
+     * Sets up the ListView with the names of attendees who signed up for the specified event.
+     * Retrieves attendee information from Firestore and updates the UI accordingly.
+     * @param eventDocID The document ID of the event in Firestore.
      */
     private void setUpCheckInsListView(String eventDocID) {
         checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {

@@ -35,6 +35,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * OrganizerDashboardActivity displays the organizer's dashboard with upcoming and other events.
+ * It provides options to create a new event and navigate to the organizer's events list.
+ */
 public class OrganizerDashboardActivity extends AppCompatActivity {
     private RecyclerView recyclerViewUpcomingEvent;
     private RecyclerView recyclerViewMyEvents;
@@ -85,6 +89,10 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Loads events from Firestore, including the closest upcoming event and the next three events.
+     * Updates the RecyclerView adapters accordingly.
+     */
     private void loadEventsFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -128,6 +136,10 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Sets up the Create Event FloatingActionButton.
+     * Navigates to the NewEventActivity when the button is clicked.
+     */
     private void setUpFabCreateEvent() {
         ImageButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
         fabCreateEvent.setOnClickListener(view -> {
