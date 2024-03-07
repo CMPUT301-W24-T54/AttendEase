@@ -207,13 +207,5 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
 
 
         });
-
-
-
-
-
-
     }
-
-
 }
