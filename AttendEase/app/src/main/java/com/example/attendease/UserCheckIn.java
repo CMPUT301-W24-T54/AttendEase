@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -34,6 +33,7 @@ public class UserCheckIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_check_in);
+        setContentView(R.layout.attendee_name); // Use your actual layout file name
 
         db = FirebaseFirestore.getInstance();
         attendeesRef = db.collection(ATTENDEE_COLLECTION);
