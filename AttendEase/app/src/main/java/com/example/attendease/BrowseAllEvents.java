@@ -137,5 +137,17 @@ public class BrowseAllEvents extends AppCompatActivity {
         });
     }
 
+    public ArrayList<Event> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(ArrayList<Event> dataList) {
+        this.dataList = dataList;
+    }
+
+    public void updateDataList() {
+        update_datalist();
+    }
+
 
 }
