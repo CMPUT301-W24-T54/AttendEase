@@ -71,7 +71,12 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             String location = documentSnapshot.getString("location");
             locationView.setText(location);
             Timestamp dateTime = documentSnapshot.getTimestamp("dateTime");
-            dateandtimeView.setText(dateTime.toDate().toString());
+            if (dateTime != null) {
+                dateandtimeView.setText(dateTime.toDate().toString());
+            } else {
+                // Handle null case, maybe hide the view or set a default text
+                dateandtimeView.setText("No date provided");
+            }
             String qrCodeImageUrl = documentSnapshot.getString("checkInQR");
 
             runOnUiThread(() -> {
