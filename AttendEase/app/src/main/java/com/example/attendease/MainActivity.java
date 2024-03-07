@@ -18,6 +18,10 @@ import com.google.firebase.firestore.auth.User;
 
 import java.util.Objects;
 
+/**
+ * This class represents the First Screen where the user
+ * can choose which actor they wish to proceed as
+ */
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;

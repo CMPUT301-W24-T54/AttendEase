@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:ignore="MissingDefaultResource"
-    android:id="@+id/attendee_dashboard_root">
+    tools:ignore="MissingDefaultResource">
 
     <ImageView
         android:id="@+id/favicon"
@@ -35,11 +34,11 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="305dp">
+            android:layout_height="287dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,26 +61,24 @@
                     android:id="@+id/see_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:fontFamily="@font/inter_semibold"
                     android:text="@string/see_all"
+                    android:clickable="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                tools:listitem="@layout/event_card_large" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -115,20 +112,19 @@
                     android:id="@+id/see_all2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:fontFamily="@font/inter_semibold"
                     android:text="@string/see_all"
+                    android:clickable="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <HorizontalScrollView
                 android:layout_width="364dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -136,10 +132,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/event_card_small" />
+                    android:layout_height="match_parent" />
             </HorizontalScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -159,7 +152,7 @@
         android:focusable="true"
         app:layout_constraintBottom_toTopOf="@+id/attendee_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/rounded_button_background" />
+        app:srcCompat="@drawable/plus" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/attendee_bottom_nav"

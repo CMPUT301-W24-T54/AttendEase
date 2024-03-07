@@ -18,6 +18,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the List of Attendees that have checked in to an event
+ */
 public class AttendanceListActivity extends AppCompatActivity {
     private TextView eventName;
     private ListView attendanceListView;
@@ -60,6 +63,10 @@ public class AttendanceListActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up the event name text view
+     * @param eventDocID event ID on the database
+     */
     private void setUpEventName(String eventDocID) {
         //String event = "FEPcR599noOVDLWK2lD9";
         eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
@@ -69,6 +76,10 @@ public class AttendanceListActivity extends AppCompatActivity {
         setUpCheckInsListView(eventDocID);
     }
 
+    /**
+     * sets up the Array Adapter for the List View
+     * @param eventDocID event ID on the database
+     */
     private void setUpCheckInsListView(String eventDocID) {
         checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> attendeeIDs = new ArrayList<>();

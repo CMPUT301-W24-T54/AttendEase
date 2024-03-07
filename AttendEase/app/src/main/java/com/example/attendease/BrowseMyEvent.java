@@ -21,6 +21,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents the Browse Events screen where
+ * an Attendee can browse events they have signed up for
+ */
 public class BrowseMyEvent extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView EventList;
@@ -74,6 +78,9 @@ public class BrowseMyEvent extends AppCompatActivity {
 
     }
 
+    /**
+     * Updates the event list array adapter with the events on the attendee has signed up for
+     */
     private void updateDatalist(){
         signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

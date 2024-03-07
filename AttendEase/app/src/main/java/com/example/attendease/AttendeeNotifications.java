@@ -25,6 +25,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents the Attendees Notifications page where an Attendee can see relevant information
+ * about the events they have signed up for
+ */
 public class AttendeeNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ArrayList<Msg> dataList;
     private ListView MsgList;

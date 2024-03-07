@@ -13,6 +13,14 @@ public class Attendee implements Serializable {
     private String image;  // Profile image of the user, must be referenced in images collection
 
 
+    /**
+     * Constructs an Attendee
+     * @param deviceID Android device ID
+     * @param name Name
+     * @param phone Phone
+     * @param email Email
+     * @param image Profile Picture
+     */
     public Attendee(String deviceID, String name, String phone, String email, String image) {
         this.deviceID = deviceID;
         this.name = name;
