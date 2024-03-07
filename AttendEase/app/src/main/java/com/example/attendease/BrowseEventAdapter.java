@@ -18,6 +18,10 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents an Array Adapter which handles list views
+ * in Browse Events activities
+ */
 public class BrowseEventAdapter extends ArrayAdapter<Event> {
 
     /**

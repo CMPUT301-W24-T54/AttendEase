@@ -48,9 +48,6 @@ public class BrowseAllEvents extends AppCompatActivity {
         dataList=new ArrayList<Event>();
         eventArrayAdapter =new BrowseEventAdapter(this,dataList);
         eventList.setAdapter(eventArrayAdapter);
-
-
-
     }
 
     @Override
