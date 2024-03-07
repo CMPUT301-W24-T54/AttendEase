@@ -5,10 +5,7 @@
       <entry key="EditProfileActivityTest">
         <State />
       </entry>
-      <entry key="EventDetailsAttendeeCheckInTest">
-        <State />
-      </entry>
-      <entry key="EventDetailsAttendeeSignUpTest">
+      <entry key="EventDetailsOrganizerTest">
         <State />
       </entry>
       <entry key="MainActivityTest">
@@ -32,6 +29,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-03-06T20:36:32.167801400Z" />
         </State>
+      </entry>
+      <entry key="testSignUpsSeeAllSwitch()">
+        <State />
       </entry>
     </value>
   </component>
