@@ -74,6 +74,15 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             }
         });
 
+        seeMyEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseMyEvent.class);
+                intent.putExtra("deviceID", deviceID);
+                startActivity(intent);
+            }
+        });
+
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

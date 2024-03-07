@@ -55,8 +55,12 @@ public class UserCheckIn extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks the user into the app
+     */
     @SuppressLint("HardwareIds")
     private void checkInAttendee() {
+        // TODO change this horrible name
         String name = attendeeNameEditText.getText().toString().trim();
 
         if (name.isEmpty()) {
@@ -90,6 +94,9 @@ public class UserCheckIn extends AppCompatActivity {
                 //.addOnFailureListener(e -> Toast.makeText(UserCheckIn.this, "Failed to check in.", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Starts the Attendee Dashboard activity page
+     */
     private void navigateToAttendeeDashboard() {
         Intent intent = new Intent(UserCheckIn.this, AttendeeDashboardActivity.class);
         intent.putExtra("deviceID", deviceID);

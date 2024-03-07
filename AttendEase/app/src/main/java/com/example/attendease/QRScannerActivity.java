@@ -25,6 +25,10 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Collections;
 
+/**
+ * This class represents the QR Code Scanner screen that the user
+ * must use to check into an event
+ */
 public class QRScannerActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
@@ -55,6 +59,9 @@ public class QRScannerActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Starts the QR Code scanner capture activity from the IntentIntegrator
+     */
     public void startQRScanner() {
         // OpenAI, 2024, ChatGPT, Initiate scan for QR Codes in Portrait mode
         // Using zxing library for IntentIntegrator
@@ -68,6 +75,17 @@ public class QRScannerActivity extends AppCompatActivity {
         integrator.initiateScan(Collections.singletonList("QR_CODE")); // Specify QR_CODE format
     }
 
+    /**
+     * Gets the eventID (currently the attribute not the docID) of an event after scanning the QR code
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Get the result of the initiateScan ActivityLauncher
@@ -87,6 +105,15 @@ public class QRScannerActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Requests camera permission from the user
+     * @param requestCode The request code passed in
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
+     *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+     *
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         // Request camera permission to initiate scan activity
@@ -102,6 +129,11 @@ public class QRScannerActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Helper function that looks at the event details page of the scanned qr code
+     * @param docID document ID of the scanned qr code
+     */
     private void landOnEventDetails(String docID) {
         // Scanned data should be the eventID
         eventsRef.whereEqualTo("eventId", docID)
