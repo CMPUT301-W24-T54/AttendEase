@@ -71,7 +71,7 @@ public class BrowseMyEvent extends AppCompatActivity {
                 intent.putExtra("dateTime",event.getDateTime().toDate().toString());
                 intent.putExtra("location",event.getLocation());
                 intent.putExtra("posterUrl",event.getPosterUrl());
-                intent.putExtra("showbutton","true");
+                intent.putExtra("canCheckIn",false);
                 startActivity(intent);
             }
         });
