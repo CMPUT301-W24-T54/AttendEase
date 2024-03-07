@@ -35,16 +35,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_dashboard);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            deviceID = extras.getString("deviceID");
-        }
-
-        if (deviceID == null) {
-            Log.e("AttendeeDashboardActivity", "Required deviceID not provided.");
-            finish();
-            return;
-        }
+        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
 
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
