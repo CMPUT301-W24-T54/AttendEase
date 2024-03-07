@@ -105,6 +105,9 @@
         <activity
             android:name=".AttendanceListActivity">
         </activity>
+        <activity
+            android:name=".EventDetailsOrganizer">
+        </activity>
 
     </application>
 

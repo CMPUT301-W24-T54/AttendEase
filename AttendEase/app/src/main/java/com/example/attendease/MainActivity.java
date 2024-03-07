@@ -73,9 +73,11 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TEMPORARILY NAVIGATES TO SIGNUPS
-                Intent intent = new Intent(MainActivity.this, AttendanceListActivity.class);
+                // TEMPORARILY NAVIGATES TO EVENT DETAILS - ORG USING HARDCODED EVENT ID
+                Intent intent = new Intent(MainActivity.this, EventDetailsOrganizer.class);
+                intent.putExtra("eventDocumentId", "AGopMhPdDB6djBeD775V");
                 startActivity(intent);}
+
         });
     }
 }
