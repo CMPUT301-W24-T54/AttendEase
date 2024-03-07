@@ -67,6 +67,7 @@ import java.util.UUID;
  */
 public class NewEventActivity extends AppCompatActivity {
     private String eventName;
+    private String eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +154,7 @@ public class NewEventActivity extends AppCompatActivity {
      */
     private void createEvent() {
         // Capture data from EditTexts, CheckBoxes, etc.
-        String eventID = generateEventId();
+        eventID = generateEventId();
         eventName = ((EditText) findViewById(R.id.etEventName)).getText().toString();
         String eventAbout = ((EditText) findViewById(R.id.etEventAbout)).getText().toString();
         String ownerID = getOwnerId();
@@ -371,7 +372,8 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     private void navigateToDashboard() {
-        Intent intent = new Intent(NewEventActivity.this, OrganizerDashboardActivity.class);
+        Intent intent = new Intent(NewEventActivity.this, EventDetailsOrganizer.class);
+        intent.putExtra("eventDocumentId", eventID); // "eventDocumentId" is the key
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
