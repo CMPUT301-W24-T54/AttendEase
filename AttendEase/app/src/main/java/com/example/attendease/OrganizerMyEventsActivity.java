@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,6 +61,19 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
             return false;
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapterLarge.setOnItemClickListener(new EventAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Event event = eventList.get(position);
+                Intent intent = new Intent(OrganizerMyEventsActivity.this, EventDetailsOrganizer.class);
+                intent.putExtra("eventDocumentId", event.getEventId());
+                startActivity(intent);
+            }
+        });
+    };
 
     /**
      * Fetches events from Firestore based on the organizer's ID and populates the eventList.

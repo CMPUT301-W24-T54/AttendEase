@@ -36,8 +36,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * OrganizerDashboardActivity displays the organizer's dashboard with upcoming and other events.
- * It provides options to create a new event and navigate to the organizer's events list.
+ * Represents the dashboard activity for event organizers in the AttendEase application.
+ * This activity displays upcoming events and provides options for event management,
+ * including the creation of new events.
  */
 public class OrganizerDashboardActivity extends AppCompatActivity {
     private RecyclerView recyclerViewUpcomingEvent;
@@ -46,6 +47,14 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     private EventAdapter adapterSmall;
     private ArrayList<Event> eventList = new ArrayList<>();
 
+    /**
+     * Initializes the activity, setting up the user interface components and loading events
+     * from Firestore to display in the RecyclerViews.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being
+     *                           shut down, this Bundle contains the data it most recently supplied
+     *                           in onSaveInstanceState(Bundle). Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +99,9 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads events from Firestore, including the closest upcoming event and the next three events.
-     * Updates the RecyclerView adapters accordingly.
+     * Loads events from Firestore, filtering by the organizer's ID to display
+     * their specific events. It populates both the upcoming event view and
+     * the list of the next three events horizontally.
      */
     private void loadEventsFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -137,8 +147,8 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the Create Event FloatingActionButton.
-     * Navigates to the NewEventActivity when the button is clicked.
+     * Sets up the FloatingActionButton for creating new events. Tapping this button
+     * navigates to the NewEventActivity where the organizer can enter event details.
      */
     private void setUpFabCreateEvent() {
         ImageButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
