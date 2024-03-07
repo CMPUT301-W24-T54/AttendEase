@@ -19,7 +19,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-
+/**
+ * This activity displays the list of events organized by the user.
+ * It retrieves event data from Firestore and populates a RecyclerView with the events.
+ * The user can navigate back to the OrganizerDashboardActivity from the bottom navigation.
+ */
 public class OrganizerMyEventsActivity extends AppCompatActivity {
     private static final int TYPE_LARGE = 0;
     private RecyclerView recyclerViewMyEvents;
@@ -56,6 +60,9 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches events from Firestore based on the organizer's ID and populates the eventList.
+     */
     private void loadEventsFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);

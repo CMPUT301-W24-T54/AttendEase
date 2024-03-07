@@ -18,6 +18,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for displaying the list of sign-ups for a specific event.
+ * This class retrieves and displays attendee information associated with an event from Firestore.
+ */
 public class SignupsListActivity extends AppCompatActivity {
     private TextView eventName;
     private ListView signUpsListView;
@@ -61,8 +65,12 @@ public class SignupsListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets up the event name TextView by retrieving the event title from Firestore.
+     * Calls {@link #setUpSignUpsListView(String)} to initialize the list of sign-ups associated with that event.
+     * @param eventDocID The document ID of the event in Firestore.
+     */
     private void setUpEventName(String eventDocID) {
-        //String event = "FEPcR599noOVDLWK2lD9";
         eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
             String eventTitle = documentSnapshot.getString("title");
             eventName.setText(eventTitle);
@@ -70,6 +78,11 @@ public class SignupsListActivity extends AppCompatActivity {
         setUpSignUpsListView(eventDocID);
     }
 
+    /**
+     * Sets up the ListView with the names of attendees who signed up for the specified event.
+     * Retrieves attendee information from Firestore and updates the UI accordingly.
+     * @param eventDocID The document ID of the event in Firestore.
+     */
     private void setUpSignUpsListView(String eventDocID) {
         signInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> attendeeIDs = new ArrayList<>();

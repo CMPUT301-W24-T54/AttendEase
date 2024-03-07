@@ -62,8 +62,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Represents activity for creating a new event and generating QR codes for check-in.
+ */
 public class NewEventActivity extends AppCompatActivity {
     private String eventName;
+    private String eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +116,9 @@ public class NewEventActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Displays a DatePickerDialog for selecting the event date.
+     */
     void showDatePickerDialog() {
         Calendar c = Calendar.getInstance();
         new DatePickerDialog(this,
@@ -125,6 +132,9 @@ public class NewEventActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Displays a TimePickerDialog for selecting the event time.
+     */
     void showTimePickerDialog() {
         Calendar c = Calendar.getInstance();
         new TimePickerDialog(this,
@@ -138,9 +148,13 @@ public class NewEventActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Creates a new event based on user input and saves it to Firestore.
+     * Generates QR codes for check-in and promo, and uploads them to Firebase Storage.
+     */
     private void createEvent() {
         // Capture data from EditTexts, CheckBoxes, etc.
-        String eventID = generateEventId();
+        eventID = generateEventId();
         eventName = ((EditText) findViewById(R.id.etEventName)).getText().toString();
         String eventAbout = ((EditText) findViewById(R.id.etEventAbout)).getText().toString();
         String ownerID = getOwnerId();
@@ -186,12 +200,20 @@ public class NewEventActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Retrieves the Android device ID to use as the event owner ID.
+     * @return The device ID as a String.
+     */
     private String getOwnerId() {
         // Get the Android device ID
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         return androidId;
     }
 
+    /**
+     * Retrieves the selected event date from the TextView.
+     * @return The selected event date as a String.
+     */
     private String getEventDate() {
         TextView tvEventDate = findViewById(R.id.tvEventDate);
         String date = tvEventDate.getText().toString();
@@ -201,6 +223,10 @@ public class NewEventActivity extends AppCompatActivity {
         return date;
     }
 
+    /**
+     * Retrieves the selected event time from the TextView.
+     * @return The selected event time as a String.
+     */
     private String getEventTime() {
         TextView tvEventTime = findViewById(R.id.tvEventTime);
         String time = tvEventTime.getText().toString();
@@ -210,6 +236,12 @@ public class NewEventActivity extends AppCompatActivity {
         return time;
     }
 
+    /**
+     * Creates a Timestamp object from the selected event date and time.
+     * @param eventDate The selected event date.
+     * @param eventTime The selected event time.
+     * @return The Timestamp object representing the combined date and time.
+     */
     private Timestamp createTimestamp(String eventDate, String eventTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         Date parsedDate = null;
@@ -222,6 +254,10 @@ public class NewEventActivity extends AppCompatActivity {
         return new Timestamp(parsedDate);
     }
 
+    /**
+     * Retrieves the maximum number of attendees from the EditText.
+     * @return The maximum number of attendees as an Integer.
+     */
     private Integer getMaxAttendees() {
         EditText etSignUpLimit = findViewById(R.id.etSignUpLimit);
         String maxAttendeesStr = etSignUpLimit.getText().toString();
@@ -237,10 +273,19 @@ public class NewEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Generates a unique event ID.
+     * @return The generated event ID as a String.
+     */
     private String generateEventId() {
         return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
     }
 
+    /**
+     * Generates a QR code bitmap for check-in using the ZXing library.
+     * @param eventId The unique identifier for the event.
+     * @return The generated QR code bitmap.
+     */
     private Bitmap generateCheckInQRCode(String eventId) {
         QRCodeWriter writer = new QRCodeWriter();
         try {
@@ -273,6 +318,11 @@ public class NewEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Writes the generated QR code bitmap to Firebase Storage.
+     * @param bitmap  The QR code bitmap to be uploaded.
+     * @param eventId The unique identifier for the event.
+     */
     private void writeQRtoDatabase(Bitmap bitmap, String eventId) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference qrCodeRef = storageRef.child("qr_codes/" + eventId + "/check_in_qr.png");
@@ -289,6 +339,11 @@ public class NewEventActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e("ERROR", "Uploading QR code failed", e));
     }
 
+    /**
+     * Updates the Firestore document with the QR code URL.
+     * @param qrUrl   The URL of the uploaded QR code.
+     * @param eventId The unique identifier for the event.
+     */
     private void updateFirestoreWithQrUrl(String qrUrl, String eventId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -317,12 +372,17 @@ public class NewEventActivity extends AppCompatActivity {
     }
 
     private void navigateToDashboard() {
-        Intent intent = new Intent(NewEventActivity.this, OrganizerDashboardActivity.class);
+        Intent intent = new Intent(NewEventActivity.this, EventDetailsOrganizer.class);
+        intent.putExtra("eventDocumentId", eventID); // "eventDocumentId" is the key
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Fetches and displays the check-in QR code from Firebase Storage.
+     * @param eventId The unique identifier for the event.
+     */
     private void fetchAndShowQRCode(String eventId) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference qrCodeRef = storageRef.child("qr_codes/" + eventId + "/check_in_qr.png");
@@ -342,6 +402,10 @@ public class NewEventActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Downloads and displays the check-in QR code using the Glide library.
+     * @param url The URL of the check-in QR code in Firebase Storage as a string.
+     */
     private void downloadAndDisplayQR(String url) {
         Glide.with(this)
                 .asBitmap()
@@ -360,6 +424,11 @@ public class NewEventActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Shows a dialog containing the event name and check-in QR code.
+     * @param bitmap   The check-in QR code bitmap.
+     * @param eventName The name of the event.
+     */
     private void showQRCodeDialog(Bitmap bitmap, String eventName) {
         // Ensure eventName is not null
         if (eventName == null) {
@@ -406,7 +475,13 @@ public class NewEventActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
+    /**
+     * Encodes data as a QR code bitmap using the ZXing library.
+     * @param data   The data to be encoded as a QR code.
+     * @param width  The width of the QR code bitmap.
+     * @param height The height of the QR code bitmap.
+     * @return The generated QR code bitmap.
+     */
     private Bitmap endcodeAsBitmap(String data, int width, int height) throws WriterException {
         QRCodeWriter writer = new QRCodeWriter();
         BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, width, height);
@@ -421,6 +496,11 @@ public class NewEventActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    /**
+     * Converts a Bitmap into a byte array in PNG format.
+     * @param bitmap The Bitmap to be converted.
+     * @return The byte array representing the PNG image.
+     */
     public byte[] getImagePng(Bitmap bitmap) {
         // Create a ByteArrayOutputStream to hold the PNG image data
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -433,5 +513,5 @@ public class NewEventActivity extends AppCompatActivity {
     }
 // TODO add functions to upload and remove images for event poster
 
-// TODO add funtions to generate QR codes
+// TODO add functions to generate QR codes
 }

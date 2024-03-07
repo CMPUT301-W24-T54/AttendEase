@@ -19,6 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID; //To generate Unique Device ID for time being
 
+/**
+ * This UserCheckIn class allows attendees to check in to the app, capturing their information
+ * and navigating to the Attendee Dashboard upon successful check-in.
+ */
 public class UserCheckIn extends AppCompatActivity {
 
     private FirebaseFirestore db;

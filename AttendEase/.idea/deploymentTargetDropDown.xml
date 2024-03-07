@@ -2,7 +2,14 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+<<<<<<< HEAD
       <entry key="EventDetailsAttendeeSignUpTest">
+=======
+      <entry key="EditProfileActivityTest">
+        <State />
+      </entry>
+      <entry key="EventDetailsOrganizerTest">
+>>>>>>> 55dfd18e55169d28477bd9c872a7a2e614872c07
         <State />
       </entry>
       <entry key="MainActivityTest">
@@ -26,6 +33,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-03-06T20:36:32.167801400Z" />
         </State>
+      </entry>
+      <entry key="testSignUpsSeeAllSwitch()">
+        <State />
       </entry>
     </value>
   </component>
