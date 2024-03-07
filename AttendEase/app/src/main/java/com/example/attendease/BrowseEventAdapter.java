@@ -23,10 +23,10 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
     /**
      * Constructor for the BrowseEventAdapter.
      * @param context The context in which the adapter is being used.
-     * @param Events The list of Event objects to be displayed.
+     * @param events The list of Event objects to be displayed.
      */
-    public BrowseEventAdapter(@NonNull Context context, ArrayList<Event> Events) {
-        super(context, 0,Events);
+    public BrowseEventAdapter(@NonNull Context context, ArrayList<Event> events) {
+        super(context, 0,events);
     }
 
     /**
@@ -52,7 +52,7 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
         TextView event_info=view.findViewById(R.id.event_info);
         event_name.setText(event.getTitle());
         Log.d("EventAdapter", "Event name: " + event.getTitle());
-        String info=event.getLocation().toString()+"\n"+event.getDateTime().toDate().toString();
+        String info=event.getDescription();
         event_info.setText(info);
 
 

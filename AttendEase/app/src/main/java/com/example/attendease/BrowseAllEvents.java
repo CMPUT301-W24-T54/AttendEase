@@ -28,8 +28,8 @@ import java.util.Objects;
  */
 public class BrowseAllEvents extends AppCompatActivity {
     private ArrayList<Event> dataList;
-    private ListView EventList;
-    private ArrayAdapter<Event> EventAdapter;
+    private ListView eventList;
+    private ArrayAdapter<Event> eventArrayAdapter;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private String deviceID;
@@ -44,10 +44,10 @@ public class BrowseAllEvents extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
 
-        EventList=findViewById(R.id.Event_list);
+        eventList =findViewById(R.id.Event_list);
         dataList=new ArrayList<Event>();
-        EventAdapter=new BrowseEventAdapter(this,dataList);
-        EventList.setAdapter(EventAdapter);
+        eventArrayAdapter =new BrowseEventAdapter(this,dataList);
+        eventList.setAdapter(eventArrayAdapter);
 
 
 
@@ -56,8 +56,8 @@ public class BrowseAllEvents extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        update_datalist();
-        EventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        updateDatalist();
+        eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=dataList.get(position);
@@ -84,7 +84,7 @@ public class BrowseAllEvents extends AppCompatActivity {
      * and other details. It then constructs Event objects and adds them to the data list.
      * Finally, it notifies the adapter to update the UI with the new data.
      */
-    private void update_datalist(){
+    private void updateDatalist(){
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
@@ -131,7 +131,7 @@ public class BrowseAllEvents extends AppCompatActivity {
                     }
 
                     //addCitiesInit();
-                    EventAdapter.notifyDataSetChanged();
+                    eventArrayAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -146,7 +146,7 @@ public class BrowseAllEvents extends AppCompatActivity {
     }
 
     public void updateDataList() {
-        update_datalist();
+        updateDatalist();
     }
 
 
