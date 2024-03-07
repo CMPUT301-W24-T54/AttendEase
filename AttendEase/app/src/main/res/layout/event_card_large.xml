@@ -4,7 +4,7 @@
     android:layout_height="246dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="24dp"
-    app:cardElevation="24dp"
+    app:cardElevation="8dp"
     android:layout_marginEnd="6dp"
     android:layout_marginStart="6dp"
     android:layout_marginBottom="10dp"
@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/event_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -45,7 +45,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/event_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -55,7 +55,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/event_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
