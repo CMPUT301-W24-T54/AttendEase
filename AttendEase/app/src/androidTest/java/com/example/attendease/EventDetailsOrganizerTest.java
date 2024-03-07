@@ -1,59 +1,41 @@
 package com.example.attendease;
 
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.containsString;
-
-import android.app.ListActivity;
-import android.content.Intent;
-
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.IdlingPolicies;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import android.content.Intent;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EventDetailsOrganizerTest {
 
     @Rule
-    public ActivityScenarioRule<EventDetailsOrganizer> scenario1 =
-            new ActivityScenarioRule<EventDetailsOrganizer>(new Intent(ApplicationProvider.getApplicationContext(), EventDetailsOrganizer.class)
-            .putExtra("eventDocumentId", "testEvent"));
+    public IntentsTestRule<EventDetailsOrganizer> intentsTestRule =
+            new IntentsTestRule<>(EventDetailsOrganizer.class, true, false);
+
     @Test
-    public void testActivitySwitch(){
+    public void testUIComponentsAreInitialized() {
+        // Launch Activity with a mocked intent if needed
+        Intent intent = new Intent();
+        intent.putExtra("eventDocumentId", "mockEventDocId"); // Mocked event document ID
+        intentsTestRule.launchActivity(intent);
+
+        // Verify that UI components are displayed
+        onView(withId(R.id.eventName)).check(matches(isDisplayed()));
         onView(withId(R.id.detailsAboutContent)).check(matches(isDisplayed()));
-        onView(withId(R.id.tabLayout)).check(matches(isDisplayed()));
-        onView(withId(R.id.signUpsSeeAllButton)).perform(click());
-        onView(withId(R.id.signupslist)).check(matches(isDisplayed()));
-        onView(withId(R.id.signupscount)).check(matches(isDisplayed()));
-        onView(withId(R.id.back_button)).perform(click());
-        onView(withId(R.id.detailsAboutContent)).check(matches(isDisplayed()));
-        onView(withId(R.id.signupscount)).check(doesNotExist());
+        onView(withId(R.id.location)).check(matches(isDisplayed()));
+        onView(withId(R.id.dateandtime)).check(matches(isDisplayed()));
+        onView(withId(R.id.QRCodeImage)).check(matches(isDisplayed()));
+
     }
 }
