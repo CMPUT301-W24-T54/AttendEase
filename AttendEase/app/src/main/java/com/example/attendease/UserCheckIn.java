@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,7 +16,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID; //To generate Unique Device ID for time being
 
 public class UserCheckIn extends AppCompatActivity {
 
@@ -25,55 +23,47 @@ public class UserCheckIn extends AppCompatActivity {
     private CollectionReference attendeesRef;
     private static final String ATTENDEE_COLLECTION = "attendees";
 
-    private EditText attendeeNameEditText; // Assuming initialization in onCreate
-    private Button checkInButton; // Assuming initialization in onCreate
-    private ImageButton backButton; // For navigating back to MainActivity
+    private EditText attendeeNameEditText;
+    private Button checkInButton;
+    private ImageButton backButton;
 
     private String deviceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.attendee_check_in); // Use your actual layout file name
+        setContentView(R.layout.attendee_check_in);
+        setContentView(R.layout.attendee_name); // Use your actual layout file name
 
         db = FirebaseFirestore.getInstance();
         attendeesRef = db.collection(ATTENDEE_COLLECTION);
 
-        // Initialize UI components
-        attendeeNameEditText = findViewById(R.id.editText_name); // Adjust the ID as needed
-        checkInButton = findViewById(R.id.button_submit); // Adjust the ID as needed
-        backButton = findViewById(R.id.back_button); // Make sure the ID matches your layout
+        attendeeNameEditText = findViewById(R.id.editText_name);
+        checkInButton = findViewById(R.id.button_submit);
+        backButton = findViewById(R.id.back_button);
 
-        // Set OnClickListener for the Check-In button
-        checkInButton.setOnClickListener(v -> checkInAttendee());
-
-        // Set OnClickListener for the Back button
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(UserCheckIn.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        setupListeners();
     }
 
     @SuppressLint("HardwareIds")
-    private void checkInAttendee() {
-        String name = attendeeNameEditText.getText().toString().trim();
+    private void setupListeners() {
+        checkInButton.setOnClickListener(v -> {
+            String name = attendeeNameEditText.getText().toString().trim();
+            if (!name.isEmpty()) {
+                saveAttendeeData(name);
+            } else {
+                Toast.makeText(UserCheckIn.this, "Name cannot be empty.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Name cannot be empty.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        backButton.setOnClickListener(v -> finish());
+    }
 
-        // Generate a unique deviceID using UUID
-//        String deviceID = UUID.randomUUID().toString();
-        // Get the Android device ID
-        deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-
-        // Placeholder values for phone, email, and image; adjust as needed
-        String phone = ""; // Optional: Collect from user input
-        String email = ""; // Optional: Collect from user input
-        String image = ""; // Optional: Use a default or allow user to upload
+    private void saveAttendeeData(String name) {
+        // Ideally, fetch these details through user input or your app's logic
+        String phone = "";
+        String email = "";
+        String image = "";
 
         Map<String, Object> attendeeData = new HashMap<>();
         attendeeData.put("name", name);
@@ -81,13 +71,13 @@ public class UserCheckIn extends AppCompatActivity {
         attendeeData.put("phone", phone);
         attendeeData.put("image", image);
 
-        attendeesRef.document(deviceID) // Use the newly generated unique deviceID
-                .set(attendeeData) // .set() to overwrite or create a new document
-                .addOnSuccessListener(aVoid -> {
-                    // Toast.makeText(UserCheckIn.this, "Check-in successful.", Toast.LENGTH_SHORT).show();
-                    navigateToAttendeeDashboard();
-                });
-                //.addOnFailureListener(e -> Toast.makeText(UserCheckIn.this, "Failed to check in.", Toast.LENGTH_SHORT).show());
+        // Using Android's unique device ID as the document ID for simplicity
+        deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        attendeesRef.document(deviceID)
+                .set(attendeeData)
+                .addOnSuccessListener(aVoid -> navigateToAttendeeDashboard())
+                .addOnFailureListener(e -> Toast.makeText(UserCheckIn.this, "Failed to check in. Please try again.", Toast.LENGTH_SHORT).show());
     }
 
     private void navigateToAttendeeDashboard() {
