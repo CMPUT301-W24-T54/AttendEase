@@ -75,5 +75,6 @@
     <string name="remove_profile">Remove Profile</string>
     <string name="plus">New Event</string>
     <string name="event_cover">Event Cover</string>
+    <string name="LoremIpsum">Lorem ipsum dolor sit amet consectetur. Convallis nulla pretium tempus adipiscing non neque mattis fames. Nascetur et arcu id volutpat.</string>
 
 </resources>

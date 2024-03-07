@@ -38,7 +38,8 @@ import java.util.concurrent.CountDownLatch;
 public class EditProfileActivityTest {
 
     @Rule
-    public ActivityScenarioRule<EditProfileActivity> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EditProfileActivity.class).putExtra("deviceID", "testDevice"));
+    public ActivityScenarioRule<EditProfileActivity> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EditProfileActivity.class)
+            .putExtra("deviceID", "testDevice"));
 
 
     @Test
