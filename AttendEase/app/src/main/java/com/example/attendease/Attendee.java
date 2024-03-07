@@ -29,6 +29,21 @@ public class Attendee implements Serializable {
         this.image = image;
     }
 
+    /**
+     * Constructs an Attendee
+     * @param deviceID Android device ID
+     * @param name Name
+     * @param phone Phone
+     * @param email Email
+     */
+    public Attendee(String deviceID, String name, String phone, String email) {
+        this.deviceID = deviceID;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.image = null;
+    }
+
     public void signUp() {}  // TODO Implement signUp functionality on database side
     public void checkIn() {} // TODO Implement checkIn functionality on database side
 

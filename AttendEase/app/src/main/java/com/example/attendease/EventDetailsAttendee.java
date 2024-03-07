@@ -78,7 +78,9 @@ public class EventDetailsAttendee extends AppCompatActivity {
         checkInsRef = db.collection("checkIns");
 
         addListeners();
-        hideSignUp();
+        if (!canCheckIn) {
+            hideSignUp();
+        }
     }
 
     /**
