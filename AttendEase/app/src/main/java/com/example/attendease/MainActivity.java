@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Check if Attendee user already exists (deviceID)
                 DocumentReference docRef = db.collection(ATTENDEE_COLLECTION).document(deviceID);
                 docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -74,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TEMPORARILY NAVIGATES TO EVENT DETAILS - ORG USING HARDCODED EVENT ID
-                Intent intent = new Intent(MainActivity.this, EventDetailsOrganizer.class);
-                intent.putExtra("eventDocumentId", "AGopMhPdDB6djBeD775V");
+                Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
                 startActivity(intent);}
 
         });

@@ -54,7 +54,7 @@ public class BrowseMyEvent extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        update_datalist();
+        updateDatalist();
         EventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -69,16 +69,12 @@ public class BrowseMyEvent extends AppCompatActivity {
                 intent.putExtra("posterUrl",event.getPosterUrl());
                 intent.putExtra("showbutton","true");
                 startActivity(intent);
-
-
-
-
             }
         });
 
     }
 
-    private void update_datalist(){
+    private void updateDatalist(){
         signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -105,7 +101,7 @@ public class BrowseMyEvent extends AppCompatActivity {
                                 Boolean isGeoTrackingEnabled=eventDocument.getBoolean("isGeoTrackingEnabled");
                                 //not able to import this?
                                 int maxAttendees=0;
-                                Event new_event= new Event(eventId,Title,description,organizerId,dateTime,location,null,QR,posterUrl,isGeoTrackingEnabled,0);
+                                Event new_event= new Event(eventId,Title,description,organizerId,dateTime,location,null,QR,posterUrl,false,0);
                                 dataList.add(new_event);
                                 EventAdapter.notifyDataSetChanged();
                             }
