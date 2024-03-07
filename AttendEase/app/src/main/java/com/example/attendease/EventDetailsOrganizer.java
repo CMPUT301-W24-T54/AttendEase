@@ -32,8 +32,6 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private FirebaseFirestore db;
     private Intent intent;
     private CollectionReference eventsRef;
-    //String event = "AGopMhPdDB6djBeD775V";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
