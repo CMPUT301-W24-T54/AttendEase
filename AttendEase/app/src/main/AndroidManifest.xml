@@ -108,6 +108,9 @@
             android:name=".AttendanceListActivity">
         </activity>
         <activity
+            android:name=".OrganizerMyEventsActivity">
+        </activity>
+        <activity
             android:name=".EventDetailsOrganizer">
         </activity>
 
