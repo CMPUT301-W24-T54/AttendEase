@@ -2,10 +2,14 @@ package com.example.attendease;
 
 import static com.example.attendease.EventAdapter.TYPE_LARGE;
 import static com.example.attendease.EventAdapter.TYPE_SMALL;
+import static com.example.attendease.R.id.attendee_bottom_nav;
+import static com.example.attendease.R.id.organizer_bottom_nav;
 import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.View;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -20,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,6 +47,14 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_dashboard);
 
+        FloatingActionButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
+        fabCreateEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
+                startActivity(intent);
+            }
+        });
         recyclerViewUpcomingEvent = findViewById(R.id.rvUpcomingEvent);
         recyclerViewMyEvents = findViewById(R.id.rvMyEvents);
 
@@ -56,6 +69,20 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
 
         loadEventsFromFirestore();
         setUpFabCreateEvent();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                return true;
+            } else if (id == R.id.nav_events) {
+                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
     }
 
     private void loadEventsFromFirestore() {

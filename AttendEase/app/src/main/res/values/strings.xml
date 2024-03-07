@@ -83,5 +83,6 @@
     <string name="contact">Contact</string>
     <string name="sign_up_limit">Sign-up Limit</string>
     <string name="create">Create</string>
+    <string name="LoremIpsum">Lorem ipsum dolor sit amet consectetur. Convallis nulla pretium tempus adipiscing non neque mattis fames. Nascetur et arcu id volutpat.</string>
 
 </resources>

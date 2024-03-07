@@ -30,7 +30,7 @@ import java.util.UUID;
  * where an attendee can view the details of an event
  * and sign up or check in
  */
-public class EventDetails extends AppCompatActivity {
+public class EventDetailsAttendee extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference signUpsRef;
     private CollectionReference checkInsRef;
@@ -119,7 +119,7 @@ public class EventDetails extends AppCompatActivity {
                                     Log.d("Firestore", "DocumentSnapshot successfully written!");
                                     interactButton.setVisibility(View.INVISIBLE);
                                     interactButton.setClickable(false);
-                                    Toast.makeText(EventDetails.this, "Check In successful!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EventDetailsAttendee.this, "Check In successful!", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } else {
@@ -130,7 +130,7 @@ public class EventDetails extends AppCompatActivity {
                                     Log.d("Firestore", "DocumentSnapshot successfully written!");
                                     interactButton.setVisibility(View.INVISIBLE);
                                     interactButton.setClickable(false);
-                                    Toast.makeText(EventDetails.this, "Sign Up successful!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EventDetailsAttendee.this, "Sign Up successful!", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
