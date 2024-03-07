@@ -2,6 +2,7 @@ package com.example.attendease;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,16 +34,20 @@ public class BrowseAllEvents extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private String deviceID;
+    private CountingIdlingResource countingIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_all_events);
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
         deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+
 
         EventList=findViewById(R.id.Event_list);
         dataList=new ArrayList<Event>();
@@ -97,6 +102,7 @@ public class BrowseAllEvents extends AppCompatActivity {
                     return;
                 }
                 if (querySnapshots != null) {
+                    countingIdlingResource.increment();
 
                     //cityDataList.clear();
                     for (DocumentChange doc: querySnapshots.getDocumentChanges()) {
@@ -136,7 +142,10 @@ public class BrowseAllEvents extends AppCompatActivity {
 
                     //addCitiesInit();
                     EventAdapter.notifyDataSetChanged();
+
                 }
+                countingIdlingResource.decrement();
+                Log.d("debug","helppppp");
             }
         });
     }
