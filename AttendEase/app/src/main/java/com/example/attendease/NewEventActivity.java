@@ -1,5 +1,7 @@
 package com.example.attendease;
 
+import static com.example.attendease.R.id.organizer_bottom_nav;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -30,6 +32,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentReference;
@@ -90,6 +93,21 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_events) {
+                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
         // TODO add onClick to upload and remove images for event poster
 
     }
