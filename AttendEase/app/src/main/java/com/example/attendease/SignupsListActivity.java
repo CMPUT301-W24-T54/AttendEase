@@ -1,7 +1,11 @@
 package com.example.attendease;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,11 +22,13 @@ public class SignupsListActivity extends AppCompatActivity {
     private TextView eventName;
     private ListView signUpsListView;
     private TextView signUpsCount;
+    private ImageButton backButton;
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference signInsRef;
     private CollectionReference attendeesRef;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,30 +45,39 @@ public class SignupsListActivity extends AppCompatActivity {
         eventName = findViewById(R.id.event_textview);
         signUpsListView = findViewById(R.id.signupslist);
         signUpsCount = findViewById(R.id.signupscount);
+        backButton = findViewById(R.id.back_button);
 
         // Call the function
-        setUpEventName(); //MAYBE ADD A PARAMETER FOR A SPECIFIC EVENT VS HARDCODED IN THIS FUNC ITSELF
-        //setUpSignUpsListView();
+        intent = getIntent();
+        String eventDocID = intent.getStringExtra("eventDocumentId");
+        setUpEventName(eventDocID);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
-    private void setUpEventName() {
-        String event = "FEPcR599noOVDLWK2lD9";
-        eventsRef.document(event).get().addOnSuccessListener(documentSnapshot -> {
+    private void setUpEventName(String eventDocID) {
+        //String event = "FEPcR599noOVDLWK2lD9";
+        eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
             String eventTitle = documentSnapshot.getString("title");
             eventName.setText(eventTitle);
         });
-        setUpSignUpsListView(event);
+        setUpSignUpsListView(eventDocID);
     }
 
-    private void setUpSignUpsListView(String event) {
+    private void setUpSignUpsListView(String eventDocID) {
         signInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> attendeeIDs = new ArrayList<>();
 
             // Retrieves the attendeeIDs associated with the event!
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 String eventID = document.getString("eventID");
-                if (event.equals(eventID)) {
+                if (eventDocID.equals(eventID)) {
                     String attendeeID = document.getString("attendeeID");
                     attendeeIDs.add(attendeeID);
                 }
