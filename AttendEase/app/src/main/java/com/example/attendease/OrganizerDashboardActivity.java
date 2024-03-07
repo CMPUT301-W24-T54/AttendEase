@@ -6,6 +6,7 @@ import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.View;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -42,6 +43,14 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_dashboard);
 
+        FloatingActionButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
+        fabCreateEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
+                startActivity(intent);
+            }
+        });
         recyclerViewUpcomingEvent = findViewById(R.id.rvUpcomingEvent);
         recyclerViewMyEvents = findViewById(R.id.rvMyEvents);
 
