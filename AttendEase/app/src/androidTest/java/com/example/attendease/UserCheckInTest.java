@@ -27,16 +27,19 @@ public class UserCheckInTest {
 
     @Before
     public void setUp() {
+        // Initialize Espresso Intents before each test, needed only if you're using intents
         Intents.init();
     }
 
     @After
     public void tearDown() {
+        // Clean up after each test by releasing Espresso Intents, needed only if you're using intents
         Intents.release();
     }
 
     @Test
     public void userTypesNameAndClicksSubmit() {
+        // Assume R.id.editText_name is your EditText and R.id.button_submit is your submit button.
         onView(withId(R.id.editText_name))
                 .perform(typeText("John Doe"), closeSoftKeyboard());
 
