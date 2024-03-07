@@ -21,7 +21,9 @@
         android:theme="@style/Theme.AttendEase"
         tools:targetApi="31">
         <activity
-            android:name=".EventDetailsSignUp"
+            android:name=".EventDetails" />
+        <activity
+            android:name=".BrowseMyEvent"
             android:exported="false" />
         <activity
             android:name=".BrowseAllEvents"

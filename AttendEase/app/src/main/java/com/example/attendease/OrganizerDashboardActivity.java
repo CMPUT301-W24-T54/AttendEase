@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -110,7 +111,7 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     }
 
     private void setUpFabCreateEvent() {
-        FloatingActionButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
+        ImageButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
         fabCreateEvent.setOnClickListener(view -> {
             Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
             startActivity(intent);

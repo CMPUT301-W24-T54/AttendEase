@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,10 +18,16 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.Objects;
 
+
+/**
+ * This class represents the Attendee's home dashboard activity
+ */
 public class AttendeeDashboardActivity extends AppCompatActivity {
 
     private ImageButton checkInButton;
     private BottomNavigationView bottomNav;
+    private TextView seeAllEvents;
+    private TextView seeMyEvents;
 
     private String deviceID;
     @Override
@@ -33,15 +40,36 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
 
+        seeMyEvents = findViewById(R.id.see_all);
+        seeAllEvents = findViewById(R.id.see_all2);
+
         addListeners();
     }
 
+    /**
+     * Sets up listeners for various UI elements in the Attendee Dashboard activity.
+     * These listeners handle user interactions such as button clicks and navigation item selections.
+     * - The check-in button listener starts the QR Scanner activity to facilitate attendee check-in.
+     * - The "See All Events" button listener navigates to the Browse All Events activity.
+     * - The bottom navigation listener handles clicks on navigation items (Home, Events, Bell, Profile),
+     *   logging debug information and initiating corresponding activities when items are clicked.
+     */
     private void addListeners() {
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
+                intent.putExtra("deviceID", deviceID);
+                startActivity(intent);
+            }
+        });
+
+        seeAllEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class);
+                intent.putExtra("deviceID", deviceID);
                 startActivity(intent);
             }
         });
