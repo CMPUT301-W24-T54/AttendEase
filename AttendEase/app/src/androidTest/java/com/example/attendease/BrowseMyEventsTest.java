@@ -17,6 +17,7 @@ import android.app.UiAutomation;
 import android.content.Intent;
 import android.os.Build;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
@@ -35,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,8 +48,9 @@ import java.util.concurrent.CountDownLatch;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BrowseMyEventsTest {
-    @Rule
-    public ActivityScenarioRule<BrowseMyEvent> scenario = new ActivityScenarioRule<BrowseMyEvent>(new Intent(ApplicationProvider.getApplicationContext(), BrowseMyEvent.class).putExtra("deviceID", "sample_attendee"));
+    //@Rule
+    private ActivityScenario<BrowseMyEvent> scenario;
+    //public ActivityScenarioRule<BrowseMyEvent> scenario = new ActivityScenarioRule<BrowseMyEvent>(new Intent(ApplicationProvider.getApplicationContext(), BrowseMyEvent.class).putExtra("deviceID", "sample_attendee"));
     private static final String IDLING_RESOURCE_NAME = "FirebaseLoading";
     private CountingIdlingResource countingIdlingResource;
     String txt = "Sample text";
@@ -59,6 +62,7 @@ public class BrowseMyEventsTest {
             uiAutomation.executeShellCommand("settings put global window_animation_scale 0");
             uiAutomation.executeShellCommand("settings put global animator_duration_scale 0");
         }
+        CountDownLatch latch = new CountDownLatch(2);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Add data to Firestore
@@ -75,6 +79,7 @@ public class BrowseMyEventsTest {
         db.collection("signIns").add(eventData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                latch.countDown();
 
             }
         });
@@ -83,19 +88,29 @@ public class BrowseMyEventsTest {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        latch.countDown();
                         // Data added successfully, now we can proceed with the test
-                        countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
-                        IdlingRegistry.getInstance().register(countingIdlingResource);
+
 
 
 
                     }
                 });
         try {
+            // Wait for all cleanup tasks to complete
+            latch.await();
+        } catch (InterruptedException e) {
+            // Handle interruption
+        }
+
+        try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
+        IdlingRegistry.getInstance().register(countingIdlingResource);
+        scenario = ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), BrowseMyEvent.class).putExtra("deviceID", "sample_attendee"));
 
         /*db.collection("events").add(newEvent);
         countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
@@ -136,6 +151,7 @@ public class BrowseMyEventsTest {
         } catch (InterruptedException e) {
             // Handle interruption
         }
+        scenario.close();
 
     }
 
@@ -156,8 +172,46 @@ public class BrowseMyEventsTest {
                 .perform(click());
         intended(hasComponent(EventDetailsAttendee.class.getName()));
         Intents.release();
+        cleanup();
     }
 
+    @Test
+    public void testeventdetails() {
+        setup();
+        onIdle();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Intents.init();
+
+        //onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
+        boolean textFound=false;
+        onData(anything())
+                .inAdapterView(withId(R.id.Event_list))
+                .atPosition(0) // Check the presence of an item at position 0
+                .perform(click());
+        /*while (true) {
+            if (textFound) {
+                break; // Exit the loop if the text is found
+            }
+
+            try {
+                onView(allOf(withText(txt), isDisplayed())).perform(click());
+                textFound = true; // Set flag to true if text is found
+            } catch (Exception e) {
+                // Swiping up
+                onView(withId(R.id.Event_list)).perform(ViewActions.swipeUp());
+            }
+        }*/
+        onView(withId(R.id.Location)).check(matches(withText("Sample text")));
+        onView(withId(R.id.description)).check(matches(withText("Sample text")));
+        //onView(withId(R.id.description)).check(matches(withText(txt)));
+        //Intents.release();
+        cleanup();
+    }
 
 //    @Test
 //    public void testeventdetails() {

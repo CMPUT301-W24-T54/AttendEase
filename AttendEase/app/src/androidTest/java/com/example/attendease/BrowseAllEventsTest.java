@@ -18,11 +18,14 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.AllOf.allOf;
 
 import android.app.UiAutomation;
@@ -48,6 +51,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.junit.After;
 import org.junit.Before;
@@ -55,6 +59,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -66,7 +71,9 @@ public class BrowseAllEventsTest {
     private static final String IDLING_RESOURCE_NAME = "FirebaseLoading";
     private CountingIdlingResource countingIdlingResource;
     String txt = "Sample text";
-    @Before
+    DocumentSnapshot documentSnapshot;
+
+
     public void setup() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             UiAutomation uiAutomation = InstrumentationRegistry.getInstrumentation().getUiAutomation();
@@ -86,8 +93,16 @@ public class BrowseAllEventsTest {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         // Data added successfully, now we can proceed with the test
-                        countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
-                        IdlingRegistry.getInstance().register(countingIdlingResource);
+                        db.collection("events").limit(1).get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                                        countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
+                                        IdlingRegistry.getInstance().register(countingIdlingResource);
+                                    }
+                                });
+
                     }
                 });
 
@@ -96,24 +111,42 @@ public class BrowseAllEventsTest {
         IdlingRegistry.getInstance().register(countingIdlingResource);*/
     }
 
-    @After
+
     public void cleanup() {
 
         IdlingRegistry.getInstance().unregister(countingIdlingResource);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CountDownLatch latch = new CountDownLatch(1);
         db.collection("events").whereEqualTo("title", txt)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (DocumentSnapshot document : task.getResult()) {
-                            db.collection("events").document(document.getId()).delete();
+                            db.collection("events").document(document.getId()).delete().addOnCompleteListener(deleteTask -> {
+                                // Reduce the count of the latch when a deletion completes
+
+                            });
                         }
+                        latch.countDown();
+
                     }
                 });
+        try {
+            // Wait for all cleanup tasks to complete
+            latch.await();
+        } catch (InterruptedException e) {
+            // Handle interruption
+        }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     public void testNavigationToDifferentPage() {
+        setup();
         onIdle();
         try {
             Thread.sleep(2000);
@@ -128,8 +161,51 @@ public class BrowseAllEventsTest {
                 .perform(click());
         intended(hasComponent(EventDetailsAttendee.class.getName()));
         Intents.release();
+        cleanup();
+
     }
 
+
+
+    @Test
+    public void testeventdetails() {
+        setup();
+        onIdle();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Intents.init();
+
+        //onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
+        boolean textFound=false;
+        /*while (true) {
+            if (textFound) {
+                break; // Exit the loop if the text is found
+            }
+
+            try {
+                onView(allOf(withId(R.id.EventTitle), withParent(withId(R.id.Event_list))))
+                        .check(matches(withText(txt)))
+                        .perform(click());
+
+                textFound = true; // Set flag to true if text is found
+            } catch (Exception e) {
+                // Swiping up
+                onView(withId(R.id.Event_list)).perform(ViewActions.swipeUp());
+            }
+        }*/
+        onData(anything())
+                .inAdapterView(withId(R.id.Event_list))
+                .atPosition(0) // Check the presence of an item at position 0
+                .perform(click());
+        onView(withId(R.id.EventTitle)).check(matches(withText(documentSnapshot.getString("title"))));
+        onView(withId(R.id.description)).check(matches(withText(documentSnapshot.getString("description"))));
+        //Intents.release();
+        cleanup();
+    }
 
 //    @Test
 //    public void testeventdetails() {
