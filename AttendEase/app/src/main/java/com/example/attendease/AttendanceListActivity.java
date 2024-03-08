@@ -70,7 +70,6 @@ public class AttendanceListActivity extends AppCompatActivity {
      * @param eventDocID The document ID of the event in Firestore.
      */
     private void setUpEventName(String eventDocID) {
-        //String event = "FEPcR599noOVDLWK2lD9";
         eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
             String eventTitle = documentSnapshot.getString("title");
             eventName.setText(eventTitle);
