@@ -3,6 +3,7 @@ package com.example.attendease;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,17 +39,19 @@ public class BrowseMyEvent extends AppCompatActivity {
     private String eventID;
 
     private String deviceID;
+    private CountingIdlingResource countingIdlingResource;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_my_event);
         //Intent intent=getIntent();
         //intent.getStringExtra("deviceID");
-        //deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
-        deviceID="fa405bfc7d76417d";
+        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        //deviceID="fa405bfc7d76417d";
         db = FirebaseFirestore.getInstance();
         signInRef = db.collection("signIns");
         eventsRef = db.collection("events");
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
 
 
@@ -86,10 +89,12 @@ public class BrowseMyEvent extends AppCompatActivity {
     }
 
     private void update_datalist(){
+
         signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    countingIdlingResource.increment();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         // Document found where fieldName is equal to desiredValue
                         eventID = doc.getString("eventID");
@@ -112,14 +117,17 @@ public class BrowseMyEvent extends AppCompatActivity {
                                 Boolean isGeoTrackingEnabled=eventDocument.getBoolean("isGeoTrackingEnabled");
                                 //not able to import this?
                                 int maxAttendees=0;
-                                Event new_event= new Event(eventId,Title,description,organizerId,dateTime,location,null,QR,posterUrl,isGeoTrackingEnabled,0);
+                                Event new_event= new Event(eventId,Title,description,organizerId,dateTime,location,null,QR,posterUrl,false,0);
                                 dataList.add(new_event);
                                 EventAdapter.notifyDataSetChanged();
+
                             }
                         });
 
+
                     }
                 }
+                countingIdlingResource.decrement();
 
             }
         });
