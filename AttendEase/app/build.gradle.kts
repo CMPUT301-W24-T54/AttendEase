@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    implementation(files("C:\\Users\\Aaron DeCosta\\AppData\\Local\\Android\\Sdk\\platforms\\android-34\\android.jar"))
+//    implementation(files("C:\\Users\\Aaron DeCosta\\AppData\\Local\\Android\\Sdk\\platforms\\android-34\\android.jar"))
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
