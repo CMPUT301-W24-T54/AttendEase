@@ -113,7 +113,8 @@ public class BrowseAllEvents extends AppCompatActivity {
 
                                 String location=doc.getDocument().getString("location");
                                 String posterUrl=doc.getDocument().getString("posterUrl");
-                                Boolean isGeoTrackingEnabled=doc.getDocument().getBoolean("isGeoTrackingEnabled");
+                                //Boolean isGeoTrackingEnabled=doc.getDocument().getBoolean("isGeoTrackingEnabled");
+                                Boolean isGeoTrackingEnabled=false;
                                 //not able to import this?
                                 int maxAttendees=0;
                                 //doc.getDocument().getLong("maxAttendees").intValue();
@@ -122,7 +123,7 @@ public class BrowseAllEvents extends AppCompatActivity {
                                 //String sent_by= doc.getDocument().getString("sentBy");
                                 Log.d("Firestore", String.format("Event(%s, %s) fetched", title,
                                         description));
-                                Event new_event= new Event(eventId,title,description,organizerId,dateTime,location,null,qr,posterUrl,isGeoTrackingEnabled,0);
+                                Event new_event= new Event(eventId,title,description,organizerId,dateTime,location,null,qr,posterUrl,false,0);
                                 dataList.add(new_event);
 
                                 break;
