@@ -26,6 +26,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -114,4 +115,9 @@ public class EditProfileActivityTest {
 
         latch.await(); // Make sure to await the latch countdown
     }
+    @After
+    public void tearDown() throws Exception {
+        // Code to delete test data from Firestore
+    }
+
 }

@@ -2,6 +2,7 @@ package com.example.attendease;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,16 +34,20 @@ public class BrowseAllEvents extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private String deviceID;
+    private CountingIdlingResource countingIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_all_events);
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
         deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+
 
         eventList =findViewById(R.id.Event_list);
         dataList=new ArrayList<Event>();
@@ -90,6 +95,7 @@ public class BrowseAllEvents extends AppCompatActivity {
                     return;
                 }
                 if (querySnapshots != null) {
+                    countingIdlingResource.increment();
 
                     //cityDataList.clear();
                     for (DocumentChange doc: querySnapshots.getDocumentChanges()) {
@@ -107,7 +113,8 @@ public class BrowseAllEvents extends AppCompatActivity {
 
                                 String location=doc.getDocument().getString("location");
                                 String posterUrl=doc.getDocument().getString("posterUrl");
-                                Boolean isGeoTrackingEnabled=doc.getDocument().getBoolean("isGeoTrackingEnabled");
+                                //Boolean isGeoTrackingEnabled=doc.getDocument().getBoolean("isGeoTrackingEnabled");
+                                Boolean isGeoTrackingEnabled=false;
                                 //not able to import this?
                                 int maxAttendees=0;
                                 //doc.getDocument().getLong("maxAttendees").intValue();
@@ -116,7 +123,7 @@ public class BrowseAllEvents extends AppCompatActivity {
                                 //String sent_by= doc.getDocument().getString("sentBy");
                                 Log.d("Firestore", String.format("Event(%s, %s) fetched", title,
                                         description));
-                                Event new_event= new Event(eventId,title,description,organizerId,dateTime,location,null,qr,posterUrl,isGeoTrackingEnabled,0);
+                                Event new_event= new Event(eventId,title,description,organizerId,dateTime,location,null,qr,posterUrl,false,0);
                                 dataList.add(new_event);
 
                                 break;
@@ -128,8 +135,11 @@ public class BrowseAllEvents extends AppCompatActivity {
                     }
 
                     //addCitiesInit();
+
                     eventArrayAdapter.notifyDataSetChanged();
                 }
+                countingIdlingResource.decrement();
+                Log.d("debug","helppppp");
             }
         });
     }
