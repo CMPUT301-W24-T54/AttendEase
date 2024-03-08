@@ -63,6 +63,7 @@ import java.util.UUID;
 
 public class NewEventActivity extends AppCompatActivity {
     private String eventName;
+    private String eventID;
 
     /**
      * Initializes the activity, setting the content view and configuring UI interactions.
@@ -162,7 +163,7 @@ public class NewEventActivity extends AppCompatActivity {
 
     private void createEvent() {
         // Capture data from EditTexts, CheckBoxes, etc.
-        String eventID = generateEventId();
+        eventID = generateEventId();
         eventName = ((EditText) findViewById(R.id.etEventName)).getText().toString();
         String eventAbout = ((EditText) findViewById(R.id.etEventAbout)).getText().toString();
         String ownerID = getOwnerId();
@@ -399,7 +400,8 @@ public class NewEventActivity extends AppCompatActivity {
      * Navigates back to the Organizer Dashboard Activity, clearing the current activity from the stack.
      */
     private void navigateToDashboard() {
-        Intent intent = new Intent(NewEventActivity.this, OrganizerDashboardActivity.class);
+        Intent intent = new Intent(NewEventActivity.this, EventDetailsOrganizer.class);
+        intent.putExtra("eventDocumentId", eventID); // "eventDocumentId" is the key
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
