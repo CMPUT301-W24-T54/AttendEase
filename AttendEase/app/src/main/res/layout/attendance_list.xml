@@ -87,7 +87,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="339dp"
         android:layout_marginBottom="16dp"
-        android:text="Total:"
+        android:text="Total: 0"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textStyle="bold"
