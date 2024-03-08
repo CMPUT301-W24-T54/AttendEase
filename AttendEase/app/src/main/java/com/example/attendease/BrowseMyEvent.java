@@ -1,13 +1,11 @@
 package com.example.attendease;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,18 +15,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * This class represents the Browse Events screen where
+ * an Attendee can browse events they have signed up for
+ */
 public class BrowseMyEvent extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView EventList;
@@ -64,12 +62,12 @@ public class BrowseMyEvent extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        update_datalist();
+        updateDatalist();
         EventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=dataList.get(position);
-                Intent intent=new Intent(BrowseMyEvent.this, EventDetails.class);
+                Intent intent=new Intent(BrowseMyEvent.this, EventDetailsAttendee.class);
                 intent.putExtra("eventID", event.getEventId());
                 intent.putExtra("Title",event.getTitle());
                 intent.putExtra("QR",event.getCheckInQR());
@@ -77,19 +75,18 @@ public class BrowseMyEvent extends AppCompatActivity {
                 intent.putExtra("dateTime",event.getDateTime().toDate().toString());
                 intent.putExtra("location",event.getLocation());
                 intent.putExtra("posterUrl",event.getPosterUrl());
-                intent.putExtra("showbutton","true");
+                intent.putExtra("canCheckIn",false);
                 startActivity(intent);
-
-
-
-
             }
         });
 
     }
 
-    private void update_datalist(){
 
+    /**
+     * Updates the event list array adapter with the events on the attendee has signed up for
+     */
+    private void updateDatalist(){
         signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

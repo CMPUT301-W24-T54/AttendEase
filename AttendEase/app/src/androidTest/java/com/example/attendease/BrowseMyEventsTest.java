@@ -154,7 +154,7 @@ public class BrowseMyEventsTest {
                 .inAdapterView(withId(R.id.Event_list))
                 .atPosition(0) // Check the presence of an item at position 0
                 .perform(click());
-        intended(hasComponent(EventDetails.class.getName()));
+        intended(hasComponent(EventDetailsAttendee.class.getName()));
         Intents.release();
     }
 

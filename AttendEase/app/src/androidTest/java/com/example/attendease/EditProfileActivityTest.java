@@ -26,6 +26,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,7 +39,8 @@ import java.util.concurrent.CountDownLatch;
 public class EditProfileActivityTest {
 
     @Rule
-    public ActivityScenarioRule<EditProfileActivity> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EditProfileActivity.class).putExtra("deviceID", "testDevice"));
+    public ActivityScenarioRule<EditProfileActivity> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EditProfileActivity.class)
+            .putExtra("deviceID", "testDevice"));
 
 
     @Test
@@ -113,4 +115,9 @@ public class EditProfileActivityTest {
 
         latch.await(); // Make sure to await the latch countdown
     }
+    @After
+    public void tearDown() throws Exception {
+        // Code to delete test data from Firestore
+    }
+
 }

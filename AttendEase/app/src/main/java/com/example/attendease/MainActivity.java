@@ -18,6 +18,10 @@ import com.google.firebase.firestore.auth.User;
 
 import java.util.Objects;
 
+/**
+ * This class represents the First Screen where the user
+ * can choose which actor they wish to proceed as
+ */
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
@@ -41,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Check if Attendee user already exists (deviceID)
                 DocumentReference docRef = db.collection(ATTENDEE_COLLECTION).document(deviceID);
                 docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -73,9 +76,10 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TEMPORARILY NAVIGATES TO SIGNUPS
-                Intent intent = new Intent(MainActivity.this, AttendanceListActivity.class);
+                // TEMPORARILY NAVIGATES TO EVENT DETAILS - ORG USING HARDCODED EVENT ID
+                Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
                 startActivity(intent);}
+
         });
     }
 }

@@ -6,19 +6,42 @@ import java.io.Serializable;
  * This class represents and Attendee user
  */
 public class Attendee implements Serializable {
-    private String deviceID;  // Uniquely identifies each user, since no login credentials
-    private String name;  // Name of the user, can be renamed to username if needed
-    private String email;  // Email of the user, can be updated in profile page
-    private String phone;  // Phone number of the user, can be update in profile page
-    private String image;  // Profile image of the user, must be referenced in images collection
+    private String deviceID;
+    private String name;
+    private String email;
+    private String phone;
+    private String image;
 
 
+    /**
+     * Constructs an Attendee
+     * @param deviceID Android device ID
+     * @param name Name
+     * @param phone Phone
+     * @param email Email
+     * @param image Profile Picture
+     */
     public Attendee(String deviceID, String name, String phone, String email, String image) {
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.image = image;
+    }
+
+    /**
+     * Constructs an Attendee
+     * @param deviceID Android device ID
+     * @param name Name
+     * @param phone Phone
+     * @param email Email
+     */
+    public Attendee(String deviceID, String name, String phone, String email) {
+        this.deviceID = deviceID;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.image = null;
     }
 
     public void signUp() {}  // TODO Implement signUp functionality on database side

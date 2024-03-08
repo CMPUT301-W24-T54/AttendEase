@@ -1,7 +1,11 @@
 package com.example.attendease;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,15 +18,21 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for displaying the list of check ins' for a specific event.
+ * This class retrieves and displays attendee information associated with an event from Firestore.
+ */
 public class AttendanceListActivity extends AppCompatActivity {
     private TextView eventName;
     private ListView attendanceListView;
     private TextView attendanceCount;
+    private ImageButton backButton;
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
     private CollectionReference checkInsRef;
     private CollectionReference attendeesRef;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,30 +49,48 @@ public class AttendanceListActivity extends AppCompatActivity {
         eventName = findViewById(R.id.event_textview);
         attendanceListView = findViewById(R.id.attendancelist);
         attendanceCount = findViewById(R.id.attendancecount);
+        backButton = findViewById(R.id.back_button);
 
         // Call the function
-        setUpEventName(); //MAYBE ADD A PARAMETER FOR A SPECIFIC EVENT VS HARDCODED IN THIS FUNC ITSELF
-        //setUpCheckInsListView();
+        intent = getIntent();
+        String eventDocID = intent.getStringExtra("eventDocumentId");
+        setUpEventName(eventDocID);
 
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    private void setUpEventName() {
-        String event = "FEPcR599noOVDLWK2lD9";
-        eventsRef.document(event).get().addOnSuccessListener(documentSnapshot -> {
+    /**
+     * Sets up the event name TextView by retrieving the event title from Firestore.
+     * Calls {@link #setUpCheckInsListView(String)} to initialize the list of check-Ins.
+     * @param eventDocID The document ID of the event in Firestore.
+     */
+    private void setUpEventName(String eventDocID) {
+        //String event = "FEPcR599noOVDLWK2lD9";
+        eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
             String eventTitle = documentSnapshot.getString("title");
             eventName.setText(eventTitle);
         });
-        setUpCheckInsListView(event);
+        setUpCheckInsListView(eventDocID);
     }
 
-    private void setUpCheckInsListView(String event) {
+    /**
+     * Sets up the ListView with the names of attendees who signed up for the specified event.
+     * Retrieves attendee information from Firestore and updates the UI accordingly.
+     * @param eventDocID The document ID of the event in Firestore.
+     */
+    private void setUpCheckInsListView(String eventDocID) {
         checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> attendeeIDs = new ArrayList<>();
 
             // Retrieves the attendeeIDs associated with the event!
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 String eventID = document.getString("eventID");
-                if (event.equals(eventID)) {
+                if (eventDocID.equals(eventID)) {
                     String attendeeID = document.getString("attendeeID");
                     attendeeIDs.add(attendeeID);
                 }
