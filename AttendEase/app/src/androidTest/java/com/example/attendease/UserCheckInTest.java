@@ -46,5 +46,6 @@ public class UserCheckInTest {
 
         onView(withId(R.id.button_submit)).perform(click());
     }
+
 }
 
