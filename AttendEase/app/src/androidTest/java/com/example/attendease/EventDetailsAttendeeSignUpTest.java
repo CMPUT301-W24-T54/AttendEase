@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,4 +85,9 @@ public class EventDetailsAttendeeSignUpTest {
                     }
                 });
     }
+    @After
+    public void tearDown() throws Exception {
+        // Code to delete test data from Firestore
+    }
+
 }

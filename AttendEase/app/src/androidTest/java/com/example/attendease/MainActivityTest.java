@@ -49,4 +49,5 @@ public class MainActivityTest {
         intended(hasComponent(AdminAccountActivity.class.getName()));
         Intents.release();
     }
+
 }
