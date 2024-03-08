@@ -166,6 +166,7 @@ public class BrowseAllEventsTest {
     }
 
 
+
     @Test
     public void testeventdetails() {
         setup();
@@ -205,6 +206,37 @@ public class BrowseAllEventsTest {
         //Intents.release();
         cleanup();
     }
+
+//    @Test
+//    public void testeventdetails() {
+//        onIdle();
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        //Intents.init();
+//
+//        //onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
+//        boolean textFound=false;
+//        while (true) {
+//            if (textFound) {
+//                break; // Exit the loop if the text is found
+//            }
+//
+//            try {
+//                onView(allOf(withText(txt), isDisplayed())).perform(click());
+//                textFound = true; // Set flag to true if text is found
+//            } catch (Exception e) {
+//                // Swiping up
+//                onView(withId(R.id.Event_list)).perform(ViewActions.swipeUp());
+//            }
+//        }
+//        onView(withId(R.id.EventTitle)).check(matches(withText(txt)));
+//        onView(withId(R.id.description)).check(matches(withText(txt)));
+//        //Intents.release();
+//    }
 
 
 }
