@@ -45,4 +45,5 @@ public class ViewMsgTest {
         onView(withId(R.id.body)).check(matches(withText("Test Message")));
         onView(withId(R.id.textView9)).check(matches(withText("Test Sender")));
     }
+
 }
