@@ -2,8 +2,6 @@ package com.example.attendease;
 
 import static com.example.attendease.EventAdapter.TYPE_LARGE;
 import static com.example.attendease.EventAdapter.TYPE_SMALL;
-import static com.example.attendease.R.id.attendee_bottom_nav;
-import static com.example.attendease.R.id.organizer_bottom_nav;
 import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 
 import android.annotation.SuppressLint;

@@ -6,11 +6,11 @@ import java.io.Serializable;
  * This class represents and Attendee user
  */
 public class Attendee implements Serializable {
-    private String deviceID;  // Uniquely identifies each user, since no login credentials
-    private String name;  // Name of the user, can be renamed to username if needed
-    private String email;  // Email of the user, can be updated in profile page
-    private String phone;  // Phone number of the user, can be update in profile page
-    private String image;  // Profile image of the user, must be referenced in images collection
+    private String deviceID;
+    private String name;
+    private String email;
+    private String phone;
+    private String image;
 
 
     /**

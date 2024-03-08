@@ -1,6 +1,5 @@
 package com.example.attendease;
 
-import static com.example.attendease.R.id.organizer_bottom_nav;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
