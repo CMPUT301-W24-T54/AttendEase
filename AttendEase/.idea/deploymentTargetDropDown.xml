@@ -2,23 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-<<<<<<< HEAD
-      <entry key="AttendeeDashboardTest">
-        <State />
-      </entry>
-      <entry key="BrowseAllEventsTest">
-        <State />
-      </entry>
-      <entry key="BrowseMyEventsTest">
-        <State />
-      </entry>
       <entry key="EditProfileActivityTest">
         <State />
       </entry>
-      <entry key="ViewMsgTest">
-=======
       <entry key="Tests in 'com.example.attendease'">
->>>>>>> ea720ce1116a286d894d262bbd730e2863ee0fe5
         <State />
       </entry>
       <entry key="app">
