@@ -48,6 +48,7 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         loadEventsFromFirestore();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setSelectedItemId(R.id.nav_events);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
