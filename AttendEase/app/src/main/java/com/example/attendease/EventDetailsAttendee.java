@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * This class represents the Event details screen
@@ -34,6 +36,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference signUpsRef;
     private CollectionReference checkInsRef;
+    private CollectionReference eventsRef;
     private Intent intent;
     private TextView titleText;
     private TextView locationText;
@@ -43,7 +46,12 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private Button interactButton;
     private String deviceID;
     private String eventID;
-    private boolean canCheckIn;
+    private boolean scanned;
+    private boolean signedUp;
+    private boolean maxSignUpsReached;
+    private int signUpLimit;
+
+    private final CountDownLatch latch = new CountDownLatch(2);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +75,35 @@ public class EventDetailsAttendee extends AppCompatActivity {
 
         deviceID = intent.getStringExtra("deviceID");
         eventID = intent.getStringExtra("eventID");
-        canCheckIn = intent.getBooleanExtra("canCheckIn", false);
+        scanned = intent.getBooleanExtra("canCheckIn", false);
 
-        if (canCheckIn) {
-            interactButton.setText("Check In");
-        }
 
         db = FirebaseFirestore.getInstance();
         signUpsRef = db.collection("signIns");
         checkInsRef = db.collection("checkIns");
+        eventsRef = db.collection("events");
+
+
+
+        // checks if event is full, checks if attendee has signed up
+        maxSignUpsReached = checkSignUpLimit();
+        signedUp = checkSignedUp();
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (signedUp && scanned) {
+            interactButton.setText("Check In");
+        }
 
         addListeners();
-        if (!canCheckIn) {
-            hideSignUp();
+
+        // if signed up already and haven't scanned to get to screen, hide sign up button
+        if (signedUp && !scanned) {
+            hideInteractButton();
         }
     }
 
@@ -113,28 +137,35 @@ public class EventDetailsAttendee extends AppCompatActivity {
                 data.put("attendeeID",deviceID);
                 data.put("timeStamp", dateString);
 
-                if (canCheckIn) {
+
+
+                if (signedUp && scanned) {
+                    // if Attendee has signed up, allow them to check in
                     checkInsRef.document(unique_id).set(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     Log.d("Firestore", "DocumentSnapshot successfully written!");
-                                    interactButton.setVisibility(View.INVISIBLE);
-                                    interactButton.setClickable(false);
+                                    hideInteractButton();
                                     Toast.makeText(EventDetailsAttendee.this, "Check In successful!", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } else {
-                    signUpsRef.document(unique_id).set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Log.d("Firestore", "DocumentSnapshot successfully written!");
-                                    interactButton.setVisibility(View.INVISIBLE);
-                                    interactButton.setClickable(false);
-                                    Toast.makeText(EventDetailsAttendee.this, "Sign Up successful!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    // if Attendee has not signed up, prompt them to sign up before checking in
+                    if (maxSignUpsReached) {
+                        // if Event has max sign ups, then cannot sign up for event
+                        Toast.makeText(EventDetailsAttendee.this, "Sign Up successful!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        signUpsRef.document(unique_id).set(data)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d("Firestore", "DocumentSnapshot successfully written!");
+                                        hideInteractButton();
+                                        Toast.makeText(EventDetailsAttendee.this, "Sign Up successful!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
                 }
             }
         });
@@ -147,9 +178,17 @@ public class EventDetailsAttendee extends AppCompatActivity {
      * exist, indicating that the attendee has already signed up, the sign-up button is hidden
      * and made unclickable.
      */
-    private void hideSignUp() {
-        if (!canCheckIn) {
-            signUpsRef
+    private void hideInteractButton() {
+        interactButton.setVisibility(View.INVISIBLE);
+        interactButton.setClickable(false);
+    }
+
+    private boolean checkSignedUp() {
+        // Method only used in the context of
+        // Trying to sign up again
+        // Trying to check in without signing
+        signedUp = false;
+        signUpsRef
                 .whereEqualTo("attendeeID", deviceID)
                 .whereEqualTo("eventID", eventID)
                 .get()
@@ -158,11 +197,49 @@ public class EventDetailsAttendee extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         QuerySnapshot querySnapshot = task.getResult();
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                            interactButton.setVisibility(View.INVISIBLE);
-                            interactButton.setClickable(false);
+                            signedUp = true;
                         }
                     }
                 });
+        return signedUp;
+    }
+
+    /**
+     * Check for event at max sign ups
+     * @return true if cannot sign up, false if can sign up
+     */
+    private boolean checkSignUpLimit() {
+        eventsRef.document(eventID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Object maxAttendeesObj = documentSnapshot.get("maxAttendees");
+                if (maxAttendeesObj != null) {
+                    signUpLimit = Integer.parseInt(maxAttendeesObj.toString());
+                    latch.countDown();
+                }
+            }
+        });
+
+        // Organizer specified no max sign ups -> can check in
+        if (signUpLimit == Integer.MAX_VALUE) {
+            return false;
         }
+
+        signUpsRef.whereEqualTo("eventID", eventID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot querySnapshot = task.getResult();
+                signUpLimit -= querySnapshot.size();
+                final CountDownLatch latch = new CountDownLatch(1);
+            }
+        });
+
+
+        // If signUpLimit is 0 then cannot sign up.
+        return signUpLimit == 0;
     }
 }
