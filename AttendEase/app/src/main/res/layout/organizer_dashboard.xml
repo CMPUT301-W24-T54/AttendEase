@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bottom_nav_stroke"
     android:padding="16dp">
 
     <ImageView
@@ -71,18 +72,20 @@
         app:layout_constraintTop_toBottomOf="@id/tvMyEvents"
         tools:listitem="@layout/event_card_small" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabCreateEvent"
+    <ImageButton
+        android:id="@+id/createEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1450px"
-        android:layout_marginRight="40px"
-        android:backgroundTint="#DEFF81"
-        app:fabSize="auto"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/rounded_button_background"
+        android:clickable="true"
+        android:contentDescription="@string/plus"
+        android:elevation="4dp"
+        android:focusable="true"
+        app:layout_constraintBottom_toTopOf="@+id/organizer_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:ignore="MissingConstraints" />
+        app:srcCompat="@drawable/plus" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/organizer_bottom_nav"
@@ -90,13 +93,17 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_nav_stroke"
         android:contentDescription="@string/bottom_nav_content_description"
+        android:layout_marginRight="-14dp"
+        android:layout_marginLeft="-16dp"
+        android:layout_marginBottom="-15dp"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/organizer_bottom_nav" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/organizer_bottom_nav"
+        tools:layout_editor_absoluteY="806dp"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
