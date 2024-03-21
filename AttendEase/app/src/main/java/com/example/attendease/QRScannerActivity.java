@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -32,8 +31,7 @@ import java.util.Collections;
 public class QRScannerActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
-
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
     private String deviceID;
 
@@ -42,8 +40,7 @@ public class QRScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
+        eventsRef = database.getEventsRef();
 
         Intent intent = getIntent();
         deviceID = intent.getStringExtra("deviceID");

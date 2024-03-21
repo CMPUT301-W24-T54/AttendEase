@@ -11,10 +11,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.Objects;
 
@@ -24,7 +23,8 @@ import java.util.Objects;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
+    private CollectionReference attendeesRef;
     private static final String ATTENDEE_COLLECTION = "attendees";
     private String deviceID;
 
@@ -38,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
         Button createEventButton = findViewById(R.id.create_event_button);
         Button adminButton = findViewById(R.id.admin_button);
 
-        db = FirebaseFirestore.getInstance();
+        attendeesRef = database.getAttendeesRef();
 
         deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DocumentReference docRef = db.collection(ATTENDEE_COLLECTION).document(deviceID);
+                DocumentReference docRef = attendeesRef.document(deviceID);
                 docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {

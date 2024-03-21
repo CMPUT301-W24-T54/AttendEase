@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -33,8 +32,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button signUpsSeeAll;
     private Button attendanceSeeAll;
     private ImageButton backButton;
-
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private Intent intent;
     private CollectionReference eventsRef;
 
@@ -44,8 +42,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         setContentView(R.layout.single_event_dashboard);
 
         // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
+        eventsRef = database.getEventsRef();
 
         // Get Intent For Single Event
         intent = getIntent();

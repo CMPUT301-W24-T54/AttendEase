@@ -16,7 +16,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -31,7 +30,7 @@ public class BrowseAllEvents extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView eventList;
     private ArrayAdapter<Event> eventArrayAdapter;
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
     private String deviceID;
     private CountingIdlingResource countingIdlingResource;
@@ -44,8 +43,7 @@ public class BrowseAllEvents extends AppCompatActivity {
 
         deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
 
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
+        eventsRef = database.getEventsRef();
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
 

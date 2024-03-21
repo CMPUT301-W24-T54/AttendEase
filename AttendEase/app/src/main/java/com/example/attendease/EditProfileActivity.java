@@ -16,13 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -42,9 +38,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditProfileActivity extends AppCompatActivity {
 
     // Database side declarations
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference attendeesRef;
-    private static final String ATTENDEE_COLLECTION = "attendees";
+    private StorageReference storageRef;
     private static final String NAME_KEY = "name";
     private static final String PHONE_KEY = "phone";
     private static final String EMAIL_KEY = "email";
@@ -61,7 +57,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     // Attendee User declaration
     private Attendee user;
-    private String deviceID;
+    private String deviceID; // TODO : Refactor to be only Attendee class
 
     // ActivityLauncher to get image from gallery
     private ActivityResultLauncher<String> mGetContent;
@@ -73,8 +69,10 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendee_edit_profile);
 
-        db = FirebaseFirestore.getInstance();
-        attendeesRef = db.collection(ATTENDEE_COLLECTION);
+        // Refactored this to use Database class
+        // No longer instantiates new FirebaseFirestore or FiresbaseFirestore object
+        attendeesRef = database.getAttendeesRef();
+        storageRef = database.getStorageRef();
 
         // Jeremy Logan, 2009, Stack Overflow, Bundle Args in intent
         // https://stackoverflow.com/questions/768969/passing-a-bundle-on-startactivity
@@ -136,6 +134,7 @@ public class EditProfileActivity extends AppCompatActivity {
      * This method retrieves the profile information of the current Attendee user and populates the corresponding views.
      */
     private void populateViews() {
+        // TODO : Refactor to only use attendee class
         attendeesRef.document(deviceID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -151,7 +150,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
 
         imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -190,7 +188,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         // Handle the profile image
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
         String downloadUri;
 
