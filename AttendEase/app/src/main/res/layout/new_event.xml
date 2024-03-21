@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bottom_nav_stroke"
     android:padding="16dp">
 
     <ImageButton
@@ -127,7 +128,7 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="355dp"
         android:layout_marginEnd="22dp"
-        android:layout_marginBottom="150dp">
+        android:layout_marginBottom="140dp">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -267,34 +268,17 @@
 
     <Button
         android:id="@+id/btnGenerateEvent"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivCoverPhoto"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="24px"
-        android:layout_marginTop="360dp"
-        android:layout_marginEnd="24px"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="390dp"
+        android:layout_marginEnd="7dp"
         android:backgroundTint="@color/black"
-        android:text="Generate"
-        android:elevation="4dp"/>
-
-    <!-- App navigation buttons -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/organizer_bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/bottom_nav_stroke"
-        android:contentDescription="@string/bottom_nav_content_description"
-        app:itemHorizontalTranslationEnabled="false"
-        app:itemIconTint="@color/black"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/organizer_bottom_nav" />
+        android:elevation="4dp"
+        android:text="Generate" />
 
 </RelativeLayout>
 

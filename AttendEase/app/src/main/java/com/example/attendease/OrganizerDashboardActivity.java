@@ -39,6 +39,7 @@ import java.util.List;
  * including the creation of new events.
  */
 public class OrganizerDashboardActivity extends AppCompatActivity {
+    private ImageButton createEventButton;
     private RecyclerView recyclerViewUpcomingEvent;
     private RecyclerView recyclerViewMyEvents;
     private EventAdapter adapterLarge;
@@ -58,8 +59,8 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_dashboard);
 
-        FloatingActionButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
-        fabCreateEvent.setOnClickListener(new View.OnClickListener() {
+        createEventButton = findViewById(R.id.createEvent);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
@@ -79,7 +80,7 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         recyclerViewMyEvents.setAdapter(adapterSmall);
 
         loadEventsFromFirestore();
-        setUpFabCreateEvent();
+        setUpCreateEvent();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -145,11 +146,11 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the FloatingActionButton for creating new events. Tapping this button
+     * Sets up the Button for creating new events. Tapping this button
      * navigates to the NewEventActivity where the organizer can enter event details.
      */
-    private void setUpFabCreateEvent() {
-        ImageButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
+    private void setUpCreateEvent() {
+        ImageButton fabCreateEvent = findViewById(R.id.createEvent);
         fabCreateEvent.setOnClickListener(view -> {
             Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
             startActivity(intent);
