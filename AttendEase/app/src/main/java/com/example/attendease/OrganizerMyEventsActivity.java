@@ -70,7 +70,7 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 Event event = eventList.get(position);
                 Intent intent = new Intent(OrganizerMyEventsActivity.this, EventDetailsOrganizer.class);
-                intent.putExtra("eventDocumentId", event.getEventId());
+                intent.putExtra("event", event);
                 startActivity(intent);
             }
         });
