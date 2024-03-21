@@ -33,7 +33,6 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button signUpsSeeAll;
     private Button attendanceSeeAll;
     private ImageButton backButton;
-
     private FirebaseFirestore db;
     private Intent intent;
     private CollectionReference eventsRef;
