@@ -45,6 +45,7 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     private EventAdapter adapterLarge;
     private EventAdapter adapterSmall;
     private ArrayList<Event> eventList = new ArrayList<>();
+    private ArrayList<Event> eventList2 = new ArrayList<>();
 
     /**
      * Initializes the activity, setting up the user interface components and loading events
@@ -74,7 +75,7 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         adapterLarge = new EventAdapter(this, eventList, TYPE_LARGE);
-        adapterSmall = new EventAdapter(this, eventList, TYPE_SMALL);
+        adapterSmall = new EventAdapter(this, eventList2, TYPE_SMALL);
 
         recyclerViewUpcomingEvent.setAdapter(adapterLarge);
         recyclerViewMyEvents.setAdapter(adapterSmall);
@@ -94,6 +95,26 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+
+        adapterLarge.setOnItemClickListener(new EventAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Event event = eventList.get(position);
+                Intent intent = new Intent(OrganizerDashboardActivity.this, EventDetailsOrganizer.class);
+                intent.putExtra("event", event);
+                startActivity(intent);
+            }
+        });
+
+        adapterSmall.setOnItemClickListener(new EventAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Event event = eventList2.get(position);
+                Intent intent = new Intent(OrganizerDashboardActivity.this, EventDetailsOrganizer.class);
+                intent.putExtra("event", event);
+                startActivity(intent);
+            }
         });
     }
 
@@ -119,21 +140,20 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
                         eventList.add(upcomingEvent); // Add the single upcoming event
                         adapterLarge.notifyDataSetChanged(); // Notify the adapter for the upcoming event
 
-                        // Now query for the next three events
+                        // Now query for the next events
                         db.collection("events")
                                 .whereEqualTo("organizerId", organizerId)
                                 .orderBy("dateTime")
                                 .startAfter(upcomingEvent.getDateTime()) // Skip the upcoming event
-                                .limit(3) // Limit the next events to three (gives 'see all' button purpose)
                                 .get()
                                 .addOnCompleteListener(task2 -> {
                                     if (task2.isSuccessful()) {
-                                        List<Event> myEvents = new ArrayList<>();
+                                        eventList2.clear();
                                         for (QueryDocumentSnapshot document : task2.getResult()) {
                                             Event event = document.toObject(Event.class);
-                                            myEvents.add(event); // Add to the list of next three events
+                                            eventList2.add(event); // Add to the list of next three events
                                         }
-                                        adapterSmall.setEventList(myEvents); // Pass the next three events to the adapter
+                                        adapterSmall.setEventList(eventList2); // Pass the next three events to the adapter
                                         adapterSmall.notifyDataSetChanged(); // Notify the adapter for the other events
                                     } else {
                                         Log.w(TAG, "Error getting documents.", task2.getException());
@@ -155,5 +175,11 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadEventsFromFirestore();
     }
 }
