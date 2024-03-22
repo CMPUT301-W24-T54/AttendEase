@@ -83,40 +83,42 @@ public class AttendanceListActivity extends AppCompatActivity {
      * Retrieves attendee information from Firestore and updates the UI accordingly.
      * @param eventDocID The document ID of the event in Firestore.
      */
-    private void setUpCheckInsListView(String eventDocID) {
-        checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            Map<String, Integer> attendeeCheckInCounts = new HashMap<>();
 
-            // Retrieves the attendeeIDs associated with the event!
-            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                String eventID = document.getString("eventID");
-                if (eventDocID.equals(eventID)) {
+    private void setUpCheckInsListView(String eventDocID) {
+        checkInsRef.whereEqualTo("eventID", eventDocID).addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (queryDocumentSnapshots != null) {
+                Map<String, Integer> attendeeCheckInCounts = new HashMap<>();
+                List<String> attendeeInfoList = new ArrayList<>();
+
+                // Retrieves the attendee IDs associated with the event
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     String attendeeID = document.getString("attendeeID");
                     attendeeCheckInCounts.put(attendeeID, attendeeCheckInCounts.getOrDefault(attendeeID, 0) + 1);
                 }
-            }
 
-            // Retrieves the attendee names associated with the attendeeIDs
-            List<String> attendeeInfoList = new ArrayList<>();
-            for (Map.Entry<String, Integer> entry : attendeeCheckInCounts.entrySet()) {
-                String attendeeID = entry.getKey();
-                int checkInCount = entry.getValue();
+                // Retrieves the attendee names associated with the attendee IDs and update the UI
+                for (Map.Entry<String, Integer> entry : attendeeCheckInCounts.entrySet()) {
+                    String attendeeID = entry.getKey();
+                    int checkInCount = entry.getValue();
 
-                attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
-                    String attendeeName = attendeeDocument.getString("name");
-                    String attendeeInfo = attendeeName + " (Check-ins: " + checkInCount + ")";
-                    attendeeInfoList.add(attendeeInfo);
+                    // Retrieves attendee name from Firestore
+                    attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+                        String attendeeName = attendeeDocument.getString("name");
 
-                    // Updates the ListView with attendee names
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeInfoList);
-                    attendanceListView.setAdapter(adapter);
+                        // Appends check-in count after attendee name
+                        String attendeeInfo = attendeeName + " (Check-ins: " + checkInCount + ")";
+                        attendeeInfoList.add(attendeeInfo);
 
-                    // Updates the attendanceCount TextView with the count of attendees
-                    String totalCountText = "Total: " + attendeeInfoList.size(); // OR GET THE COUNT FROM THE LISTVIEW ITSELF
-                    attendanceCount.setText(totalCountText);
-                });
+                        // Updates the ListView with attendee names and check-in counts
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeInfoList);
+                        attendanceListView.setAdapter(adapter);
+
+                        // Updates the attendanceCount TextView with the count of attendees
+                        String totalCountText = "Total: " + attendeeInfoList.size();
+                        attendanceCount.setText(totalCountText);
+                    });
+                }
             }
         });
     }
-
 }
