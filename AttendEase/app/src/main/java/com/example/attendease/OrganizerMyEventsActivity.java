@@ -12,13 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.example.attendease.EventAdapter.TYPE_LARGE;
 import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 /**
@@ -31,6 +32,8 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewMyEvents;
     private EventAdapter adapterLarge;
     private ArrayList<Event> eventList = new ArrayList<>();
+    private final Database database = Database.getInstance();
+    private CollectionReference eventsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,8 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         adapterLarge = new EventAdapter(this, eventList, TYPE_LARGE);
 
         recyclerViewMyEvents.setAdapter(adapterLarge);
+
+        eventsRef = database.getEventsRef();
 
         loadEventsFromFirestore();
 
@@ -80,10 +85,9 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
      * Fetches events from Firestore based on the organizer's ID and populates the eventList.
      */
     private void loadEventsFromFirestore() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        db.collection("events")
+        eventsRef
                 .whereEqualTo("organizerId", organizerId)
                 .orderBy("dateTime")
                 .get()

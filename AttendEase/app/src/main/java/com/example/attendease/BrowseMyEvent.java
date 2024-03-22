@@ -16,7 +16,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -31,24 +30,22 @@ public class BrowseMyEvent extends AppCompatActivity {
     private ArrayList<Event> dataList;
     private ListView EventList;
     private ArrayAdapter<Event> EventAdapter;
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
     private CollectionReference signInRef;
+
+    private Attendee attendee;
     private String eventID;
 
-    private String deviceID;
     private CountingIdlingResource countingIdlingResource;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_my_event);
-        //Intent intent=getIntent();
-        //intent.getStringExtra("deviceID");
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
-        //deviceID="fa405bfc7d76417d";
-        db = FirebaseFirestore.getInstance();
-        signInRef = db.collection("signIns");
-        eventsRef = db.collection("events");
+
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        signInRef = database.getSignInsRef();
+        eventsRef = database.getEventsRef();
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
 
@@ -68,6 +65,7 @@ public class BrowseMyEvent extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=dataList.get(position);
                 Intent intent=new Intent(BrowseMyEvent.this, EventDetailsAttendee.class);
+                intent.putExtra("attendee", attendee);
                 intent.putExtra("eventID", event.getEventId());
                 intent.putExtra("Title",event.getTitle());
                 intent.putExtra("QR",event.getCheckInQR());
@@ -75,7 +73,7 @@ public class BrowseMyEvent extends AppCompatActivity {
                 intent.putExtra("dateTime",event.getDateTime().toDate().toString());
                 intent.putExtra("location",event.getLocation());
                 intent.putExtra("posterUrl",event.getPosterUrl());
-                intent.putExtra("canCheckIn",false);
+                intent.putExtra("prevActivity", "BrowseMyEvent");
                 startActivity(intent);
             }
         });
@@ -87,7 +85,7 @@ public class BrowseMyEvent extends AppCompatActivity {
      * Updates the event list array adapter with the events on the attendee has signed up for
      */
     private void updateDatalist(){
-        signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        signInRef.whereEqualTo("attendeeID",attendee.getDeviceID()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
