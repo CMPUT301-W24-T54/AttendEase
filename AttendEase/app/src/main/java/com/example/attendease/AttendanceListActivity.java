@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -29,22 +28,20 @@ public class AttendanceListActivity extends AppCompatActivity {
     private TextView attendanceCount;
     private ImageButton backButton;
 
-    private FirebaseFirestore db;
-    private CollectionReference eventsRef;
+    private final Database database = Database.getInstance();
     private CollectionReference checkInsRef;
     private CollectionReference attendeesRef;
     private Intent intent;
     private String eventDocID;
+    private Event event;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendance_list);
 
-        // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-        checkInsRef = db.collection("checkIns");
-        attendeesRef = db.collection("attendees");
+        // Initialize Firebase Collections
+        checkInsRef = database.getCheckInsRef();
+        attendeesRef = database.getAttendeesRef();
 
         // Initialize UI components
         eventName = findViewById(R.id.event_textview);
@@ -54,8 +51,9 @@ public class AttendanceListActivity extends AppCompatActivity {
 
         // Call the function
         intent = getIntent();
-        eventDocID = intent.getStringExtra("eventDocumentId");
-        setUpEventName(eventDocID);
+        event = intent.getParcelableExtra("event");
+        eventDocID = event.getEventId();
+        setUpEventName(event, eventDocID);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,11 +68,9 @@ public class AttendanceListActivity extends AppCompatActivity {
      * Calls {@link #setUpCheckInsListView(String)} to initialize the list of check-Ins.
      * @param eventDocID The document ID of the event in Firestore.
      */
-    private void setUpEventName(String eventDocID) {
-        eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
-            String eventTitle = documentSnapshot.getString("title");
-            eventName.setText(eventTitle);
-        });
+    private void setUpEventName(Event event, String eventDocID) {
+        String eventTitle = event.getTitle();
+        eventName.setText(eventTitle);
         setUpCheckInsListView(eventDocID);
     }
 
@@ -110,7 +106,7 @@ public class AttendanceListActivity extends AppCompatActivity {
                         attendeeInfoList.add(attendeeInfo);
 
                         // Updates the ListView with attendee names and check-in counts
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeInfoList);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(AttendanceListActivity.this, android.R.layout.simple_list_item_1, attendeeInfoList);
                         attendanceListView.setAdapter(adapter);
 
                         // Updates the attendanceCount TextView with the count of attendees

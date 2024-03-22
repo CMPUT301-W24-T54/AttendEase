@@ -27,18 +27,18 @@ public class SignupsListActivity extends AppCompatActivity {
     private ImageButton backButton;
 
     private final Database database = Database.getInstance();
-    private CollectionReference eventsRef;
     private CollectionReference signInsRef;
     private CollectionReference attendeesRef;
     private Intent intent;
+    private String eventDocID;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signups_list);
 
-        // Initialize Firebase
-        eventsRef = database.getEventsRef();
+        // Initialize Firebase Collections
         signInsRef = database.getSignInsRef();
         attendeesRef = database.getAttendeesRef();
 
@@ -50,8 +50,9 @@ public class SignupsListActivity extends AppCompatActivity {
 
         // Call the function
         intent = getIntent();
-        String eventDocID = intent.getStringExtra("eventDocumentId");
-        setUpEventName(eventDocID);
+        event = intent.getParcelableExtra("event");
+        eventDocID = event.getEventId();
+        setUpEventName(event, eventDocID);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,11 +68,9 @@ public class SignupsListActivity extends AppCompatActivity {
      * Calls {@link #setUpSignUpsListView(String)} to initialize the list of sign-ups associated with that event.
      * @param eventDocID The document ID of the event in Firestore.
      */
-    private void setUpEventName(String eventDocID) {
-        eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
-            String eventTitle = documentSnapshot.getString("title");
-            eventName.setText(eventTitle);
-        });
+    private void setUpEventName(Event event, String eventDocID) {
+        String eventTitle = event.getTitle();
+        eventName.setText(eventTitle);
         setUpSignUpsListView(eventDocID);
     }
 
@@ -101,7 +100,7 @@ public class SignupsListActivity extends AppCompatActivity {
                     attendeeNames.add(attendeeName);
 
                     // Updates the ListView with attendee names
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeNames);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupsListActivity.this, android.R.layout.simple_list_item_1, attendeeNames);
                     signUpsListView.setAdapter(adapter);
 
                     // Updates the signupscount TextView with the count of attendees
