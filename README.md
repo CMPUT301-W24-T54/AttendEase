@@ -2,7 +2,8 @@
 
 Libraries Used:
 
-- https://github.com/zxing/zxing for QR Code Scanning and Generation
+- https://github.com/zxing/zxing - For QR Code Scanning and Generation
+- https://github.com/bumptech/glide - For URL to Image converison
 - We have also used OpenAI ChatGPT 3.5 to generate Javadocs for some of our source code
 
 
