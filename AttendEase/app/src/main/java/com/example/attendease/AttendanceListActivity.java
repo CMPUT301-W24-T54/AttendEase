@@ -1,9 +1,14 @@
 package com.example.attendease;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,6 +19,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +88,10 @@ public class AttendanceListActivity extends AppCompatActivity {
 
     private void setUpCheckInsListView(String eventDocID) {
         checkInsRef.whereEqualTo("eventID", eventDocID).addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Log.e("AttendanceListActivity", "Error getting check-ins", e);
+                return;
+            }
             if (queryDocumentSnapshots != null) {
                 Map<String, Integer> attendeeCheckInCounts = new HashMap<>();
                 List<String> attendeeInfoList = new ArrayList<>();
@@ -112,9 +122,43 @@ public class AttendanceListActivity extends AppCompatActivity {
                         // Updates the attendanceCount TextView with the count of attendees
                         String totalCountText = "Total: " + attendeeInfoList.size();
                         attendanceCount.setText(totalCountText);
+
+                        // Checks for milestone
+                        checkMilestone(attendeeInfoList.size());
                     });
                 }
             }
+
         });
+    }
+
+    private void checkMilestone(int attendeeCount) {
+        // The milestones are hard-coded temporarily
+        List<Integer> milestones = Arrays.asList(1, 5, 10, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
+        if (milestones.contains(attendeeCount)) {
+            showMilestoneDialog(attendeeCount);
+        }
+
+    }
+
+    private void showMilestoneDialog(int attendeeCount) {
+        if (!isFinishing()) {
+            View view = LayoutInflater.from(this).inflate(R.layout.milestone_dialog, null);
+            Button okayButton = view.findViewById(R.id.okay_button);
+
+            TextView milestoneTextView = view.findViewById(R.id.milestoneTextView);
+            milestoneTextView.setText("Congratulations! Your Event Has Reached " + attendeeCount + " Attendees!");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(view);
+            Dialog dialog = builder.create();
+            okayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
     }
 }
