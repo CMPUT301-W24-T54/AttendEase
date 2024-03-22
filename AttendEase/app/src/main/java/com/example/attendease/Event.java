@@ -1,13 +1,18 @@
 package com.example.attendease;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
+
+import java.io.Serializable;
 
 /**
  * Represents an event within the AttendEase application.
  * This class encapsulates all the information about an event including its location,
  * QR codes for promotion and check-in, settings/info, and attendee management functionalities.
  */
-public class Event {
+public class Event implements Parcelable {
     private String eventId;
     private String title;
     private String description;
@@ -21,22 +26,22 @@ public class Event {
     private int maxAttendees; // Optional limit on attendees
 
 
-
     // Constructor //
+
     /**
      * Constructs a new Event with specified details.
      *
-     * @param eventId      Unique identifier for the event.
-     * @param title        Title of the event.
-     * @param description  Description of the event.
-     * @param organizerId  ID of the user organizing the event.
-     * @param dateTime     Timestamp of when the event is scheduled.
-     * @param location     GeoPoint location for the event, used for geolocation verification.
-     * @param promoQR      QR code URL for event promotion.
-     * @param checkInQR    QR code URL for event check-in.
-     * @param posterUrl    URL of the event poster image.
+     * @param eventId              Unique identifier for the event.
+     * @param title                Title of the event.
+     * @param description          Description of the event.
+     * @param organizerId          ID of the user organizing the event.
+     * @param dateTime             Timestamp of when the event is scheduled.
+     * @param location             GeoPoint location for the event, used for geolocation verification.
+     * @param promoQR              QR code URL for event promotion.
+     * @param checkInQR            QR code URL for event check-in.
+     * @param posterUrl            URL of the event poster image.
      * @param isGeoTrackingEnabled Identifies whether or not the organizer has enabled geo-tracking
-     * @param maxAttendees Maximum number of attendees allowed (optional).
+     * @param maxAttendees         Maximum number of attendees allowed (optional).
      */
     public Event(String eventId, String title, String description, String organizerId, Timestamp dateTime, String location, String promoQR, String checkInQR, String posterUrl, boolean isGeoTrackingEnabled, int maxAttendees) {
         this.eventId = eventId;
@@ -132,9 +137,11 @@ public class Event {
     public boolean getisGeoTrackingEnabled() {
         return isGeoTrackingEnabled;
     }
+
     public void setisGeoTrackingEnabled(boolean isGeoTrackingEnabled) {
         this.isGeoTrackingEnabled = isGeoTrackingEnabled;
     }
+
     public int getMaxAttendees() {
         return maxAttendees;
     }
@@ -143,70 +150,65 @@ public class Event {
         this.maxAttendees = maxAttendees;
     }
 
-
-
-    // QR Code Methods //
-    /**
-     * Placeholder method for generating and updating the check-in QR code.
-     * Actual implementation should create a QR code that, when scanned, marks an attendee as checked in.
-     */
-    public void generateCheckInQrCode() {
-        // Placeholder for generating and updating the check-in QR code
-    }
-    /**
-     * Placeholder method for generating and updating the promotion QR code.
-     * Actual implementation should create a QR code that, when scanned, routes to the event page in the app.
-     */
-    public void generatePromotionQrCode() {
-        // Placeholder for generating and updating the promotion QR code
-    }
-
-
-
     // Notification Methods //
+
     /**
      * Placeholder method for creating and sending notifications to attendees.
+     *
      * @param message The message to be sent to all attendees.
      */
     public void sendNotificationToAttendees(String message) {
         // Placeholder for creating and sending notifications to attendees
     }
 
-
-
-    // Signups/Checkins and other miscellaneous methods interacting with firestore //
-    /**
-     * Placeholder methods for interacting with Firestore to manage event details and attendee lists.
-     * These methods include fetching and updating attendee sign-up and check-in lists, among other functionalities.
-     */
-    public void fetchSignUpList() {
-        // Placeholder for fetching sign-up list from Firestore
+    // Parcelable implementation
+    protected Event(Parcel in) {
+        eventId = in.readString();
+        title = in.readString();
+        description = in.readString();
+        organizerId = in.readString();
+        // Reads Timestamp as longs (seconds and nanoseconds)
+        long seconds = in.readLong();
+        int nanoseconds = in.readInt();
+        dateTime = new Timestamp(seconds, nanoseconds);
+        location = in.readString();
+        promoQR = in.readString();
+        checkInQR = in.readString();
+        posterUrl = in.readString();
+        isGeoTrackingEnabled = in.readByte() != 0; // true if byte is non-zero
+        maxAttendees = in.readInt();
     }
 
-    public void fetchCheckInList() {
-        // Placeholder for fetching check-in list from Firestore
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void addAttendeeToSignUpList(String userId) {
-        // Placeholder for adding an attendee to the sign-up list in Firestore
-    }
-
-    public void addAttendeeToCheckInList(String userId) {
-        // Placeholder for adding an attendee to the check-in list in Firestore
-    }
-    /**
-     * Updates the event details with new information provided.
-     * This method allows for updating the event's title, description, date/time, location, and poster URL.
-     * It's designed to be used when event details change and need to be reflected in the application and database.
-     *
-     * @param title        The new title for the event.
-     * @param description  The new description for the event.
-     * @param dateTime     The new date and time for the event.
-     * @param location     The new location for the event represented as a GeoPoint.
-     * @param posterUrl    The new URL for the event's poster image.
-     */
-    public void updateEventDetails(String title, String description, Timestamp dateTime, GeoPoint location, String posterUrl) {
-        // Placeholder for logic to update event details
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(eventId);
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeString(organizerId);
+        parcel.writeLong(dateTime.getSeconds());
+        parcel.writeInt(dateTime.getNanoseconds());
+        parcel.writeString(location);
+        parcel.writeString(promoQR);
+        parcel.writeString(checkInQR);
+        parcel.writeString(posterUrl);
+        parcel.writeByte((byte) (isGeoTrackingEnabled ? 1 : 0)); // true if isGeoTrackingEnabled is true, false otherwise
+        parcel.writeInt(maxAttendees);
     }
 }
-
