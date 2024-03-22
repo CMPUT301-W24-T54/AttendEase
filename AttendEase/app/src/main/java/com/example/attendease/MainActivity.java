@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final Database database = Database.getInstance();
     private CollectionReference attendeesRef;
-    private static final String ATTENDEE_COLLECTION = "attendees";
     private String deviceID;
 
     @SuppressLint("HardwareIds")
@@ -50,10 +49,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
+                            // If the user already exists instantiate Attendee object for them
+                            String name = documentSnapshot.getString("name");
+                            String phone = documentSnapshot.getString("phone");
+                            String email = documentSnapshot.getString("email");
+                            String image = documentSnapshot.getString("image");
+                            Attendee attendee = new Attendee(deviceID, name, phone, email, image);
+
                             Intent intent = new Intent(MainActivity.this, AttendeeDashboardActivity.class);
-                            intent.putExtra("deviceID", deviceID);
+                            intent.putExtra("attendee", attendee);  // pass the serializable attendee object
                             startActivity(intent);
                         } else {
+                            // If the user does not exist (no name) they have to enter their name
                             Intent intent = new Intent(MainActivity.this, UserCheckIn.class);
                             startActivity(intent);
                         }

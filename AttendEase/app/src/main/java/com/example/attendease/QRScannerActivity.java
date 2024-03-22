@@ -23,6 +23,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * This class represents the QR Code Scanner screen that the user
@@ -33,7 +34,7 @@ public class QRScannerActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
-    private String deviceID;
+    private Attendee attendee;
 
 
     @Override
@@ -43,7 +44,7 @@ public class QRScannerActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
 
         Intent intent = getIntent();
-        deviceID = intent.getStringExtra("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(intent.getExtras()).getSerializable("attendee");
 
 
         // OpenAI, 2024, ChatGPT, ScanQR code using zxing IntentIntegrator
@@ -152,13 +153,13 @@ public class QRScannerActivity extends AppCompatActivity {
                                 Timestamp dateTime = document.getTimestamp("dateTime");
 
                                 Intent intent = new Intent(QRScannerActivity.this, EventDetailsAttendee.class);
-                                intent.putExtra("deviceID", deviceID);
+                                intent.putExtra("attendee", attendee);
                                 intent.putExtra("eventID", eventID);
                                 intent.putExtra("title",title);
                                 intent.putExtra("description",description);
                                 intent.putExtra("dateTime",dateTime.toDate().toString());
                                 intent.putExtra("location",location);
-                                intent.putExtra("canCheckIn", true);
+                                intent.putExtra("prevActivity", "QRScannerActivity");
                                 startActivity(intent);
                             }
                         }

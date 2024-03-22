@@ -1,10 +1,21 @@
 package com.example.attendease;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import javax.inject.Singleton;
+
+/**
+ * This class represents a Singleton Firestore Database instance
+ */
+@Singleton
 public class Database {
     private static Database instance = null;
     private final FirebaseFirestore db;

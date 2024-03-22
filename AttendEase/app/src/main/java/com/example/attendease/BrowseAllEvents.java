@@ -32,7 +32,7 @@ public class BrowseAllEvents extends AppCompatActivity {
     private ArrayAdapter<Event> eventArrayAdapter;
     private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
-    private String deviceID;
+    private Attendee attendee;
     private CountingIdlingResource countingIdlingResource;
 
     @Override
@@ -41,7 +41,7 @@ public class BrowseAllEvents extends AppCompatActivity {
         setContentView(R.layout.activity_browse_all_events);
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
 
         eventsRef = database.getEventsRef();
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
@@ -62,7 +62,7 @@ public class BrowseAllEvents extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=dataList.get(position);
                 Intent intent=new Intent(BrowseAllEvents.this, EventDetailsAttendee.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 intent.putExtra("eventID", event.getEventId());
                 intent.putExtra("title",event.getTitle());
                 intent.putExtra("QR",event.getCheckInQR());
@@ -70,7 +70,7 @@ public class BrowseAllEvents extends AppCompatActivity {
                 intent.putExtra("dateTime",event.getDateTime().toDate().toString());
                 intent.putExtra("location",event.getLocation());
                 intent.putExtra("posterUrl",event.getPosterUrl());
-                intent.putExtra("canCheckIn", false);
+                intent.putExtra("prevActivity", "BrowseAllEvents");
                 startActivity(intent);
             }
         });

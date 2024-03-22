@@ -37,6 +37,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class EditProfileActivity extends AppCompatActivity {
 
+    // TODO : This is the main reason why we want to pass an Attendee
+    // TODO : UI relies on database too much, GUI butter knife is useless here
+
     // Database side declarations
     private final Database database = Database.getInstance();
     private CollectionReference attendeesRef;
@@ -56,8 +59,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private Button saveChanges;
 
     // Attendee User declaration
-    private Attendee user;
-    private String deviceID; // TODO : Refactor to be only Attendee class
+    private Attendee attendee;
+    private String deviceID;
 
     // ActivityLauncher to get image from gallery
     private ActivityResultLauncher<String> mGetContent;
@@ -76,7 +79,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Jeremy Logan, 2009, Stack Overflow, Bundle Args in intent
         // https://stackoverflow.com/questions/768969/passing-a-bundle-on-startactivity
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        deviceID = attendee.getDeviceID();
 
         profileImage = findViewById(R.id.edit_profile_pic);
         uploadProfileImage = findViewById(R.id.edit_profile_upload_button);
