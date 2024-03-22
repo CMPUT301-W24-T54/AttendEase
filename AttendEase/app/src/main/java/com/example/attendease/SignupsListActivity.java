@@ -80,35 +80,37 @@ public class SignupsListActivity extends AppCompatActivity {
      * @param eventDocID The document ID of the event in Firestore.
      */
     private void setUpSignUpsListView(String eventDocID) {
-        signInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<String> attendeeIDs = new ArrayList<>();
+        signInsRef.whereEqualTo("eventID", eventDocID).addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (queryDocumentSnapshots != null) {
+                        List<String> attendeeIDs = new ArrayList<>();
 
-            // Retrieves the attendeeIDs associated with the event!
-            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                String eventID = document.getString("eventID");
-                if (eventDocID.equals(eventID)) {
-                    String attendeeID = document.getString("attendeeID");
-                    attendeeIDs.add(attendeeID);
-                }
-            }
+                        // Retrieves the attendeeIDs associated with the event!
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String eventID = document.getString("eventID");
+                            if (eventDocID.equals(eventID)) {
+                                String attendeeID = document.getString("attendeeID");
+                                attendeeIDs.add(attendeeID);
+                            }
+                        }
 
-            // Retrieves the attendee names associated with the attendeeIDs
-            List<String> attendeeNames = new ArrayList<>();
-            for (String attendeeID : attendeeIDs) {
-                attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
-                    String attendeeName = attendeeDocument.getString("name");
-                    attendeeNames.add(attendeeName);
+                        // Retrieves the attendee names associated with the attendeeIDs
+                        List<String> attendeeNames = new ArrayList<>();
+                        for (String attendeeID : attendeeIDs) {
+                            attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+                                String attendeeName = attendeeDocument.getString("name");
+                                attendeeNames.add(attendeeName);
 
-                    // Updates the ListView with attendee names
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupsListActivity.this, android.R.layout.simple_list_item_1, attendeeNames);
-                    signUpsListView.setAdapter(adapter);
+                                // Updates the ListView with attendee names
+                                ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupsListActivity.this, android.R.layout.simple_list_item_1, attendeeNames);
+                                signUpsListView.setAdapter(adapter);
 
-                    // Updates the signupscount TextView with the count of attendees
-                    String totalCountText = "Total: " + attendeeNames.size(); // OR GET THE COUNT FROM THE LISTVIEW ITSELF
-                    signUpsCount.setText(totalCountText);
+                                // Updates the signupscount TextView with the count of attendees
+                                String totalCountText = "Total: " + attendeeNames.size();
+                                signUpsCount.setText(totalCountText);
+                            });
+                        }
+                    }
                 });
-            }
-        });
     }
 
 }
