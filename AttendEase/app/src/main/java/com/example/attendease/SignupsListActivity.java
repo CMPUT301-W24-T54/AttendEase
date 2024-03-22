@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class SignupsListActivity extends AppCompatActivity {
     private TextView signUpsCount;
     private ImageButton backButton;
 
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
     private CollectionReference signInsRef;
     private CollectionReference attendeesRef;
@@ -39,10 +38,9 @@ public class SignupsListActivity extends AppCompatActivity {
         setContentView(R.layout.signups_list);
 
         // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-        signInsRef = db.collection("signIns");
-        attendeesRef = db.collection("attendees");
+        eventsRef = database.getEventsRef();
+        signInsRef = database.getSignInsRef();
+        attendeesRef = database.getAttendeesRef();
 
         // Initialize UI components
         eventName = findViewById(R.id.event_textview);

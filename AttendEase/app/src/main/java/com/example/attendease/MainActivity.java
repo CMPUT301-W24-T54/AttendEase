@@ -11,10 +11,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.Objects;
 
@@ -24,8 +23,8 @@ import java.util.Objects;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db;
-    private static final String ATTENDEE_COLLECTION = "attendees";
+    private final Database database = Database.getInstance();
+    private CollectionReference attendeesRef;
     private String deviceID;
 
     @SuppressLint("HardwareIds")
@@ -38,22 +37,30 @@ public class MainActivity extends AppCompatActivity {
         Button createEventButton = findViewById(R.id.create_event_button);
         Button adminButton = findViewById(R.id.admin_button);
 
-        db = FirebaseFirestore.getInstance();
+        attendeesRef = database.getAttendeesRef();
 
         deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DocumentReference docRef = db.collection(ATTENDEE_COLLECTION).document(deviceID);
+                DocumentReference docRef = attendeesRef.document(deviceID);
                 docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
+                            // If the user already exists instantiate Attendee object for them
+                            String name = documentSnapshot.getString("name");
+                            String phone = documentSnapshot.getString("phone");
+                            String email = documentSnapshot.getString("email");
+                            String image = documentSnapshot.getString("image");
+                            Attendee attendee = new Attendee(deviceID, name, phone, email, image);
+
                             Intent intent = new Intent(MainActivity.this, AttendeeDashboardActivity.class);
-                            intent.putExtra("deviceID", deviceID);
+                            intent.putExtra("attendee", attendee);  // pass the serializable attendee object
                             startActivity(intent);
                         } else {
+                            // If the user does not exist (no name) they have to enter their name
                             Intent intent = new Intent(MainActivity.this, UserCheckIn.class);
                             startActivity(intent);
                         }

@@ -18,12 +18,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * This class represents the QR Code Scanner screen that the user
@@ -32,21 +32,19 @@ import java.util.Collections;
 public class QRScannerActivity extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
-
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
-    private String deviceID;
+    private Attendee attendee;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
+        eventsRef = database.getEventsRef();
 
         Intent intent = getIntent();
-        deviceID = intent.getStringExtra("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(intent.getExtras()).getSerializable("attendee");
 
 
         // OpenAI, 2024, ChatGPT, ScanQR code using zxing IntentIntegrator
@@ -155,13 +153,13 @@ public class QRScannerActivity extends AppCompatActivity {
                                 Timestamp dateTime = document.getTimestamp("dateTime");
 
                                 Intent intent = new Intent(QRScannerActivity.this, EventDetailsAttendee.class);
-                                intent.putExtra("deviceID", deviceID);
+                                intent.putExtra("attendee", attendee);
                                 intent.putExtra("eventID", eventID);
                                 intent.putExtra("title",title);
                                 intent.putExtra("description",description);
                                 intent.putExtra("dateTime",dateTime.toDate().toString());
                                 intent.putExtra("location",location);
-                                intent.putExtra("canCheckIn", true);
+                                intent.putExtra("prevActivity", "QRScannerActivity");
                                 startActivity(intent);
                             }
                         }

@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -35,10 +34,21 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button attendanceSeeAll;
     private ImageButton backButton;
 
+    private final Database database = Database.getInstance();
+    private Intent intent;
+    private CollectionReference eventsRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_event_dashboard);
+
+        // Initialize Firebase
+        eventsRef = database.getEventsRef();
+
+        // Get Intent For Single Event
+        intent = getIntent();
+        String eventDocID = intent.getStringExtra("eventDocumentId");
 
         // Initialize UI components
         eventName = findViewById(R.id.eventName);
