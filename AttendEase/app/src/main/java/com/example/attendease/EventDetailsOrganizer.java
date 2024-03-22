@@ -83,7 +83,10 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             String qrCodeImageUrl = event.getCheckInQR();
             // Load QR code image into ImageView
             if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
-                Glide.with(this).load(qrCodeImageUrl).into(QRCodeImage);
+                Glide.with(this)
+                        .load(qrCodeImageUrl)
+                        .override(500, 500) // Adjust the size as per your requirement
+                        .into(QRCodeImage);
             }
         }
     }

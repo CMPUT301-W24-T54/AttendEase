@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,7 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Activity for displaying the list of check ins' for a specific event.
@@ -33,7 +34,7 @@ public class AttendanceListActivity extends AppCompatActivity {
     private CollectionReference checkInsRef;
     private CollectionReference attendeesRef;
     private Intent intent;
-
+    private String eventDocID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,7 @@ public class AttendanceListActivity extends AppCompatActivity {
 
         // Call the function
         intent = getIntent();
-        String eventDocID = intent.getStringExtra("eventDocumentId");
+        eventDocID = intent.getStringExtra("eventDocumentId");
         setUpEventName(eventDocID);
 
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -84,30 +85,34 @@ public class AttendanceListActivity extends AppCompatActivity {
      */
     private void setUpCheckInsListView(String eventDocID) {
         checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<String> attendeeIDs = new ArrayList<>();
+            Map<String, Integer> attendeeCheckInCounts = new HashMap<>();
 
             // Retrieves the attendeeIDs associated with the event!
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 String eventID = document.getString("eventID");
                 if (eventDocID.equals(eventID)) {
                     String attendeeID = document.getString("attendeeID");
-                    attendeeIDs.add(attendeeID);
+                    attendeeCheckInCounts.put(attendeeID, attendeeCheckInCounts.getOrDefault(attendeeID, 0) + 1);
                 }
             }
 
             // Retrieves the attendee names associated with the attendeeIDs
-            List<String> attendeeNames = new ArrayList<>();
-            for (String attendeeID : attendeeIDs) {
+            List<String> attendeeInfoList = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : attendeeCheckInCounts.entrySet()) {
+                String attendeeID = entry.getKey();
+                int checkInCount = entry.getValue();
+
                 attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
                     String attendeeName = attendeeDocument.getString("name");
-                    attendeeNames.add(attendeeName);
+                    String attendeeInfo = attendeeName + " (Check-ins: " + checkInCount + ")";
+                    attendeeInfoList.add(attendeeInfo);
 
                     // Updates the ListView with attendee names
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeNames);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeInfoList);
                     attendanceListView.setAdapter(adapter);
 
                     // Updates the attendanceCount TextView with the count of attendees
-                    String totalCountText = "Total: " + attendeeNames.size(); // OR GET THE COUNT FROM THE LISTVIEW ITSELF
+                    String totalCountText = "Total: " + attendeeInfoList.size(); // OR GET THE COUNT FROM THE LISTVIEW ITSELF
                     attendanceCount.setText(totalCountText);
                 });
             }
