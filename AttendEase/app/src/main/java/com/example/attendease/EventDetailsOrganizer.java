@@ -1,9 +1,6 @@
 package com.example.attendease;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,12 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Activity for displaying detailed information about a single event for organizers.
@@ -34,21 +26,15 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button attendanceSeeAll;
     private ImageButton backButton;
 
-    private final Database database = Database.getInstance();
     private Intent intent;
-    private CollectionReference eventsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_event_dashboard);
 
-        // Initialize Firebase
-        eventsRef = database.getEventsRef();
-
         // Get Intent For Single Event
         intent = getIntent();
-        String eventDocID = intent.getStringExtra("eventDocumentId");
 
         // Initialize UI components
         eventName = findViewById(R.id.eventName);
@@ -60,7 +46,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         attendanceSeeAll = findViewById(R.id.attendanceSeeAllButton);
         backButton = findViewById(R.id.back_button);
 
-        Event event = getIntent().getParcelableExtra("event");
+        Event event = intent.getParcelableExtra("event");
 
         populateUIWithEvent(event);
 
@@ -68,13 +54,13 @@ public class EventDetailsOrganizer extends AppCompatActivity {
 
         signUpsSeeAll.setOnClickListener(v -> {
             Intent intent = new Intent(EventDetailsOrganizer.this, SignupsListActivity.class);
-            intent.putExtra("eventDocumentId", event.getEventId());
+            intent.putExtra("event", event);
             startActivity(intent);
         });
 
         attendanceSeeAll.setOnClickListener(v -> {
             Intent intent = new Intent(EventDetailsOrganizer.this, AttendanceListActivity.class);
-            intent.putExtra("eventDocumentId", event.getEventId());
+            intent.putExtra("event", event);
             startActivity(intent);
         });
     }
@@ -93,7 +79,10 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             String qrCodeImageUrl = event.getCheckInQR();
             // Load QR code image into ImageView
             if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
-                Glide.with(this).load(qrCodeImageUrl).into(QRCodeImage);
+                Glide.with(this)
+                        .load(qrCodeImageUrl)
+                        .override(500, 500) // Adjust the size as per your requirement
+                        .into(QRCodeImage);
             }
         }
     }
