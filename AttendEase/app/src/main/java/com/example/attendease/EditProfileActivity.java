@@ -13,9 +13,11 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,6 +67,9 @@ public class EditProfileActivity extends AppCompatActivity {
     // ActivityLauncher to get image from gallery
     private ActivityResultLauncher<String> mGetContent;
     private Uri profileUri;
+
+    private Boolean ImagePresent=false;
+    private Boolean ImageRemoved=false;
 
 
     @Override
@@ -128,8 +133,24 @@ public class EditProfileActivity extends AppCompatActivity {
         removeProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                profileUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.splash);
-                profileImage.setImageURI(profileUri);
+                profileUri=null;
+                //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
+                imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("TAG", "Image deleted successfully");
+
+                    }
+                });
+                int image_size=100;
+
+                // Generate profile picture and set it to the ImageView
+                String profileName = editProfileName.getText().toString(); // Example profile name
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
+                profileImage.setImageBitmap(profilePicture);
+                ImagePresent=false;
+                ImageRemoved=true;
             }
         });
     }
@@ -164,6 +185,17 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 // Set the bitmap to ImageView
                 profileImage.setImageBitmap(bitmap);
+                ImagePresent=true;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                int image_size=100;
+
+                // Generate profile picture and set it to the ImageView
+                String profileName = editProfileName.getText().toString(); // Example profile name
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
+                profileImage.setImageBitmap(profilePicture);
             }
         });
     }
@@ -213,7 +245,19 @@ public class EditProfileActivity extends AppCompatActivity {
             });
         }
         else {
+            if(ImageRemoved){
+                data.put(IMAGE_KEY, "");
+            }
             saveChangesInDatabase(data);
+            if(!ImagePresent){
+                int image_size=100;
+
+                // Generate profile picture and set it to the ImageView
+                //String profileName = editProfileName.getText().toString(); // Example profile name
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(name, image_size);
+                profileImage.setImageBitmap(profilePicture);
+            }
+
         }
     }
 
