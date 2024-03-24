@@ -1,23 +1,21 @@
 package com.example.attendease;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.bumptech.glide.Glide;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Activity for displaying detailed information about a single event for organizers.
@@ -33,24 +31,18 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button signUpsSeeAll;
     private Button attendanceSeeAll;
     private ImageButton backButton;
+    private Button shareQRButton;
 
-    private FirebaseFirestore db;
     private Intent intent;
-    private CollectionReference eventsRef;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_event_dashboard);
 
-        // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-
         // Get Intent For Single Event
         intent = getIntent();
-        String eventDocID = intent.getStringExtra("eventDocumentId");
-
 
         // Initialize UI components
         eventName = findViewById(R.id.eventName);
@@ -61,78 +53,84 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         signUpsSeeAll = findViewById(R.id.signUpsSeeAllButton);
         attendanceSeeAll = findViewById(R.id.attendanceSeeAllButton);
         backButton = findViewById(R.id.back_button);
+        shareQRButton = findViewById(R.id.shareQRButton);
 
-        // Fill in the views with information of the event  (TEMP)
-        eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
-            String eventTitle = documentSnapshot.getString("title");
-            eventName.setText(eventTitle);
-            String aboutDesc = documentSnapshot.getString("description");
-            aboutDescription.setText(aboutDesc);
-            String location = documentSnapshot.getString("location");
-            locationView.setText(location);
-            Timestamp dateTime = documentSnapshot.getTimestamp("dateTime");
-            if (dateTime != null) {
-                dateandtimeView.setText(dateTime.toDate().toString());
+
+        event = intent.getParcelableExtra("event");
+        populateUIWithEvent(event);
+
+        // On-Click Listeners for the buttons
+        backButton.setOnClickListener(v -> finish());
+        shareQRButton.setOnClickListener(v -> shareQRCodeImage());
+
+        signUpsSeeAll.setOnClickListener(v -> {
+            Intent intent = new Intent(EventDetailsOrganizer.this, SignupsListActivity.class);
+            intent.putExtra("event", event);
+            startActivity(intent);
+        });
+
+        attendanceSeeAll.setOnClickListener(v -> {
+            Intent intent = new Intent(EventDetailsOrganizer.this, AttendanceListActivity.class);
+            intent.putExtra("event", event);
+            startActivity(intent);
+        });
+    }
+
+    private void populateUIWithEvent(Event event) {
+        if (event != null) {
+            eventName.setText(event.getTitle());
+            aboutDescription.setText(event.getDescription());
+            locationView.setText(event.getLocation());
+            if (event.getDateTime() != null) {
+                dateandtimeView.setText(event.getDateTime().toDate().toString());
             } else {
-                // Handle null case, maybe hide the view or set a default text
                 dateandtimeView.setText("No date provided");
             }
-            String qrCodeImageUrl = documentSnapshot.getString("checkInQR");
 
-            runOnUiThread(() -> {
-                // Load QR code image into ImageView using URL and BitmapFactory
-                if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
-                    new Thread(() -> {
-                        try {
-                            URL url = new URL(qrCodeImageUrl);
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            connection.setDoInput(true);
-                            connection.connect();
-                            InputStream input = connection.getInputStream();
-                            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            String qrCodeImageUrl = event.getCheckInQR();
+            // Load QR code image into ImageView
+            if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
+                Glide.with(this)
+                        .load(qrCodeImageUrl)
+                        .override(500, 500) // Adjust the size as per your requirement
+                        .into(QRCodeImage);
+            }
+        }
+    }
 
-                            runOnUiThread(() -> QRCodeImage.setImageBitmap(bitmap));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }).start();
-                }
-            });
-        });
+    private void shareQRCodeImage() {
+        // Get the QR code Bitmap from the ImageView
+        Bitmap qrCodeBitmap = getBitmapFromImageView(QRCodeImage);
+
+        if (qrCodeBitmap != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/png");
+
+            // Add the Bitmap to intent for sharing
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            qrCodeBitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), qrCodeBitmap, "QR Code Image", null);
+            Uri qrCodeUri = Uri.parse(path);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, qrCodeUri);
+
+            // Share dialog
+            Intent chooserIntent = Intent.createChooser(shareIntent, "Share QR Code Image");
+            chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(chooserIntent);
+        } else {
+            Toast.makeText(EventDetailsOrganizer.this, "Unable to share QR code", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Bitmap getBitmapFromImageView(ImageView imageView) {
+        if (imageView.getDrawable() instanceof BitmapDrawable) {
+            return ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        }
+        return null;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Get Intent For Single Event
-        intent = getIntent();
-        String eventDocID = intent.getStringExtra("eventDocumentId");
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        signUpsSeeAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(EventDetailsOrganizer.this, SignupsListActivity.class);
-                intent.putExtra("eventDocumentId", eventDocID);
-                startActivity(intent);
-            }
-        });
-
-        attendanceSeeAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(EventDetailsOrganizer.this, AttendanceListActivity.class);
-                intent.putExtra("eventDocumentId", eventDocID);
-                startActivity(intent);
-            }
-        });
-
     }
 }

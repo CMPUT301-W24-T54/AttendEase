@@ -1,8 +1,14 @@
 package com.example.attendease;
 
+import static com.example.attendease.EventAdapter.TYPE_LARGE;
+import static com.example.attendease.EventAdapter.TYPE_SMALL;
+import static com.google.firebase.appcheck.internal.util.Logger.TAG;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,12 +17,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -29,13 +48,23 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
     private TextView seeAllEvents;
     private TextView seeMyEvents;
 
+    private Attendee attendee;
+
+
+    private RecyclerView recyclerViewBrowseEvents;
+    private RecyclerView recyclerViewMyEvents;
+    private EventAdapter adapterLarge;
+    private EventAdapter adapterSmall;
+    private ArrayList<Event> eventList = new ArrayList<>();
+
     private String deviceID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_dashboard);
 
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
 
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
@@ -43,6 +72,19 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         seeMyEvents = findViewById(R.id.see_all);
         seeAllEvents = findViewById(R.id.see_all2);
 
+        recyclerViewBrowseEvents = findViewById(R.id.rvBrowseEvents);
+        recyclerViewMyEvents = findViewById(R.id.rvMyEvents);
+
+        recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewBrowseEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        adapterLarge = new EventAdapter(this, eventList, TYPE_LARGE);
+        adapterSmall = new EventAdapter(this, eventList, TYPE_SMALL);
+
+        recyclerViewMyEvents.setAdapter(adapterLarge);
+        recyclerViewBrowseEvents.setAdapter(adapterSmall);
+
+        loadEventsFromFirestore();
         addListeners();
     }
 
@@ -60,7 +102,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 startActivity(intent);
             }
         });
@@ -69,7 +111,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 startActivity(intent);
             }
         });
@@ -78,7 +120,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseMyEvent.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 startActivity(intent);
             }
         });
@@ -101,14 +143,90 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_profile) {// Handle click on Profile item
                     Log.d("DEBUG", "Profile item clicked");
                     Intent intent = new Intent(AttendeeDashboardActivity.this, EditProfileActivity.class);
-                    intent.putExtra("deviceID", deviceID);
+                    intent.putExtra("attendee", attendee);
                     startActivity(intent);
 
                 }
                 return true;
             }
         });
-
-
     }
+    private void loadEventsFromFirestore() {
+        collectEventIdsForUser();
+        loadNewestEvents();
+    }
+
+    private void collectEventIdsForUser() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String attendeeId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        List<String> eventIds = new ArrayList<>();
+        db.collection("signIns")
+                .whereEqualTo("attendeeID", attendeeId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String eventId = document.getString("eventID");
+                            if (eventId != null && !eventId.isEmpty()) {
+                                eventIds.add(eventId);
+                            }
+                        }
+                        fetchEventsForIds(eventIds);
+                    } else {
+                        Log.w(TAG, "Error getting signed up events for user.", task.getException());
+                    }
+                });
+    }
+
+    private void fetchEventsForIds(List<String> eventIds) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<Event> events = new ArrayList<>();
+
+        if (eventIds.isEmpty()) {
+            // Handles the case where the user is not signed up for any events
+            adapterLarge.setEventList(events);
+            adapterLarge.notifyDataSetChanged();
+            return;
+        }
+
+        db.collection("events")
+                .whereIn(FieldPath.documentId(), eventIds)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Event> MyEvents = new ArrayList<>();
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            Event event = documentSnapshot.toObject(Event.class);
+                            MyEvents.add(event);
+                        }
+
+                        adapterLarge.setEventList(MyEvents);
+                        adapterLarge.notifyDataSetChanged();
+                    } else {
+                        Log.w(TAG, "Error fetching events for IDs.", task.getException());
+                    }
+                });
+    }
+
+    private void loadNewestEvents() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("events")
+                .limit(10)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Event> newestEvents = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Event event = document.toObject(Event.class);
+                            newestEvents.add(event);
+                        }
+                        adapterSmall.setEventList(newestEvents);
+                        adapterSmall.notifyDataSetChanged();
+                    } else {
+                        Log.w(TAG, "Error getting events documents.", task.getException());
+                    }
+                });
+    }
+
 }

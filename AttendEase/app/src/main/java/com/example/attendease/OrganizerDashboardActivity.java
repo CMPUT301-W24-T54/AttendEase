@@ -25,7 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,11 +39,16 @@ import java.util.List;
  * including the creation of new events.
  */
 public class OrganizerDashboardActivity extends AppCompatActivity {
+    private ImageButton createEventButton;
     private RecyclerView recyclerViewUpcomingEvent;
     private RecyclerView recyclerViewMyEvents;
     private EventAdapter adapterLarge;
     private EventAdapter adapterSmall;
     private ArrayList<Event> eventList = new ArrayList<>();
+    private final Database database = Database.getInstance();
+    private CollectionReference eventsRef;
+    private ArrayList<Event> eventList2 = new ArrayList<>();
+
 
     /**
      * Initializes the activity, setting up the user interface components and loading events
@@ -58,8 +63,8 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_dashboard);
 
-        FloatingActionButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
-        fabCreateEvent.setOnClickListener(new View.OnClickListener() {
+        createEventButton = findViewById(R.id.createEvent);
+        createEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
@@ -73,13 +78,14 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         adapterLarge = new EventAdapter(this, eventList, TYPE_LARGE);
-        adapterSmall = new EventAdapter(this, eventList, TYPE_SMALL);
+        adapterSmall = new EventAdapter(this, eventList2, TYPE_SMALL);
 
         recyclerViewUpcomingEvent.setAdapter(adapterLarge);
         recyclerViewMyEvents.setAdapter(adapterSmall);
 
+        eventsRef = database.getEventsRef();
         loadEventsFromFirestore();
-        setUpFabCreateEvent();
+        setUpCreateEvent();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -94,6 +100,26 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        adapterLarge.setOnItemClickListener(new EventAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Event event = eventList.get(position);
+                Intent intent = new Intent(OrganizerDashboardActivity.this, EventDetailsOrganizer.class);
+                intent.putExtra("event", event);
+                startActivity(intent);
+            }
+        });
+
+        adapterSmall.setOnItemClickListener(new EventAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Event event = eventList2.get(position);
+                Intent intent = new Intent(OrganizerDashboardActivity.this, EventDetailsOrganizer.class);
+                intent.putExtra("event", event);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -102,11 +128,10 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
      * the list of the next three events horizontally.
      */
     private void loadEventsFromFirestore() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Query for the closest upcoming event
-        db.collection("events")
+        eventsRef
                 .whereEqualTo("organizerId", organizerId)
                 .orderBy("dateTime")
                 .limit(1) // Ensures only one result is returned for the upcoming event
@@ -118,21 +143,20 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
                         eventList.add(upcomingEvent); // Add the single upcoming event
                         adapterLarge.notifyDataSetChanged(); // Notify the adapter for the upcoming event
 
-                        // Now query for the next three events
-                        db.collection("events")
+
+                        eventsRef
                                 .whereEqualTo("organizerId", organizerId)
                                 .orderBy("dateTime")
                                 .startAfter(upcomingEvent.getDateTime()) // Skip the upcoming event
-                                .limit(3) // Limit the next events to three (gives 'see all' button purpose)
                                 .get()
                                 .addOnCompleteListener(task2 -> {
                                     if (task2.isSuccessful()) {
-                                        List<Event> myEvents = new ArrayList<>();
+                                        eventList2.clear();
                                         for (QueryDocumentSnapshot document : task2.getResult()) {
                                             Event event = document.toObject(Event.class);
-                                            myEvents.add(event); // Add to the list of next three events
+                                            eventList2.add(event); // Add to the list of next three events
                                         }
-                                        adapterSmall.setEventList(myEvents); // Pass the next three events to the adapter
+                                        adapterSmall.setEventList(eventList2); // Pass the next three events to the adapter
                                         adapterSmall.notifyDataSetChanged(); // Notify the adapter for the other events
                                     } else {
                                         Log.w(TAG, "Error getting documents.", task2.getException());
@@ -145,14 +169,20 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the FloatingActionButton for creating new events. Tapping this button
+     * Sets up the Button for creating new events. Tapping this button
      * navigates to the NewEventActivity where the organizer can enter event details.
      */
-    private void setUpFabCreateEvent() {
-        ImageButton fabCreateEvent = findViewById(R.id.fabCreateEvent);
+    private void setUpCreateEvent() {
+        ImageButton fabCreateEvent = findViewById(R.id.createEvent);
         fabCreateEvent.setOnClickListener(view -> {
             Intent intent = new Intent(OrganizerDashboardActivity.this, NewEventActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadEventsFromFirestore();
     }
 }
