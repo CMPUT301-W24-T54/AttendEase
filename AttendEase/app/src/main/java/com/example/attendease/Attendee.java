@@ -2,16 +2,18 @@ package com.example.attendease;
 
 import java.io.Serializable;
 
+
 /**
- * This class represents and Attendee user
+ * This class represents an Attendee user
  */
-public class Attendee implements Serializable {
+
+public class Attendee implements Serializable{
     private String deviceID;
     private String name;
     private String email;
     private String phone;
     private String image;
-
+    private boolean geoTrackingEnabled;  // TODO : use this when checking in for maps
 
     /**
      * Constructs an Attendee
@@ -22,6 +24,7 @@ public class Attendee implements Serializable {
      * @param image Profile Picture
      */
     public Attendee(String deviceID, String name, String phone, String email, String image) {
+        // Use this constructor if the Attendee already exists
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
@@ -37,6 +40,7 @@ public class Attendee implements Serializable {
      * @param email Email
      */
     public Attendee(String deviceID, String name, String phone, String email) {
+        // Use this constructor if the Attendee already exists
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;

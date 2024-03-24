@@ -64,6 +64,7 @@ import java.util.UUID;
 public class NewEventActivity extends AppCompatActivity {
     private String eventName;
     private String eventID;
+    private Event newEvent;
 
     /**
      * Initializes the activity, setting the content view and configuring UI interactions.
@@ -102,21 +103,6 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_events) {
-                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            return false;
-        });
         // TODO add onClick to upload and remove images for event poster
 
     }
@@ -189,7 +175,7 @@ public class NewEventActivity extends AppCompatActivity {
             return;
         }
 
-        Event newEvent = new Event(eventID, eventName, eventAbout, ownerID, dateTime, eventLocation, "promoQR_placeholder", "checkInQR_placeholder", posterUrl, isGeoTrackingEnabled, maxAttendees);
+        newEvent = new Event(eventID, eventName, eventAbout, ownerID, dateTime, eventLocation, "promoQR_placeholder", "checkInQR_placeholder", posterUrl, isGeoTrackingEnabled, maxAttendees);
 
         // Save the new event to Firestore.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -370,7 +356,7 @@ public class NewEventActivity extends AppCompatActivity {
      */
     private void updateFirestoreWithQrUrl(String qrUrl, String eventId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        newEvent.setCheckInQR(qrUrl);
         // Query the collection for the document with the matching eventId
         db.collection("events")
                 .whereEqualTo("eventId", eventId)
@@ -401,7 +387,7 @@ public class NewEventActivity extends AppCompatActivity {
      */
     private void navigateToDashboard() {
         Intent intent = new Intent(NewEventActivity.this, EventDetailsOrganizer.class);
-        intent.putExtra("eventDocumentId", eventID); // "eventDocumentId" is the key
+        intent.putExtra("event", newEvent);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
