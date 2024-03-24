@@ -48,9 +48,10 @@ public class MapActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        event = getIntent().getParcelableExtra("event");
-        event = new Event();
-        event.setEventId("0d7276f3-0353-4f3a-b05b-8de77a068f1c_1711067197366");
+        event = getIntent().getParcelableExtra("event");
+        Log.d("DEBUG", String.format("onCreate: %s", event.getEventId()));
+//        event = new Event();
+//        event.setEventId("0d7276f3-0353-4f3a-b05b-8de77a068f1c_1711067197366");
         checkInsRef = database.getCheckInsRef();
 
         //handle permissions first, before map is created. not depicted here
@@ -87,7 +88,7 @@ public class MapActivity extends AppCompatActivity {
 
         controller.setCenter(myLocationGeoPoint);
         controller.animateTo(myLocationGeoPoint);
-        controller.setZoom(18);
+        controller.setZoom(1);
 
         map.getOverlays().add(locationOverlay);
         populateMapWithMarkers();

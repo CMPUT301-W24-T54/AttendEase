@@ -3,6 +3,7 @@ package com.example.attendease;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MapEventsOverlay;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,6 +38,7 @@ import java.util.Map;
  * This class retrieves and displays attendee information associated with an event from Firestore.
  */
 public class AttendanceListActivity extends AppCompatActivity {
+    private MapView mapView;
     private TextView eventName;
     private ListView attendanceListView;
     private TextView attendanceCount;
@@ -50,6 +60,7 @@ public class AttendanceListActivity extends AppCompatActivity {
         attendeesRef = database.getAttendeesRef();
 
         // Initialize UI components
+        mapView = findViewById(R.id.mapView);
         eventName = findViewById(R.id.event_textview);
         attendanceListView = findViewById(R.id.attendancelist);
         attendanceCount = findViewById(R.id.attendancecount);
@@ -60,6 +71,7 @@ public class AttendanceListActivity extends AppCompatActivity {
         event = intent.getParcelableExtra("event");
         eventDocID = event.getEventId();
         setUpEventName(event, eventDocID);
+        setUpMap();
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,5 +172,31 @@ public class AttendanceListActivity extends AppCompatActivity {
             });
             dialog.show();
         }
+    }
+
+    private void setUpMap() {
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setTilesScaledToDpi(true);
+        mapView.getLocalVisibleRect(new Rect());
+        IMapController controller = mapView.getController();
+        controller.setZoom(3);
+
+        // StackOverflow, NeoKerd, Click listener in open street maps
+        // https://stackoverflow.com/questions/67850072/set-onclicklistener-for-mapview-using-open-street-map
+
+        mapView.getOverlays().add(new MapEventsOverlay(new MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(GeoPoint p) {
+                Intent mapIntent = new Intent(AttendanceListActivity.this, MapActivity.class);
+                mapIntent.putExtra("event", event);
+                startActivity(mapIntent);
+                return false;
+            }
+
+            @Override
+            public boolean longPressHelper(GeoPoint p) {
+                return false;
+            }
+        }));
     }
 }
