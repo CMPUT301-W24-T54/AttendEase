@@ -2,8 +2,15 @@ package com.example.attendease;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +19,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -35,6 +46,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private CollectionReference signUpsRef;
     private CollectionReference checkInsRef;
     private CollectionReference eventsRef;
+    private CollectionReference attendeesRef;
     private Intent intent;
     private TextView titleText;
     private TextView locationText;
@@ -45,6 +57,9 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private Attendee attendee;
     private String eventID;
     private String prevActivity;
+    private GeoPoint geoPoint;
+    private FusedLocationProviderClient fusedLocationClient;
+    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +70,19 @@ public class EventDetailsAttendee extends AppCompatActivity {
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
         Log.d("DEBUG", String.format("onCreate: %s", attendee.getDeviceID()));
 
+        if (attendee.isGeoTrackingEnabled()) {
+            Log.d("DEBUG", String.format("onCreate: %s", "YIPPEE it works"));
+        }
+
+
         eventID = intent.getStringExtra("eventID");
         prevActivity = intent.getStringExtra("prevActivity");
 
         signUpsRef = database.getSignInsRef();
         checkInsRef = database.getCheckInsRef();
         eventsRef = database.getEventsRef();
+        attendeesRef = database.getAttendeesRef();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         titleText = findViewById(R.id.EventTitle);
         descriptionText = findViewById(R.id.description);
@@ -77,27 +99,18 @@ public class EventDetailsAttendee extends AppCompatActivity {
         toggleInteractButton(false);  // Wait to see if they haven't signed up yet
 
 
-
-
-        // TODO : If they have signed up and they came here through checkin, allow them to check in
-        // TODO : If they haven't signed up and they came here through checkin, allow them to sign up
         if (Objects.equals(prevActivity, "QRScannerActivity")) {
             // Check if they have signed up first
             setListener(eventID, true);
         }
 
 
-        // TODO : If they came here through all events and they have signed up, they shouldn't be able to do anything
-        // TODO : If they came here through all events, and haven't signed up, they should be able to sign up.
         if (Objects.equals(prevActivity, "BrowseAllEvents")) {
             // Check if they have signed up first
             setListener(eventID, false);
         }
 
-
-
         addListeners();
-
     }
 
     private void setListener(String eventID, boolean canCheckIn) {
@@ -134,8 +147,13 @@ public class EventDetailsAttendee extends AppCompatActivity {
                 String unique_id = UUID.randomUUID().toString();
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventID", eventID);
-                data.put("attendeeID",attendee.getDeviceID());
+                data.put("attendeeID", attendee.getDeviceID());
                 data.put("timeStamp", dateString);
+
+                // TODO : Check Geo Location enabled
+
+
+                // TODO : Add Geo Point data
 
                 checkInsRef.document(unique_id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -144,8 +162,59 @@ public class EventDetailsAttendee extends AppCompatActivity {
                                 Log.d("Firestore", "DocumentSnapshot successfully written!");
                                 toggleInteractButton(false);
                                 Toast.makeText(EventDetailsAttendee.this, "Check In successful!", Toast.LENGTH_SHORT).show();
+                                checkAndGetGeoPoint(unique_id);
                             }
                         });
+            }
+        });
+    }
+
+    private void checkAndGetGeoPoint(String docID) {
+        attendeesRef.document(attendee.getDeviceID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (Boolean.TRUE.equals(document.getBoolean("geoTrackingEnabled"))) {
+                        getGeoPoint(docID);
+                    }
+                }
+            }
+        });
+    }
+
+    private void getGeoPoint(String docID) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            Log.d("DEBUG", String.format("onLocationChanged: %f %f", latitude, longitude));
+                            geoPoint = new GeoPoint(latitude, longitude);
+                            addGeoPoint(docID);
+                        } else {
+                            Log.d("DEBUG", String.format("onLocationChanged: can't really get a emulator location"));
+                        }
+                    }
+                });
+    }
+
+    private void addGeoPoint(String docID) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("geoPoint", geoPoint);
+        checkInsRef.document(docID).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("DEBUG", "onSuccess: Location worked woopee");
             }
         });
     }
