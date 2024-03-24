@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -133,7 +134,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 profileUri=null;
-                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                 StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
                 imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

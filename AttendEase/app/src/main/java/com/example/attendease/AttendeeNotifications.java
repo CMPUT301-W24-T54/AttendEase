@@ -3,6 +3,7 @@ package com.example.attendease;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,21 +43,32 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
     private ArrayList<Msg> dataList;
     private ListView MsgList;
     private ArrayAdapter<Msg> MsgAdapter;
-    private FirebaseFirestore db;
+
     private CollectionReference eventsRef;
     private DocumentReference attendee_Ref;
     private ArrayList<String> stringArray;
-    private boolean Array_set=false;
+
     private BottomNavigationView bottomNav;
     private String deviceID;
     private CollectionReference signInRef;
 
     private ArrayList<String> eventArray;
     private CollectionReference realeventsRef;
+    private Attendee attendee;
+    private CountingIdlingResource countingIdlingResource;
+    private final Database database = Database.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_notification);
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        deviceID = attendee.getDeviceID();
+        attendee_Ref=database.getAttendeesRef().document(deviceID);
+        realeventsRef = database.getEventsRef();
+        signInRef=database.getSignInsRef();
+        eventsRef=database.getNotificationsRef();
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
         bottomNav = findViewById(R.id.attendee_bottom_nav);
         ImageView imageview=findViewById(R.id.backgroundimageview);
         TextView textview=findViewById(R.id.textView7);
@@ -66,17 +78,17 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         textview.setVisibility(View.INVISIBLE);
         textview2.setVisibility(View.INVISIBLE);
 
-        Intent intent=getIntent();
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        //Intent intent=getIntent();
+
         //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
         //need to implements Serializable in Attendee class
         //attendee.getsignupids
-        db = FirebaseFirestore.getInstance();
+        /*db = FirebaseFirestore.getInstance();
         signInRef = db.collection("signIns");
         eventsRef = db.collection("notifications");
         realeventsRef = db.collection("events");
         Log.d("DEBUG", "Deviceid");
-        attendee_Ref=db.collection("attendees").document(deviceID);
+        attendee_Ref=db.collection("attendees").document(deviceID);*/
         //attendee_Ref=db.collection("attendees").document("atharva");
         eventArray=new ArrayList<>();
 
@@ -94,6 +106,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         }*/
         MsgAdapter = new MsgAdapter(this, dataList);
         MsgList.setAdapter(MsgAdapter);
+        getallnotifications();
 
 
 
@@ -139,6 +152,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,7 +171,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                 } else if (id == R.id.nav_profile) {// Handle click on Profile item
                     Log.d("DEBUG", "Profile item clicked");
                     Intent intent = new Intent(AttendeeNotifications.this, EditProfileActivity.class);
-                    intent.putExtra("deviceID", deviceID);
+                    intent.putExtra("attendee", attendee);
                     startActivity(intent);
 
                 }
@@ -165,28 +179,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
             }
         });
 
-        attendee_Ref.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            // Document exists in the database
-                            if (documentSnapshot.contains("notification_deleted")) {
-                                // 'notification_deleted' field exists in the document
-                                stringArray = (ArrayList<String>) documentSnapshot.get("notification_deleted");
-                            } else {
-                                // 'notification_deleted' field doesn't exist in the document
-                                stringArray = null;
-                            }
-                            eventlist();
-                            // Now 'variableValue' contains the value of the variable from the Firestore
-                        } else {
-                            stringArray=null;
-                            eventlist();
-                            // Document does not exist
-                        }
-                    }
-                });
+
 
         MsgList.setOnItemLongClickListener((parent, views, position, id) ->{
             Msg selectedMsg = dataList.get(position);
@@ -226,6 +219,30 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
 
+    }
+    private void getallnotifications(){
+        attendee_Ref.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            // Document exists in the database
+                            if (documentSnapshot.contains("notification_deleted")) {
+                                // 'notification_deleted' field exists in the document
+                                stringArray = (ArrayList<String>) documentSnapshot.get("notification_deleted");
+                            } else {
+                                // 'notification_deleted' field doesn't exist in the document
+                                stringArray = null;
+                            }
+                            eventlist();
+                            // Now 'variableValue' contains the value of the variable from the Firestore
+                        } else {
+                            stringArray=null;
+                            eventlist();
+                            // Document does not exist
+                        }
+                    }
+                });
     }
     private void eve(){
         //forattendee only

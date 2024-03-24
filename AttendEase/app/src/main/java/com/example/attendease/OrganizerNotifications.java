@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,9 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
     private String deviceID;
 
     private CollectionReference realeventsRef;
+    private Attendee attendee;
+    private CountingIdlingResource countingIdlingResource;
+    private final Database database = Database.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +61,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                         addMsg(message);
                     }
                 });
-        Intent intent=getIntent();
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+
         ImageView imageview=findViewById(R.id.backgroundimageview);
         TextView textview=findViewById(R.id.textView7);
         TextView textview2=findViewById(R.id.textView8);
@@ -69,9 +72,12 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
         //need to implements Serializable in Attendee class
         //attendee.getsignupids
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("notifications");
-        realeventsRef = db.collection("events");
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        deviceID = attendee.getDeviceID();
+        realeventsRef = database.getEventsRef();
+        eventsRef=database.getNotificationsRef();
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
 
         MsgList=findViewById(R.id.Msg_list);
