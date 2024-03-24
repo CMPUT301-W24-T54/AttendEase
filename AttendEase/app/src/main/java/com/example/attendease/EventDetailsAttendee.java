@@ -203,6 +203,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
                             addGeoPoint(docID);
                         } else {
                             Log.d("DEBUG", String.format("onLocationChanged: can't really get a emulator location"));
+                            Toast.makeText(EventDetailsAttendee.this, "Could not get Location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
