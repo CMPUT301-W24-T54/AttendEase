@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-
+import java.util.Objects;
 
 
 public class OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
@@ -38,6 +39,12 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
     private ArrayAdapter<Msg> MsgAdapter;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
+    private String deviceID;
+
+    private CollectionReference realeventsRef;
+    private Attendee attendee;
+    private CountingIdlingResource countingIdlingResource;
+    private final Database database = Database.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +61,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                         addMsg(message);
                     }
                 });
-        Intent intent=getIntent();
+
         ImageView imageview=findViewById(R.id.backgroundimageview);
         TextView textview=findViewById(R.id.textView7);
         TextView textview2=findViewById(R.id.textView8);
@@ -65,8 +72,12 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
         //need to implements Serializable in Attendee class
         //attendee.getsignupids
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("notifications");
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        deviceID = attendee.getDeviceID();
+        realeventsRef = database.getEventsRef();
+        eventsRef=database.getNotificationsRef();
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
 
         MsgList=findViewById(R.id.Msg_list);
@@ -74,7 +85,8 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         String[] Messages = {};
         dataList = new ArrayList<Msg>();
         eventsRef
-                .whereEqualTo("sentBy", "name")
+                //.whereEqualTo("sentBy", "name")
+                .whereEqualTo("sentBy", deviceID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -119,6 +131,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         makeinvisible();
         String Title= message.getTitle().toString();
         String Message= message.getMessage().toString();
+        String event=message.getEvent();
         long currentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String dateString = sdf.format(new Date(currentTimeMillis));
@@ -128,7 +141,8 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         data.put("message",Message);
         data.put("timestamp", dateString);
         //need to get name
-        data.put("sentBy",Title);
+        data.put("sentBy",deviceID);
+        data.put("event",event);
         eventsRef.document(message.getUnique_id()).set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -195,8 +209,25 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         ImageButton adds=findViewById(R.id.AddButton);
         adds.setOnClickListener(v -> {
             //new ViewMsgDialog().show(getSupportFragmentManager(), "Add Message");
-            Intent intent= new Intent(OrganizerNotifications.this, MsgAdd.class);
-            addMsgLauncher.launch(intent);
+            ArrayList<String> eventIDs=new ArrayList<>();
+            ArrayList<String> eventslist=new ArrayList<>();
+            realeventsRef.whereEqualTo("organizerId",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            // Document found where fieldName is equal to desiredValue
+                            eventIDs.add(doc.getString("eventId"));
+                            eventslist.add(doc.getString("title"));
+
+                        }
+                        Intent intent= new Intent(OrganizerNotifications.this, MsgAdd.class);
+                        intent.putExtra("eventIDs",eventIDs);
+                        intent.putExtra("eventslist",eventslist);
+                        addMsgLauncher.launch(intent);
+                    }
+                }
+            });
 
             /*Bundle extras = getIntent().getExtras();
             String Title=extras.getString("Title");

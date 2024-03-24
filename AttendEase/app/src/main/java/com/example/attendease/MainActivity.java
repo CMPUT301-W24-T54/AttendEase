@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TEMPORARILY NAVIGATES TO EVENT DETAILS - ORG USING HARDCODED EVENT ID
                 Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
                 startActivity(intent);}
 

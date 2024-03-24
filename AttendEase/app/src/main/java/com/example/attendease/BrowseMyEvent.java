@@ -54,12 +54,12 @@ public class BrowseMyEvent extends AppCompatActivity {
         dataList=new ArrayList<Event>();
         EventAdapter=new BrowseEventAdapter(this,dataList);
         EventList.setAdapter(EventAdapter);
+        updateDatalist();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateDatalist();
         EventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
