@@ -7,22 +7,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -41,14 +40,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class EditProfileActivity extends AppCompatActivity {
 
+    // TODO : This is the main reason why we want to pass an Attendee
+    // TODO : UI relies on database too much, GUI butter knife is useless here
+
     // Database side declarations
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference attendeesRef;
-    private static final String ATTENDEE_COLLECTION = "attendees";
+    private StorageReference storageRef;
     private static final String NAME_KEY = "name";
     private static final String PHONE_KEY = "phone";
     private static final String EMAIL_KEY = "email";
     private static final String IMAGE_KEY = "image";
+    private static final String TRACKING = "geoTrackingEnabled";
 
     // View declarations
     private CircleImageView profileImage;
@@ -57,15 +60,19 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editProfileName;
     private EditText editProfilePhone;
     private EditText editProfileEmail;
+    private CheckBox geoTrackingCheckBox;
     private Button saveChanges;
 
     // Attendee User declaration
-    private Attendee user;
+    private Attendee attendee;
     private String deviceID;
 
     // ActivityLauncher to get image from gallery
     private ActivityResultLauncher<String> mGetContent;
     private Uri profileUri;
+
+    private Boolean ImagePresent=false;
+    private Boolean ImageRemoved=false;
 
 
     @Override
@@ -73,12 +80,15 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendee_edit_profile);
 
-        db = FirebaseFirestore.getInstance();
-        attendeesRef = db.collection(ATTENDEE_COLLECTION);
+        // Refactored this to use Database class
+        // No longer instantiates new FirebaseFirestore or FiresbaseFirestore object
+        attendeesRef = database.getAttendeesRef();
+        storageRef = database.getStorageRef();
 
         // Jeremy Logan, 2009, Stack Overflow, Bundle Args in intent
         // https://stackoverflow.com/questions/768969/passing-a-bundle-on-startactivity
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        deviceID = attendee.getDeviceID();
 
         profileImage = findViewById(R.id.edit_profile_pic);
         uploadProfileImage = findViewById(R.id.edit_profile_upload_button);
@@ -86,6 +96,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editProfileName = findViewById(R.id.edit_profile_name);
         editProfilePhone = findViewById(R.id.edit_profile_phone);
         editProfileEmail = findViewById(R.id.edit_profile_email);
+        geoTrackingCheckBox = findViewById(R.id.geo_tracking_check);
         saveChanges = findViewById(R.id.edit_profile_save_changes);
 
         populateViews();
@@ -126,8 +137,24 @@ public class EditProfileActivity extends AppCompatActivity {
         removeProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                profileUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.splash);
-                profileImage.setImageURI(profileUri);
+                profileUri=null;
+                //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
+                imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("TAG", "Image deleted successfully");
+
+                    }
+                });
+                int image_size=100;
+
+                // Generate profile picture and set it to the ImageView
+                String profileName = editProfileName.getText().toString(); // Example profile name
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
+                profileImage.setImageBitmap(profilePicture);
+                ImagePresent=false;
+                ImageRemoved=true;
             }
         });
     }
@@ -136,6 +163,7 @@ public class EditProfileActivity extends AppCompatActivity {
      * This method retrieves the profile information of the current Attendee user and populates the corresponding views.
      */
     private void populateViews() {
+        // TODO : Refactor to only use attendee class
         attendeesRef.document(deviceID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -143,15 +171,16 @@ public class EditProfileActivity extends AppCompatActivity {
                     String name = documentSnapshot.get(NAME_KEY) != null ? String.valueOf(documentSnapshot.get(NAME_KEY)) : "";
                     String phone = documentSnapshot.get(PHONE_KEY) != null ? String.valueOf(documentSnapshot.get(PHONE_KEY)) : "";
                     String email = documentSnapshot.get(EMAIL_KEY) != null ? String.valueOf(documentSnapshot.get(EMAIL_KEY)) : "";
+                    boolean geoTracking = Boolean.TRUE.equals(documentSnapshot.getBoolean(TRACKING));
 
                     editProfileName.setText(name);
                     editProfilePhone.setText(phone);
                     editProfileEmail.setText(email);
+                    geoTrackingCheckBox.setChecked(geoTracking);
                 }
             }
         });
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
 
         imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -162,6 +191,17 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 // Set the bitmap to ImageView
                 profileImage.setImageBitmap(bitmap);
+                ImagePresent=true;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                int image_size=100;
+
+                // Generate profile picture and set it to the ImageView
+                String profileName = editProfileName.getText().toString(); // Example profile name
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
+                profileImage.setImageBitmap(profilePicture);
             }
         });
     }
@@ -175,6 +215,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = editProfileName.getText().toString();
         String email = editProfileEmail.getText().toString();
         String phone = editProfilePhone.getText().toString();
+        boolean geoTrackingEnabled = geoTrackingCheckBox.isChecked();
         Log.d("DEBUG", String.format("%s %s %s", name, email, phone));
 
         if (name.equals("") || email.equals("") || phone.equals("")) {
@@ -187,10 +228,10 @@ public class EditProfileActivity extends AppCompatActivity {
         data.put(NAME_KEY, name);
         data.put(EMAIL_KEY, email);
         data.put(PHONE_KEY, phone);
+        data.put(TRACKING, geoTrackingEnabled);
 
         // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         // Handle the profile image
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
         String downloadUri;
 
@@ -205,14 +246,26 @@ public class EditProfileActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             data.put(IMAGE_KEY, uri.toString());
                             Log.d("DEBUG", "onSuccess: image url should show up in doc");
-                            saveChangesInDatabase(data);
+                            SaveChanges(data);
                         }
                     });
                 }
             });
         }
         else {
-            saveChangesInDatabase(data);
+            if(ImageRemoved){
+                data.put(IMAGE_KEY, "");
+            }
+            SaveChanges(data);
+            if(!ImagePresent){
+                int image_size=100;
+
+                // Generate profile picture and set it to the ImageView
+                //String profileName = editProfileName.getText().toString(); // Example profile name
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(name, image_size);
+                profileImage.setImageBitmap(profilePicture);
+            }
+
         }
     }
 
@@ -222,7 +275,9 @@ public class EditProfileActivity extends AppCompatActivity {
      *
      * @param data A HashMap containing the updated profile data to be saved in the database.
      */
-    private void saveChangesInDatabase(HashMap<String, Object> data){
+    private void SaveChanges(HashMap<String, Object> data){
+//        attendee.setGeoTrackingEnabled(geoTrackingCheckBox.isChecked());
+
         attendeesRef.document(deviceID)
                 .update(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -25,7 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -45,7 +45,10 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     private EventAdapter adapterLarge;
     private EventAdapter adapterSmall;
     private ArrayList<Event> eventList = new ArrayList<>();
+    private final Database database = Database.getInstance();
+    private CollectionReference eventsRef;
     private ArrayList<Event> eventList2 = new ArrayList<>();
+
 
     /**
      * Initializes the activity, setting up the user interface components and loading events
@@ -80,6 +83,7 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         recyclerViewUpcomingEvent.setAdapter(adapterLarge);
         recyclerViewMyEvents.setAdapter(adapterSmall);
 
+        eventsRef = database.getEventsRef();
         loadEventsFromFirestore();
         setUpCreateEvent();
 
@@ -124,11 +128,10 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
      * the list of the next three events horizontally.
      */
     private void loadEventsFromFirestore() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Query for the closest upcoming event
-        db.collection("events")
+        eventsRef
                 .whereEqualTo("organizerId", organizerId)
                 .orderBy("dateTime")
                 .limit(1) // Ensures only one result is returned for the upcoming event
@@ -140,8 +143,8 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
                         eventList.add(upcomingEvent); // Add the single upcoming event
                         adapterLarge.notifyDataSetChanged(); // Notify the adapter for the upcoming event
 
-                        // Now query for the next events
-                        db.collection("events")
+
+                        eventsRef
                                 .whereEqualTo("organizerId", organizerId)
                                 .orderBy("dateTime")
                                 .startAfter(upcomingEvent.getDateTime()) // Skip the upcoming event

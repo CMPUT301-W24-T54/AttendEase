@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +23,8 @@ import java.util.Map;
  */
 public class UserCheckIn extends AppCompatActivity {
 
-    private FirebaseFirestore db;
+    private final Database database = Database.getInstance();
     private CollectionReference attendeesRef;
-    private static final String ATTENDEE_COLLECTION = "attendees";
 
     private EditText attendeeNameEditText;
     private Button checkInButton;
@@ -47,9 +45,7 @@ public class UserCheckIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_check_in);
 
-
-        db = FirebaseFirestore.getInstance();
-        attendeesRef = db.collection(ATTENDEE_COLLECTION);
+        attendeesRef = database.getAttendeesRef();
 
         attendeeNameEditText = findViewById(R.id.editText_name);
         checkInButton = findViewById(R.id.button_submit);

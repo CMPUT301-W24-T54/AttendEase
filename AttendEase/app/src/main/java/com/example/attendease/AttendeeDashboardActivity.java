@@ -47,6 +47,10 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
     private TextView seeAllEvents;
     private TextView seeMyEvents;
+
+    private Attendee attendee;
+
+
     private RecyclerView recyclerViewBrowseEvents;
     private RecyclerView recyclerViewMyEvents;
     private EventAdapter adapterLarge;
@@ -54,13 +58,13 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
     private ArrayList<Event> eventList = new ArrayList<>();
 
     private String deviceID;
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_dashboard);
 
-        deviceID = (String) Objects.requireNonNull(getIntent().getExtras()).get("deviceID");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
 
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
@@ -98,7 +102,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 startActivity(intent);
             }
         });
@@ -107,7 +111,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 startActivity(intent);
             }
         });
@@ -116,7 +120,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AttendeeDashboardActivity.this, BrowseMyEvent.class);
-                intent.putExtra("deviceID", deviceID);
+                intent.putExtra("attendee", attendee);
                 startActivity(intent);
             }
         });
@@ -130,12 +134,16 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                     Log.d("DEBUG", "Home item clicked");
                 } else if (id == R.id.nav_events) {// Handle click on Events item
                     Log.d("DEBUG", "Events item clicked");
+
                 } else if (id == R.id.nav_bell) {// Handle click on Bell item
                     Log.d("DEBUG", "Bell item clicked");
+                    Intent intent=new Intent(AttendeeDashboardActivity.this, AttendeeNotifications.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 } else if (id == R.id.nav_profile) {// Handle click on Profile item
                     Log.d("DEBUG", "Profile item clicked");
                     Intent intent = new Intent(AttendeeDashboardActivity.this, EditProfileActivity.class);
-                    intent.putExtra("deviceID", deviceID);
+                    intent.putExtra("attendee", attendee);
                     startActivity(intent);
 
                 }

@@ -1,24 +1,21 @@
 package com.example.attendease;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Activity for displaying detailed information about a single event for organizers.
@@ -34,11 +31,18 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button signUpsSeeAll;
     private Button attendanceSeeAll;
     private ImageButton backButton;
+    private Button shareQRButton;
+
+    private Intent intent;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_event_dashboard);
+
+        // Get Intent For Single Event
+        intent = getIntent();
 
         // Initialize UI components
         eventName = findViewById(R.id.eventName);
@@ -49,22 +53,25 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         signUpsSeeAll = findViewById(R.id.signUpsSeeAllButton);
         attendanceSeeAll = findViewById(R.id.attendanceSeeAllButton);
         backButton = findViewById(R.id.back_button);
+        shareQRButton = findViewById(R.id.shareQRButton);
 
-        Event event = getIntent().getParcelableExtra("event");
 
+        event = intent.getParcelableExtra("event");
         populateUIWithEvent(event);
 
+        // On-Click Listeners for the buttons
         backButton.setOnClickListener(v -> finish());
+        shareQRButton.setOnClickListener(v -> shareQRCodeImage());
 
         signUpsSeeAll.setOnClickListener(v -> {
             Intent intent = new Intent(EventDetailsOrganizer.this, SignupsListActivity.class);
-            intent.putExtra("eventDocumentId", event.getEventId());
+            intent.putExtra("event", event);
             startActivity(intent);
         });
 
         attendanceSeeAll.setOnClickListener(v -> {
             Intent intent = new Intent(EventDetailsOrganizer.this, AttendanceListActivity.class);
-            intent.putExtra("eventDocumentId", event.getEventId());
+            intent.putExtra("event", event);
             startActivity(intent);
         });
     }
@@ -83,9 +90,43 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             String qrCodeImageUrl = event.getCheckInQR();
             // Load QR code image into ImageView
             if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
-                Glide.with(this).load(qrCodeImageUrl).into(QRCodeImage);
+                Glide.with(this)
+                        .load(qrCodeImageUrl)
+                        .override(500, 500) // Adjust the size as per your requirement
+                        .into(QRCodeImage);
             }
         }
+    }
+
+    private void shareQRCodeImage() {
+        // Get the QR code Bitmap from the ImageView
+        Bitmap qrCodeBitmap = getBitmapFromImageView(QRCodeImage);
+
+        if (qrCodeBitmap != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/png");
+
+            // Add the Bitmap to intent for sharing
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            qrCodeBitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), qrCodeBitmap, "QR Code Image", null);
+            Uri qrCodeUri = Uri.parse(path);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, qrCodeUri);
+
+            // Share dialog
+            Intent chooserIntent = Intent.createChooser(shareIntent, "Share QR Code Image");
+            chooserIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(chooserIntent);
+        } else {
+            Toast.makeText(EventDetailsOrganizer.this, "Unable to share QR code", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Bitmap getBitmapFromImageView(ImageView imageView) {
+        if (imageView.getDrawable() instanceof BitmapDrawable) {
+            return ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        }
+        return null;
     }
 
     @Override

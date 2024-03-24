@@ -1,7 +1,12 @@
 package com.example.attendease;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,40 +17,50 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MapEventsOverlay;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Activity for displaying the list of check ins' for a specific event.
  * This class retrieves and displays attendee information associated with an event from Firestore.
  */
 public class AttendanceListActivity extends AppCompatActivity {
+    private MapView mapView;
     private TextView eventName;
     private ListView attendanceListView;
     private TextView attendanceCount;
     private ImageButton backButton;
 
-    private FirebaseFirestore db;
-    private CollectionReference eventsRef;
+    private final Database database = Database.getInstance();
     private CollectionReference checkInsRef;
     private CollectionReference attendeesRef;
     private Intent intent;
-
+    private String eventDocID;
+    private Event event;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendance_list);
 
-        // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
-        checkInsRef = db.collection("checkIns");
-        attendeesRef = db.collection("attendees");
+        // Initialize Firebase Collections
+        checkInsRef = database.getCheckInsRef();
+        attendeesRef = database.getAttendeesRef();
 
         // Initialize UI components
+        mapView = findViewById(R.id.mapView);
         eventName = findViewById(R.id.event_textview);
         attendanceListView = findViewById(R.id.attendancelist);
         attendanceCount = findViewById(R.id.attendancecount);
@@ -53,8 +68,10 @@ public class AttendanceListActivity extends AppCompatActivity {
 
         // Call the function
         intent = getIntent();
-        String eventDocID = intent.getStringExtra("eventDocumentId");
-        setUpEventName(eventDocID);
+        event = intent.getParcelableExtra("event");
+        eventDocID = event.getEventId();
+        setUpEventName(event, eventDocID);
+        setUpMap();
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,11 +86,9 @@ public class AttendanceListActivity extends AppCompatActivity {
      * Calls {@link #setUpCheckInsListView(String)} to initialize the list of check-Ins.
      * @param eventDocID The document ID of the event in Firestore.
      */
-    private void setUpEventName(String eventDocID) {
-        eventsRef.document(eventDocID).get().addOnSuccessListener(documentSnapshot -> {
-            String eventTitle = documentSnapshot.getString("title");
-            eventName.setText(eventTitle);
-        });
+    private void setUpEventName(Event event, String eventDocID) {
+        String eventTitle = event.getTitle();
+        eventName.setText(eventTitle);
         setUpCheckInsListView(eventDocID);
     }
 
@@ -82,36 +97,106 @@ public class AttendanceListActivity extends AppCompatActivity {
      * Retrieves attendee information from Firestore and updates the UI accordingly.
      * @param eventDocID The document ID of the event in Firestore.
      */
-    private void setUpCheckInsListView(String eventDocID) {
-        checkInsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<String> attendeeIDs = new ArrayList<>();
 
-            // Retrieves the attendeeIDs associated with the event!
-            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                String eventID = document.getString("eventID");
-                if (eventDocID.equals(eventID)) {
+    private void setUpCheckInsListView(String eventDocID) {
+        checkInsRef.whereEqualTo("eventID", eventDocID).addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Log.e("AttendanceListActivity", "Error getting check-ins", e);
+                return;
+            }
+            if (queryDocumentSnapshots != null) {
+                Map<String, Integer> attendeeCheckInCounts = new HashMap<>();
+                List<String> attendeeInfoList = new ArrayList<>();
+
+                // Retrieves the attendee IDs associated with the event
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     String attendeeID = document.getString("attendeeID");
-                    attendeeIDs.add(attendeeID);
+                    attendeeCheckInCounts.put(attendeeID, attendeeCheckInCounts.getOrDefault(attendeeID, 0) + 1);
+                }
+
+                // Retrieves the attendee names associated with the attendee IDs and update the UI
+                for (Map.Entry<String, Integer> entry : attendeeCheckInCounts.entrySet()) {
+                    String attendeeID = entry.getKey();
+                    int checkInCount = entry.getValue();
+
+                    // Retrieves attendee name from Firestore
+                    attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+                        String attendeeName = attendeeDocument.getString("name");
+
+                        // Appends check-in count after attendee name
+                        String attendeeInfo = attendeeName + " (Check-ins: " + checkInCount + ")";
+                        attendeeInfoList.add(attendeeInfo);
+
+                        // Updates the ListView with attendee names and check-in counts
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(AttendanceListActivity.this, android.R.layout.simple_list_item_1, attendeeInfoList);
+                        attendanceListView.setAdapter(adapter);
+
+                        // Updates the attendanceCount TextView with the count of attendees
+                        String totalCountText = "Total: " + attendeeInfoList.size();
+                        attendanceCount.setText(totalCountText);
+
+                        // Checks for milestone
+                        checkMilestone(attendeeInfoList.size());
+                    });
                 }
             }
 
-            // Retrieves the attendee names associated with the attendeeIDs
-            List<String> attendeeNames = new ArrayList<>();
-            for (String attendeeID : attendeeIDs) {
-                attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
-                    String attendeeName = attendeeDocument.getString("name");
-                    attendeeNames.add(attendeeName);
-
-                    // Updates the ListView with attendee names
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, attendeeNames);
-                    attendanceListView.setAdapter(adapter);
-
-                    // Updates the attendanceCount TextView with the count of attendees
-                    String totalCountText = "Total: " + attendeeNames.size(); // OR GET THE COUNT FROM THE LISTVIEW ITSELF
-                    attendanceCount.setText(totalCountText);
-                });
-            }
         });
     }
 
+    private void checkMilestone(int attendeeCount) {
+        // The milestones are hard-coded temporarily
+        List<Integer> milestones = Arrays.asList(1, 5, 10, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
+        if (milestones.contains(attendeeCount)) {
+            showMilestoneDialog(attendeeCount);
+        }
+
+    }
+
+    private void showMilestoneDialog(int attendeeCount) {
+        if (!isFinishing()) {
+            View view = LayoutInflater.from(this).inflate(R.layout.milestone_dialog, null);
+            Button okayButton = view.findViewById(R.id.okay_button);
+
+            TextView milestoneTextView = view.findViewById(R.id.milestoneTextView);
+            milestoneTextView.setText("Congratulations! Your Event Has Reached " + attendeeCount + " Attendees!");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(view);
+            Dialog dialog = builder.create();
+            okayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    private void setUpMap() {
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setTilesScaledToDpi(true);
+        mapView.getLocalVisibleRect(new Rect());
+        IMapController controller = mapView.getController();
+        controller.setZoom(3);
+
+        // StackOverflow, NeoKerd, Click listener in open street maps
+        // https://stackoverflow.com/questions/67850072/set-onclicklistener-for-mapview-using-open-street-map
+
+        mapView.getOverlays().add(new MapEventsOverlay(new MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(GeoPoint p) {
+                Intent mapIntent = new Intent(AttendanceListActivity.this, MapActivity.class);
+                mapIntent.putExtra("event", event);
+                startActivity(mapIntent);
+                return false;
+            }
+
+            @Override
+            public boolean longPressHelper(GeoPoint p) {
+                return false;
+            }
+        }));
+    }
 }
