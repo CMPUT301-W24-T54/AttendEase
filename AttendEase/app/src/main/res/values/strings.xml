@@ -76,5 +76,6 @@
     <string name="plus">New Event</string>
     <string name="event_cover">Event Cover</string>
     <string name="LoremIpsum">Lorem ipsum dolor sit amet consectetur. Convallis nulla pretium tempus adipiscing non neque mattis fames. Nascetur et arcu id volutpat.</string>
+    <string name="geo_tracking_enabled">Geo Tracking Enabled</string>
 
 </resources>

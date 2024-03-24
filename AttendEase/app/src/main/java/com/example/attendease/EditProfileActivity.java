@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private static final String PHONE_KEY = "phone";
     private static final String EMAIL_KEY = "email";
     private static final String IMAGE_KEY = "image";
+    private static final String TRACKING = "geoTrackingEnabled";
 
     // View declarations
     private CircleImageView profileImage;
@@ -56,6 +58,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editProfileName;
     private EditText editProfilePhone;
     private EditText editProfileEmail;
+    private CheckBox geoTrackingCheckBox;
     private Button saveChanges;
 
     // Attendee User declaration
@@ -88,6 +91,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editProfileName = findViewById(R.id.edit_profile_name);
         editProfilePhone = findViewById(R.id.edit_profile_phone);
         editProfileEmail = findViewById(R.id.edit_profile_email);
+        geoTrackingCheckBox = findViewById(R.id.geo_tracking_check);
         saveChanges = findViewById(R.id.edit_profile_save_changes);
 
         populateViews();
@@ -146,10 +150,12 @@ public class EditProfileActivity extends AppCompatActivity {
                     String name = documentSnapshot.get(NAME_KEY) != null ? String.valueOf(documentSnapshot.get(NAME_KEY)) : "";
                     String phone = documentSnapshot.get(PHONE_KEY) != null ? String.valueOf(documentSnapshot.get(PHONE_KEY)) : "";
                     String email = documentSnapshot.get(EMAIL_KEY) != null ? String.valueOf(documentSnapshot.get(EMAIL_KEY)) : "";
+                    boolean geoTracking = Boolean.TRUE.equals(documentSnapshot.getBoolean(TRACKING));
 
                     editProfileName.setText(name);
                     editProfilePhone.setText(phone);
                     editProfileEmail.setText(email);
+                    geoTrackingCheckBox.setChecked(geoTracking);
                 }
             }
         });
@@ -177,6 +183,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = editProfileName.getText().toString();
         String email = editProfileEmail.getText().toString();
         String phone = editProfilePhone.getText().toString();
+        boolean geoTrackingEnabled = geoTrackingCheckBox.isChecked();
         Log.d("DEBUG", String.format("%s %s %s", name, email, phone));
 
         if (name.equals("") || email.equals("") || phone.equals("")) {
@@ -189,6 +196,7 @@ public class EditProfileActivity extends AppCompatActivity {
         data.put(NAME_KEY, name);
         data.put(EMAIL_KEY, email);
         data.put(PHONE_KEY, phone);
+        data.put(TRACKING, geoTrackingEnabled);
 
         // OpenAI, 2024, ChatGPT, Upload Profile Pic as PNG
         // Handle the profile image
@@ -206,14 +214,14 @@ public class EditProfileActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             data.put(IMAGE_KEY, uri.toString());
                             Log.d("DEBUG", "onSuccess: image url should show up in doc");
-                            saveChangesInDatabase(data);
+                            SaveChanges(data);
                         }
                     });
                 }
             });
         }
         else {
-            saveChangesInDatabase(data);
+            SaveChanges(data);
         }
     }
 
@@ -223,7 +231,9 @@ public class EditProfileActivity extends AppCompatActivity {
      *
      * @param data A HashMap containing the updated profile data to be saved in the database.
      */
-    private void saveChangesInDatabase(HashMap<String, Object> data){
+    private void SaveChanges(HashMap<String, Object> data){
+//        attendee.setGeoTrackingEnabled(geoTrackingCheckBox.isChecked());
+
         attendeesRef.document(deviceID)
                 .update(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
