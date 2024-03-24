@@ -8,13 +8,13 @@ public class Msg {
 
     private String unique_id;
 
-    private String sent_By;
+    private String event;
 
-    public Msg(String title, String message, String sent_By) {
+    public Msg(String title, String message, String event) {
         this.title = title;
         this.message = message;
         unique_id= UUID.randomUUID().toString();
-        this.sent_By=sent_By;
+        this.event=event;
     }
 
     public String getTitle() {
@@ -41,7 +41,7 @@ public class Msg {
         this.unique_id = unique_id;
     }
 
-    public String getSent_By() {
-        return sent_By;
+    public String getEvent() {
+        return event;
     }
 }
