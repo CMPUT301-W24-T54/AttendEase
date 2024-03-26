@@ -23,20 +23,20 @@ import java.util.ArrayList;
 
 public class AdminDashboardActivity extends AppCompatActivity {
     private RecyclerView rvAllEvents;
-    private RecyclerView rvAllProfiles;
+    private RecyclerView rvAllAttendees;
     private RecyclerView rvAllImages;
     private TextView seeAll;
     private TextView seeAll2;
     private TextView seeAll3;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference eventsRef = db.collection("events");
-    private CollectionReference profilesRef = db.collection("profiles");
+    private CollectionReference attendeesRef = db.collection("attendees");
     private CollectionReference imagesRef = db.collection("images");
     private EventAdapter eventAdapter;
-    private ProfileAdapter profileAdapter;
+    private AttendeeAdapter attendeeAdapter;
     private ImageAdapter imageAdapter;
     private ArrayList<Event> eventList = new ArrayList<>();
-    private ArrayList<Profile> profileList = new ArrayList<>();
+    private ArrayList<Attendee> attendeeList = new ArrayList<>();
     private ArrayList<Image> imageList = new ArrayList<>();
 
     @Override
@@ -45,7 +45,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.admin_dashboard);
 
         rvAllEvents = findViewById(R.id.rvAllEvents);
-        rvAllProfiles = findViewById(R.id.rvAllProfiles);
+        rvAllAttendees = findViewById(R.id.rvAllProfiles);
         rvAllImages = findViewById(R.id.rvAllImages);
 
         seeAll = findViewById(R.id.see_all);
@@ -53,19 +53,19 @@ public class AdminDashboardActivity extends AppCompatActivity {
         seeAll3 = findViewById(R.id.see_all3);
 
         rvAllEvents.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        rvAllProfiles.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvAllAttendees.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvAllImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         eventAdapter = new EventAdapter(this, eventList, EventAdapter.TYPE_SMALL);
-        profileAdapter = new ProfileAdapter(this, profileList);
+        attendeeAdapter = new AttendeeAdapter(this, attendeeList);
         imageAdapter = new ImageAdapter(this, imageList);
 
         rvAllEvents.setAdapter(eventAdapter);
-        rvAllProfiles.setAdapter(profileAdapter);
+        rvAllAttendees.setAdapter(attendeeAdapter);
         rvAllImages.setAdapter(imageAdapter);
 
         loadEventsFromFirestore();
-        loadProfilesFromFirestore();
+        loadAttendeesFromFirestore();
         loadImagesFromFirestore();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +79,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         seeAll2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, AllProfilesActivity.class);
+                Intent intent = new Intent(AdminDashboardActivity.this, BrowseAllAttendees.class);
                 startActivity(intent);
             }
         });
@@ -87,7 +87,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         seeAll3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, AllImagesActivity.class);
+                Intent intent = new Intent(AdminDashboardActivity.this, BrowseAllImages.class);
                 startActivity(intent);
             }
         });
@@ -102,11 +102,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, BrowseAllEvents.class);
                 startActivity(intent);
                 return true;
-            } else if (id == R.id.nav_profiles) {
-                Intent intent = new Intent(this, BrowseAllProfiles.class);
+            } else if (id == R.id.nav_profile) {
+                Intent intent = new Intent(this, BrowseAllAttendees.class);
                 startActivity(intent);
                 return true;
-            } else if (id == R.id.nav_images) {
+            } else if (id == R.id.nav_image) {
                 Intent intent = new Intent(this, BrowseAllImages.class);
                 startActivity(intent);
                 return true;
@@ -121,16 +121,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        profileAdapter.setOnItemClickListener((view, position) -> {
-            Profile profile = profileList.get(position);
-            Intent intent = new Intent(AdminDashboardActivity.this, AdminProfileDetailsActivity.class);
-            intent.putExtra("profile", profile);
+        /**
+        attendeeAdapter.setOnItemClickListener((view, position) -> {
+            Attendee attendee = attendeeList.get(position);
+            Intent intent = new Intent(AdminDashboardActivity.this, AdminAttendeeDetailsActivity.class);
+            intent.putExtra("attendee", attendee);
             startActivity(intent);
-        });
+        });*/
     }
 
     private void loadEventsFromFirestore() {
-        eventsRef.get().addOnCompleteListener(task -> {
+        eventsRef.orderBy("dateTime").limit(4).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 eventList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -144,17 +145,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void loadProfilesFromFirestore() {
-        profilesRef.get().addOnCompleteListener(task -> {
+    private void loadAttendeesFromFirestore() {
+        attendeesRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                profileList.clear();
+                attendeeList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Profile profile = document.toObject(Profile.class);
-                    profileList.add(profile);
+                    Attendee attendee = document.toObject(Attendee.class);
+                    attendeeList.add(attendee);
                 }
-                profileAdapter.notifyDataSetChanged();
+                attendeeAdapter.notifyDataSetChanged();
             } else {
-                Log.d("AdminDashboardActivity", "Error getting profiles: ", task.getException());
+                Log.d("AdminDashboardActivity", "Error getting attendees: ", task.getException());
             }
         });
     }

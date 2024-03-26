@@ -68,14 +68,14 @@ public class EventDetailsAdmin extends AppCompatActivity {
             } else {
                 dateandtimeView.setText("No date provided");
             }
-
-            String coverImageUrl = event.getCoverImageUrl();
+            /**
+            String coverImageUrl = event.getImageURL();
             if (coverImageUrl != null && !coverImageUrl.isEmpty()) {
                 Glide.with(this)
                         .load(coverImageUrl)
                         .override(500, 500)
                         .into(eventCover);
-            }
+            }*/
         }
     }
 
@@ -86,8 +86,8 @@ public class EventDetailsAdmin extends AppCompatActivity {
     }
 
     private void removeEventCover() {
-        // Code to remove event cover image (if needed)
-        eventCover.setImageResource(R.drawable.placeholder_image); // Set a placeholder image or null
+        // Code to remove event cover image TODO
+        eventCover.setImageResource(R.drawable.item_removed_successfully); //placeholder image
         Toast.makeText(this, "Event cover photo removed", Toast.LENGTH_SHORT).show();
     }
 }
