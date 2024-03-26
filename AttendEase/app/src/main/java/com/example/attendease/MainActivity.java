@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
-                startActivity(intent);}
-
+                Intent intent = new Intent(MainActivity.this, AdminDashboardActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }
