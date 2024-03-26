@@ -2,9 +2,13 @@ package com.example.attendease;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,20 +22,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Activity for displaying the list of check ins' for a specific event.
@@ -50,6 +52,11 @@ public class AttendanceListActivity extends AppCompatActivity {
     private Intent intent;
     private String eventDocID;
     private Event event;
+
+//    private int[] milestones = {1, 5, 10, 50, 100}; // Define milestones
+//    private boolean[] milestoneReached = new boolean[milestones.length];
+    private List<Attendee> attendeeList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +79,7 @@ public class AttendanceListActivity extends AppCompatActivity {
         eventDocID = event.getEventId();
         setUpEventName(event, eventDocID);
         setUpMap();
+//        showMilestoneDialogIfNeeded();
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,74 +113,96 @@ public class AttendanceListActivity extends AppCompatActivity {
                 return;
             }
             if (queryDocumentSnapshots != null) {
-                Map<String, Integer> attendeeCheckInCounts = new HashMap<>();
-                List<String> attendeeInfoList = new ArrayList<>();
+                attendeeList = new ArrayList<>();
 
-                // Retrieves the attendee IDs associated with the event
+                // Calculate check-in counts and create Attendee objects
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     String attendeeID = document.getString("attendeeID");
-                    attendeeCheckInCounts.put(attendeeID, attendeeCheckInCounts.getOrDefault(attendeeID, 0) + 1);
-                }
-
-                // Retrieves the attendee names associated with the attendee IDs and update the UI
-                for (Map.Entry<String, Integer> entry : attendeeCheckInCounts.entrySet()) {
-                    String attendeeID = entry.getKey();
-                    int checkInCount = entry.getValue();
-
-                    // Retrieves attendee name from Firestore
+                    int checkInCount = calculateCheckInCount(queryDocumentSnapshots, attendeeID);
                     attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
                         String attendeeName = attendeeDocument.getString("name");
+                        String url = attendeeDocument.getString("image");
 
-                        // Appends check-in count after attendee name
-                        String attendeeInfo = attendeeName + " (Check-ins: " + checkInCount + ")";
-                        attendeeInfoList.add(attendeeInfo);
+                        // Check if the attendee is already in the list
+                        boolean attendeeExists = false;
+                        for (Attendee attendee : attendeeList) {
+                            if (attendee.getName().equals(attendeeName)) {
+                                // Update the existing attendee's check-in count
+                                attendee.setCheckInCount(checkInCount);
+                                attendeeExists = true;
+                                break;
+                            }
+                        }
+                        if (!attendeeExists) {
+                            // Create a new Attendee object if the attendee is not in the list
+                            Attendee attendee = new Attendee(attendeeName, checkInCount, url);
+                            attendeeList.add(attendee);
+                        }
 
-                        // Updates the ListView with attendee names and check-in counts
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(AttendanceListActivity.this, android.R.layout.simple_list_item_1, attendeeInfoList);
+                        ArrayAdapter<Attendee> adapter = new AttendanceListAdapter(this, R.layout.list_item_attendance, attendeeList);
                         attendanceListView.setAdapter(adapter);
 
-                        // Updates the attendanceCount TextView with the count of attendees
-                        String totalCountText = "Total: " + attendeeInfoList.size();
+                        String totalCountText = "Total: " + attendeeList.size();
                         attendanceCount.setText(totalCountText);
 
-                        // Checks for milestone
-                        checkMilestone(attendeeInfoList.size());
                     });
                 }
             }
-
         });
     }
 
-    private void checkMilestone(int attendeeCount) {
-        // The milestones are hard-coded temporarily
-        List<Integer> milestones = Arrays.asList(1, 5, 10, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
-        if (milestones.contains(attendeeCount)) {
-            showMilestoneDialog(attendeeCount);
+    // Calculate check-in count for a specific attendee
+    private int calculateCheckInCount(QuerySnapshot queryDocumentSnapshots, String attendeeID) {
+        int count = 0;
+        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+            String id = document.getString("attendeeID");
+            if (id != null && id.equals(attendeeID)) {
+                count++;
+            }
         }
-
+        return count;
     }
+//    private void showMilestoneDialogIfNeeded() {
+//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//        boolean milestoneDialogShown = sharedPreferences.getBoolean("milestoneDialogShown", false);
+//
+//        if (!milestoneDialogShown) {
+//            int numberOfAttendees = attendeeList.size();
+//
+//            for (int i = 0; i < milestones.length; i++) {
+//                if (numberOfAttendees >= milestones[i] && !milestoneReached[i]) {
+//                    milestoneReached[i] = true;
+//                    showMilestoneDialog(milestones[i]);
+//                }
+//            }
+//
+//            // Check if all milestones are reached, mark that milestone dialog has been shown
+//            boolean allMilestonesReached = true;
+//            for (boolean reached : milestoneReached) {
+//                if (!reached) {
+//                    allMilestonesReached = false;
+//                    break;
+//                }
+//            }
+//
+//            if (allMilestonesReached) {
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                editor.putBoolean("milestoneDialogShown", true);
+//                editor.apply();
+//            }
+//        }
+//    }
+//
+//    private void showMilestoneDialog(int milestone) {
+////        // Implement the logic to show the milestone dialog for the specified milestone
+////        // For example, you can create a custom dialog
+////        Dialog dialog = new Dialog(this);
+////        dialog.setContentView(R.layout.milestone_dialog);
+////        TextView milestoneTextView = dialog.findViewById(R.id.milestoneTextView);
+////        milestoneTextView.setText("Congratulations! Your Event Has Reached " + milestone + " Attendees!");
+////        dialog.show();
+////    }
 
-    private void showMilestoneDialog(int attendeeCount) {
-        if (!isFinishing()) {
-            View view = LayoutInflater.from(this).inflate(R.layout.milestone_dialog, null);
-            Button okayButton = view.findViewById(R.id.okay_button);
-
-            TextView milestoneTextView = view.findViewById(R.id.milestoneTextView);
-            milestoneTextView.setText("Congratulations! Your Event Has Reached " + attendeeCount + " Attendees!");
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(view);
-            Dialog dialog = builder.create();
-            okayButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-        }
-    }
 
     private void setUpMap() {
         mapView.setTileSource(TileSourceFactory.MAPNIK);
