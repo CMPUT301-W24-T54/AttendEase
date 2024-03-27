@@ -14,6 +14,9 @@ public class Attendee implements Serializable{
     private String phone;
     private String image;
     private boolean geoTrackingEnabled;  // TODO : use this when checking in for maps
+    private int checkInCount; // New field for check-in count
+    private String url;
+
 
     /**
      * Constructs an Attendee
@@ -47,6 +50,12 @@ public class Attendee implements Serializable{
         this.email = email;
         this.phone = phone;
         this.image = null;
+    }
+
+    public Attendee(String name, int checkInCount, String url) {
+        this.name = name;
+        this.checkInCount = checkInCount;
+        this.url = url;
     }
 
     public void signUp() {}  // TODO Implement signUp functionality on database side
@@ -148,5 +157,15 @@ public class Attendee implements Serializable{
 
     public void setGeoTrackingEnabled(boolean geoTrackingEnabled) {
         this.geoTrackingEnabled = geoTrackingEnabled;
+    }
+    public int getCheckInCount() {
+        return checkInCount;
+    }
+
+    public void setCheckInCount(int checkInCount) {
+        this.checkInCount = checkInCount;
+    }
+    public String getUrl() {
+        return url;
     }
 }
