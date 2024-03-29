@@ -4,9 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 /**
@@ -121,6 +125,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         TextView titleTextView;
         TextView locationTextView;
+        ImageView eventImageView; // Reference to the ImageView
 
         EventViewHolder(View itemView, int viewType) {
             super(itemView);
@@ -128,8 +133,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             titleTextView = itemView.findViewById(R.id.textView3);
             if (viewType == TYPE_LARGE) {
                 locationTextView = itemView.findViewById(R.id.textView4);
+                eventImageView = itemView.findViewById(R.id.imageView); // Initialize ImageView for large type
             } else {
                 locationTextView = null;
+                eventImageView = itemView.findViewById(R.id.imageView); // Initialize ImageView for small type as well
             }
         }
 
@@ -138,7 +145,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             if (locationTextView != null) {
                 locationTextView.setText(event.getLocation());
             }
-            // Other bindings potentially
+            // Check if the event has a valid poster URL and load it; otherwise set a placeholder
+            if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null")) {
+                Glide.with(itemView.getContext())
+                        .load(event.getPosterUrl())
+                        .centerCrop()
+                        .into(eventImageView);
+            } else {
+                eventImageView.setImageResource(R.drawable.splash);
+            }
         }
     }
 
