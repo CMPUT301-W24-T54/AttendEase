@@ -14,6 +14,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.ByteArrayOutputStream;
 
@@ -85,6 +88,20 @@ public class EventDetailsOrganizer extends AppCompatActivity {
                 dateandtimeView.setText(event.getDateTime().toDate().toString());
             } else {
                 dateandtimeView.setText("No date provided");
+            }
+
+            // Load the event poster
+            ImageView eventPosterImageView = findViewById(R.id.imageView4);
+            String posterUrl = event.getPosterUrl();
+            if (posterUrl != null && !posterUrl.equals("null") && !posterUrl.isEmpty()) {
+                int cornerRadius = 24;
+                Glide.with(this)
+                        .load(posterUrl)
+                        .apply(new RequestOptions()
+                                .transform(new CenterCrop(), new RoundedCorners(cornerRadius)))
+                        .into(eventPosterImageView);
+            } else {
+                eventPosterImageView.setImageResource(R.drawable.splash);
             }
 
             String qrCodeImageUrl = event.getCheckInQR();
