@@ -93,7 +93,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             // Load the event poster
             ImageView eventPosterImageView = findViewById(R.id.imageView4);
             String posterUrl = event.getPosterUrl();
-            if (posterUrl != null && !posterUrl.equals("null") && !posterUrl.isEmpty()) {
+            if (posterUrl != null && !posterUrl.equals("null")) {
                 int cornerRadius = 24;
                 Glide.with(this)
                         .load(posterUrl)
@@ -109,7 +109,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
                 Glide.with(this)
                         .load(qrCodeImageUrl)
-                        .override(500, 500) // Adjust the size as per your requirement
+                        .override(500, 500)
                         .into(QRCodeImage);
             }
         }
