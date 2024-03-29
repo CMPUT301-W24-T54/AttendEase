@@ -22,6 +22,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,6 +68,8 @@ public class NewEventActivity extends AppCompatActivity {
     private String eventName;
     private String eventID;
     private Event newEvent;
+    private String posterUrl;
+    private Uri eventPosterUri = null;
 
     /**
      * Initializes the activity, setting the content view and configuring UI interactions.
@@ -81,6 +86,10 @@ public class NewEventActivity extends AppCompatActivity {
         setContentView(R.layout.new_event);
 
         ImageButton buttonGoBack = findViewById(R.id.buttonGoBack);
+        ImageView ivCoverPhoto = findViewById(R.id.ivCoverPhoto);
+        Button btnUploadPhoto = findViewById(R.id.btnUploadPhoto);
+        Button btnRemovePhoto = findViewById(R.id.btnRemovePhoto);
+
         buttonGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +112,18 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 
-        // TODO add onClick to upload and remove images for event poster
+        ActivityResultLauncher<String> getContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                uri -> {
+                    ivCoverPhoto.setImageURI(uri);
+                    eventPosterUri = uri;
+                });
+
+        btnUploadPhoto.setOnClickListener(v -> getContent.launch("image/*"));
+
+        btnRemovePhoto.setOnClickListener(v -> {
+            ivCoverPhoto.setImageResource(0); // Remove the image from the ImageView
+            eventPosterUri = null; // Clear the image URI
+        });
 
     }
 
@@ -164,8 +184,12 @@ public class NewEventActivity extends AppCompatActivity {
         Timestamp dateTime = createTimestamp(eventDate, eventTime);
         String eventLocation = ((EditText) findViewById(R.id.etEventLocation)).getText().toString();
 
-        // TODO add image upload functionality to the upload image button in onCreate and then fetch the image here
-        String posterUrl = "null";
+        if (eventPosterUri != null) {
+            uploadEventPoster(eventPosterUri, eventID);
+        } else {
+            // Proceed with creating the event without a poster
+            posterUrl = "null";
+        }
 
         boolean isGeoTrackingEnabled = ((CheckBox) findViewById(R.id.cbGeoTracking)).isChecked();
         int maxAttendees = getMaxAttendees();
@@ -184,7 +208,6 @@ public class NewEventActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     // Once the event is successfully added, generate and upload the QR code.
                     Bitmap qrCodeBitmap = generateCheckInQRCode(eventID);
-                    // TODO generate promoQR
                     if (qrCodeBitmap != null) {
                         writeQRtoDatabase(qrCodeBitmap, eventID);
                     }
@@ -383,7 +406,7 @@ public class NewEventActivity extends AppCompatActivity {
 
 
     /**
-     * Navigates back to the Organizer Dashboard Activity, clearing the current activity from the stack.
+     * Navigates back to the details of the event, clearing the current activity from the stack.
      */
     private void navigateToDashboard() {
         Intent intent = new Intent(NewEventActivity.this, EventDetailsOrganizer.class);
@@ -495,47 +518,16 @@ public class NewEventActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private void uploadEventPoster(Uri posterUri, String eventID) {
+        StorageReference posterRef = FirebaseStorage.getInstance().getReference("images/" + eventID + "/eventposter.png");
 
-    /**
-     * Converts the provided data into a QR code bitmap of specified width and height.
-     *
-     * @param data The data to encode in the QR code.
-     * @param width The width of the QR code bitmap.
-     * @param height The height of the QR code bitmap.
-     * @return A Bitmap representing the QR code, or null if generation fails.
-     * @throws WriterException If an error occurs during QR code generation.
-     */
-    private Bitmap endcodeAsBitmap(String data, int width, int height) throws WriterException {
-        QRCodeWriter writer = new QRCodeWriter();
-        BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, width, height);
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                bitmap.setPixel(x, y, bitMatrix.get(x, y) ? getResources().getColor(R.color.black) : getResources().getColor(R.color.white));
-            }
-        }
-
-        return bitmap;
+        posterRef.putFile(posterUri).addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            posterUrl = uri.toString();
+            FirebaseFirestore.getInstance().collection("events").document(eventID)
+                    .update("posterUrl", posterUrl)
+                    .addOnSuccessListener(aVoid -> Log.d("Upload", "Poster uploaded successfully"))
+                    .addOnFailureListener(e -> Log.e("Upload", "Failed to upload poster", e));
+        })).addOnFailureListener(e -> Log.e("Upload", "Failed to upload poster", e));
     }
 
-    /**
-     * Compresses the provided bitmap into PNG format and returns the resulting byte array.
-     *
-     * @param bitmap The bitmap to compress.
-     * @return A byte array containing the PNG-compressed bitmap data.
-     */
-    public byte[] getImagePng(Bitmap bitmap) {
-        // Create a ByteArrayOutputStream to hold the PNG image data
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        // Compress the Bitmap into PNG format with 100% quality
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-
-        // Convert the ByteArrayOutputStream to byte array
-        return outputStream.toByteArray();
-    }
-// TODO add functions to upload and remove images for event poster
-
-// TODO add funtions to generate QR codes
 }

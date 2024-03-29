@@ -225,7 +225,33 @@ public class EventDetailsAttendee extends AppCompatActivity {
         interactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //need to take name from attendee class
+                eventsRef.document(eventID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Long maxAttendees = documentSnapshot.getLong("maxAttendees");
+                            signUpsRef.whereEqualTo("eventID", eventID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        int currentAttendeesCount = Objects.requireNonNull(task.getResult()).size();
+                                        if (maxAttendees != null && currentAttendeesCount < maxAttendees) {
+                                            // Allow sign up
+                                            proceedWithSignUp();
+                                        } else {
+                                            // Prevent sign up
+                                            Toast.makeText(EventDetailsAttendee.this, "Unsuccessful: Event is full.", Toast.LENGTH_SHORT).show();
+                                            toggleInteractButton(false);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            private void proceedWithSignUp() {
                 long currentTimeMillis = System.currentTimeMillis();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                 String dateString = sdf.format(new Date(currentTimeMillis));
@@ -233,7 +259,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
                 String unique_id = UUID.randomUUID().toString();
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventID", eventID);
-                data.put("attendeeID",attendee.getDeviceID());
+                data.put("attendeeID", attendee.getDeviceID());
                 data.put("timeStamp", dateString);
 
                 signUpsRef.document(unique_id).set(data)

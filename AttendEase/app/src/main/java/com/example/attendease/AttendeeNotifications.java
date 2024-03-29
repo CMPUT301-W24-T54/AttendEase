@@ -164,6 +164,9 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                 Log.d("DEBUG", String.format("onNavigationItemSelected: %d", id));
                 if (id == R.id.nav_home) {// Handle click on Home item
                     Log.d("DEBUG", "Home item clicked");
+                    Intent intent = new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 } else if (id == R.id.nav_events) {// Handle click on Events item
                     Log.d("DEBUG", "Events item clicked");
                 } else if (id == R.id.nav_bell) {// Handle click on Bell item
