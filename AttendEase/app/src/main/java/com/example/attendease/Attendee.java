@@ -57,6 +57,10 @@ public class Attendee implements Serializable{
         this.checkInCount = checkInCount;
         this.url = url;
     }
+    public Attendee(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
     public void signUp() {}  // TODO Implement signUp functionality on database side
     public void checkIn() {} // TODO Implement checkIn functionality on database side

@@ -2,17 +2,15 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- AppBarLayout -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!-- Back Button ImageButton -->
+
         <ImageButton
             android:id="@+id/back_button"
             android:layout_width="50dp"
@@ -24,14 +22,12 @@
             android:text=""
             app:layout_scrollFlags="scroll|enterAlways"/>
 
-        <!-- CollapsingToolbarLayout -->
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!-- ImageView for Event Image -->
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="match_parent"
@@ -44,16 +40,6 @@
                 android:src="@drawable/ae"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"/>
-
-            <!-- Toolbar -->
-<!--            <androidx.appcompat.widget.Toolbar-->
-<!--                android:id="@+id/toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="?attr/actionBarSize"-->
-<!--                app:layout_collapseMode="pin"-->
-<!--                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--                app:title=""-->
-<!--                app:titleTextColor="@color/black" />-->
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -320,349 +306,4 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<androidx.constraintlayout.widget.ConstraintLayout-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent" >-->
-<!--    <ImageButton-->
-<!--        android:id="@+id/back_button"-->
-<!--        android:layout_width="50dp"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:layout_marginStart="15dp"-->
-<!--        android:layout_marginTop="13dp"-->
-<!--        android:backgroundTint="@android:color/transparent"-->
-<!--        android:src="@drawable/nav_left"-->
-<!--        android:text=""-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:ignore="SpeakableTextPresentCheck" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView4"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginStart="22dp"-->
-<!--        android:layout_marginEnd="22dp"-->
-<!--        android:layout_marginBottom="9dp"-->
-<!--        android:background="@drawable/rounded_corners"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/eventName"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/textView16"-->
-<!--        app:srcCompat="@drawable/ae"/>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/eventName"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="26dp"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:text="Event Name"-->
-<!--        android:textAlignment="viewStart"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="16sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/tabLayout"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/imageView4" />-->
-
-<!--    <com.google.android.material.tabs.TabLayout-->
-<!--        android:id="@+id/tabLayout"-->
-<!--        android:layout_width="409dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginBottom="50dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--        <com.google.android.material.tabs.TabItem-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Details" />-->
-
-<!--    </com.google.android.material.tabs.TabLayout>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/textView16"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="162dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:layout_marginEnd="162dp"-->
-<!--        android:layout_marginBottom="21dp"-->
-<!--        android:text="Event"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="24sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/imageView4"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <ScrollView-->
-<!--        android:id="@+id/scrollViewEventDetails"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginStart="22dp"-->
-<!--        android:layout_marginEnd="22dp"-->
-<!--        android:paddingTop="24dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tabLayout">-->
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/linearLayout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/detailsAboutHeader"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:paddingBottom="10dp"-->
-<!--                android:text="About"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textStyle="bold" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/detailsAboutContent"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:paddingBottom="10dp"-->
-<!--                android:text="@string/LoremIpsum"-->
-<!--                android:textColor="@color/black" />-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/neon"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingLeft="8dp"-->
-<!--                android:paddingTop="8dp"-->
-<!--                android:paddingBottom="8dp">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:contentDescription="LOCATION ICON"-->
-<!--                    android:src="@drawable/nav_events" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/location"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="Location"-->
-<!--                    android:textColor="@color/black" />-->
-<!--            </LinearLayout>-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/neon"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingLeft="8dp"-->
-<!--                android:paddingTop="8dp"-->
-<!--                android:paddingBottom="8dp">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:contentDescription="TIME ICON"-->
-<!--                    android:src="@drawable/time" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/dateandtime"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="12dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="Date and Time"-->
-<!--                    android:textColor="@color/black" />-->
-<!--            </LinearLayout>-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider2"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/neon"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@color/neon"-->
-<!--                    android:gravity="center_vertical"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:paddingLeft="8dp"-->
-<!--                    android:paddingTop="8dp"-->
-<!--                    android:paddingBottom="8dp">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:contentDescription="SCAN ICON"-->
-<!--                        android:src="@drawable/scan" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginStart="12dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="start"-->
-<!--                        android:text="QR Code"-->
-<!--                        android:textColor="@color/black" />-->
-<!--                </LinearLayout>-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/QRCodeImage"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_horizontal"-->
-<!--                    android:paddingBottom="8dp"-->
-<!--                    android:src="@drawable/scan" />-->
-
-<!--            </LinearLayout>-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider3"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/neon"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingLeft="8dp"-->
-<!--                android:paddingTop="8dp"-->
-<!--                android:paddingBottom="8dp">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:contentDescription="SIGN UPS ICON"-->
-<!--                    android:src="@drawable/sign_up" />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:layout_marginEnd="20dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="Sign Ups"-->
-<!--                    android:textColor="@color/black" />-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/signUpsSeeAllButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:text="See all"-->
-<!--                    android:textAlignment="viewEnd"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="14sp" />-->
-<!--            </LinearLayout>-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider4"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/neon"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:paddingLeft="8dp"-->
-<!--                android:paddingTop="8dp"-->
-<!--                android:paddingBottom="8dp">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:contentDescription="Attendance Icon"-->
-<!--                    android:src="@drawable/nav_map" />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:layout_marginEnd="20dp"-->
-
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="start"-->
-<!--                    android:text="Attendance"-->
-<!--                    android:textColor="@color/black" />-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/attendanceSeeAllButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:text="See all"-->
-<!--                    android:textAlignment="viewEnd"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="14sp" />-->
-<!--            </LinearLayout>-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider5"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/sendNotificationButton"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Send Notification" />-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider6"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/shareQRButton"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Share Event QR Code" />-->
-
-<!--            <View-->
-<!--                android:id="@+id/divider7"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="10dp" />-->
-<!--        </LinearLayout>-->
-<!--    </ScrollView>-->
-
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
