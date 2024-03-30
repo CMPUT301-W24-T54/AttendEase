@@ -74,26 +74,29 @@ public class FirebaseListener extends Service{
                     if (dc.getType() == DocumentChange.Type.ADDED) {
                         String event=dc.getDocument().getString("event");
                         if (event != null) {
+                            Log.d("yope", event+deviceid);
                             signInRef.whereEqualTo("eventID",event).whereEqualTo("attendeeID",deviceid).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    Log.d("yope", "New document: " + dc.getDocument().getData());
-                                    String documentTimestamp = dc.getDocument().getString("timestamp");
-                                    // Convert documentTimestamp to Date object
-                                    try {
-                                        Date documentTimestampDate = sdf.parse(documentTimestamp);
-                                        timeStampDate=sdf.parse(TimeStamp);
-                                        if (timeStampDate.before(documentTimestampDate)) {
-                                            // Update TimeStamp if document timestamp is greater
-                                            TimeStamp = documentTimestamp;
-                                            saveTimeStamp(TimeStamp);
+                                    if(!queryDocumentSnapshots.isEmpty()){
+                                        String documentTimestamp = dc.getDocument().getString("timestamp");
+                                        // Convert documentTimestamp to Date object
+                                        try {
+                                            Date documentTimestampDate = sdf.parse(documentTimestamp);
+                                            timeStampDate=sdf.parse(TimeStamp);
+                                            if (timeStampDate.before(documentTimestampDate)) {
+                                                // Update TimeStamp if document timestamp is greater
+                                                TimeStamp = documentTimestamp;
+                                                saveTimeStamp(TimeStamp);
+                                            }
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
                                         }
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
+                                        if(!dc.getDocument().getString("title").isEmpty()){
+                                            Toast.makeText(getApplicationContext(), "Got new message with title: "+dc.getDocument().getString("title"), Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                    if(!dc.getDocument().getString("title").isEmpty()){
-                                        Toast.makeText(getApplicationContext(), "Got new message with title: "+dc.getDocument().getString("title"), Toast.LENGTH_SHORT).show();
-                                    }
+
 
                                 }
                             });
