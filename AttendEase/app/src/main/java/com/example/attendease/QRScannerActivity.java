@@ -95,7 +95,7 @@ public class QRScannerActivity extends AppCompatActivity {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() != null) {
-                String scannedData = result.getContents();
+                String scannedData = result.getContents().replaceAll("[./#$\\[\\]]", "_");
                 if (Objects.equals(prevActivity, "AttendeeDashboardActivity")) {
                     landOnEventDetails(scannedData);
                 } else {

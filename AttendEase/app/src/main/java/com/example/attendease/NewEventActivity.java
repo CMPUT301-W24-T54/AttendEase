@@ -73,7 +73,6 @@ public class NewEventActivity extends AppCompatActivity {
     private Event newEvent;
     private String posterUrl;
     private Uri eventPosterUri = null;
-    private boolean reused;
 
     /**
      * Initializes the activity, setting the content view and configuring UI interactions.
@@ -94,7 +93,6 @@ public class NewEventActivity extends AppCompatActivity {
         Button btnUploadPhoto = findViewById(R.id.btnUploadPhoto);
         Button btnRemovePhoto = findViewById(R.id.btnRemovePhoto);
 
-        reused = false;
         buttonGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +135,6 @@ public class NewEventActivity extends AppCompatActivity {
                 if (o.getResultCode() == Activity.RESULT_OK) {
                     Intent data = o.getData();
                     String resultString = data.getStringExtra("result");
-                    reused = true;
                     eventID = resultString;
                     // Handle the resultString here
                     Log.d("MainActivity", "Result: " + resultString);
@@ -235,7 +232,7 @@ public class NewEventActivity extends AppCompatActivity {
 
         // Save the new event to Firestore.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events").document(getDocID())
+        db.collection("events").document(eventID)
                 .set(newEvent)
                 .addOnSuccessListener(aVoid -> {
                     // Once the event is successfully added, generate and upload the QR code.
@@ -340,14 +337,6 @@ public class NewEventActivity extends AppCompatActivity {
      */
     private String generateEventId() {
         if (eventID == null) {
-            return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
-        } else {
-            return eventID;
-        }
-    }
-
-    private String getDocID() {
-        if (reused) {
             return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
         } else {
             return eventID;
