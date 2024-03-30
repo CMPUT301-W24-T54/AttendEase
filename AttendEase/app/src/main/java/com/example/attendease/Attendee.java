@@ -14,6 +14,9 @@ public class Attendee implements Serializable{
     private String phone;
     private String image;
     private boolean geoTrackingEnabled;  // TODO : use this when checking in for maps
+    private int checkInCount; // New field for check-in count
+    private String url;
+
 
     /**
      * Constructs an Attendee
@@ -23,13 +26,14 @@ public class Attendee implements Serializable{
      * @param email Email
      * @param image Profile Picture
      */
-    public Attendee(String deviceID, String name, String phone, String email, String image) {
+    public Attendee(String deviceID, String name, String phone, String email, String image, boolean geoTrackingEnabled) {
         // Use this constructor if the Attendee already exists
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.image = image;
+        this.geoTrackingEnabled = geoTrackingEnabled;
     }
 
     /**
@@ -46,6 +50,16 @@ public class Attendee implements Serializable{
         this.email = email;
         this.phone = phone;
         this.image = null;
+    }
+
+    public Attendee(String name, int checkInCount, String url) {
+        this.name = name;
+        this.checkInCount = checkInCount;
+        this.url = url;
+    }
+    public Attendee(String name, String url) {
+        this.name = name;
+        this.url = url;
     }
 
     public void signUp() {}  // TODO Implement signUp functionality on database side
@@ -141,4 +155,21 @@ public class Attendee implements Serializable{
         this.image = image;
     }
 
+    public boolean isGeoTrackingEnabled() {
+        return geoTrackingEnabled;
+    }
+
+    public void setGeoTrackingEnabled(boolean geoTrackingEnabled) {
+        this.geoTrackingEnabled = geoTrackingEnabled;
+    }
+    public int getCheckInCount() {
+        return checkInCount;
+    }
+
+    public void setCheckInCount(int checkInCount) {
+        this.checkInCount = checkInCount;
+    }
+    public String getUrl() {
+        return url;
+    }
 }

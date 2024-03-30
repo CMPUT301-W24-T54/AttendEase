@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        For testing the Map Activity
+//        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+//        startActivity(intent);
+
         Button checkInButton = findViewById(R.id.check_in_button);
         Button createEventButton = findViewById(R.id.create_event_button);
         Button adminButton = findViewById(R.id.admin_button);
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                             String phone = documentSnapshot.getString("phone");
                             String email = documentSnapshot.getString("email");
                             String image = documentSnapshot.getString("image");
-                            Attendee attendee = new Attendee(deviceID, name, phone, email, image);
+                            Attendee attendee = new Attendee(deviceID, name, phone, email, image, false);
 
                             Intent intent = new Intent(MainActivity.this, AttendeeDashboardActivity.class);
                             intent.putExtra("attendee", attendee);  // pass the serializable attendee object
