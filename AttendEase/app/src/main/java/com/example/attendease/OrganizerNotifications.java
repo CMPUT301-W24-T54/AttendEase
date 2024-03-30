@@ -45,6 +45,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
     private Attendee attendee;
     private CountingIdlingResource countingIdlingResource;
     private final Database database = Database.getInstance();
+    private String event_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +56,10 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                         String title = result.getData().getStringExtra("Title");
                         String events = result.getData().getStringExtra("Events");
                         String body = result.getData().getStringExtra("Body");
+                        event_name=result.getData().getStringExtra("EventName");
 
                         // Now you have the data, you can do whatever you want with it.
-                        Msg message = new Msg(title, body, events);
+                        Msg message = new Msg(title, body, events,event_name);
                         addMsg(message);
                     }
                 });
@@ -98,7 +100,8 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                                 // Document found where fieldName is equal to desiredValue
                                 String Title = doc.getString("title");
                                 String Notification = doc.getString("message");
-                                Msg notif=new Msg(Title, Notification,"name");
+                                String event_name = doc.getString("event_name");
+                                Msg notif=new Msg(Title, Notification,"name",event_name);
                                 notif.setUnique_id(doc.getId());
                                 dataList.add(notif);
 
@@ -145,6 +148,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         //need to get name
         data.put("sentBy",deviceID);
         data.put("event",event);
+        data.put("event_name",event_name);
         eventsRef.document(message.getUnique_id()).set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -194,9 +198,11 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
             Msg selectedMsg = dataList.get(position);
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
+            String event_name=selectedMsg.getEvent_name().toString();
             Intent intent= new Intent(OrganizerNotifications.this, ViewMsgOrganizer.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
+            intent.putExtra("event_name",event_name);
             startActivity(intent);
             //new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
             /*Bundle bundle = new Bundle();

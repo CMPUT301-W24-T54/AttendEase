@@ -43,7 +43,7 @@ public class ViewMsgTest {
         // Check that the text views display the correct text
         onView(withId(R.id.Title)).check(matches(withText("Test Title")));
         onView(withId(R.id.body)).check(matches(withText("Test Message")));
-        onView(withId(R.id.textView9)).check(matches(withText("Test Sender")));
+        onView(withId(R.id.event_name)).check(matches(withText("Test Sender")));
     }
 
 }

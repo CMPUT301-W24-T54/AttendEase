@@ -199,10 +199,13 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
             String event=selectedMsg.getEvent().toString();
+            String event_name=selectedMsg.getEvent_name().toString();
             Intent intent= new Intent(AttendeeNotifications.this, ViewMsg.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
             intent.putExtra("event",event);
+            intent.putExtra("event_name",event_name);
+
             startActivity(intent);
             //new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
             /*Bundle bundle = new Bundle();
@@ -265,6 +268,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                                 String Title = doc.getDocument().getString("title");
                                 String Notification = doc.getDocument().getString("message");
                                 String event=doc.getDocument().getString("event");
+                                String event_name=doc.getDocument().getString("event_name");
                                 String Unique_id=doc.getDocument().getId().toString();
                                 if(!eventArray.contains(event)){
                                     break;
@@ -280,7 +284,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                                 //String sent_by= doc.getDocument().getString("sentBy");
                                 Log.d("Firestore", String.format("City(%s, %s) fetched", Title,
                                         Notification));
-                                Msg add_Msg=new Msg(Title, Notification,event);
+                                Msg add_Msg=new Msg(Title, Notification,event,event_name);
                                 add_Msg.setUnique_id(Unique_id);
                                 dataList.add(add_Msg);
                                 break;

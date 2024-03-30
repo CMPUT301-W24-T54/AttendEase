@@ -23,6 +23,7 @@ public class MsgAdd extends AppCompatActivity {
     public ArrayList<String> eventslist=new ArrayList<>();
 
     public String event;
+    public String event_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class MsgAdd extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 event = eventIDs.get(position);
+                event_name=eventslist.get(position);
                 Log.d("error", String.valueOf(position));
             }
 
@@ -78,6 +80,7 @@ public class MsgAdd extends AppCompatActivity {
                 returnIntent.putExtra("Title", title);
                 returnIntent.putExtra("Events", event);
                 returnIntent.putExtra("Body", body);
+                returnIntent.putExtra("EventName", event_name);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
