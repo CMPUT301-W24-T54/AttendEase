@@ -104,14 +104,6 @@ public class NewEventActivity extends AppCompatActivity {
         findViewById(R.id.tvEventDate).setOnClickListener(view -> showDatePickerDialog());
         findViewById(R.id.tvEventTime).setOnClickListener(view -> showTimePickerDialog());
 
-        Button btnGenerate = findViewById(R.id.btnGenerateEvent);
-        btnGenerate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createEvent();
-            }
-        });
-
         ActivityResultLauncher<String> getContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 uri -> {
                     ivCoverPhoto.setImageURI(uri);
@@ -123,6 +115,29 @@ public class NewEventActivity extends AppCompatActivity {
         btnRemovePhoto.setOnClickListener(v -> {
             ivCoverPhoto.setImageResource(0); // Remove the image from the ImageView
             eventPosterUri = null; // Clear the image URI
+        });
+
+        Button btnGenerate = findViewById(R.id.btnGenerateEvent);
+        btnGenerate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (eventPosterUri != null) {
+                    uploadEventPoster(eventPosterUri, eventID, new UploadCallback() {
+                        @Override
+                        public void onSuccess(String imageUrl) {
+                            createEvent(imageUrl);
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(NewEventActivity.this, "Failed to upload image, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    // No image to upload, proceed with event creation without an image
+                    createEvent(null);
+                }
+            }
         });
 
     }
@@ -167,7 +182,7 @@ public class NewEventActivity extends AppCompatActivity {
      * and uploading to Firebase Storage.
      */
 
-    private void createEvent() {
+    private void createEvent(@Nullable String imageUrl) {
         // Capture data from EditTexts, CheckBoxes, etc.
         eventID = generateEventId();
         eventName = ((EditText) findViewById(R.id.etEventName)).getText().toString();
@@ -184,10 +199,9 @@ public class NewEventActivity extends AppCompatActivity {
         Timestamp dateTime = createTimestamp(eventDate, eventTime);
         String eventLocation = ((EditText) findViewById(R.id.etEventLocation)).getText().toString();
 
-        if (eventPosterUri != null) {
-            uploadEventPoster(eventPosterUri, eventID);
+        if (imageUrl != null) {
+            posterUrl = imageUrl;
         } else {
-            // Proceed with creating the event without a poster
             posterUrl = "null";
         }
 
@@ -518,16 +532,17 @@ public class NewEventActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void uploadEventPoster(Uri posterUri, String eventID) {
+    interface UploadCallback {
+        void onSuccess(String imageUrl);
+        void onFailure(Exception e);
+    }
+
+    private void uploadEventPoster(Uri posterUri, String eventID, UploadCallback callback) {
         StorageReference posterRef = FirebaseStorage.getInstance().getReference("images/" + eventID + "/eventposter.png");
 
         posterRef.putFile(posterUri).addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl().addOnSuccessListener(uri -> {
             posterUrl = uri.toString();
-            FirebaseFirestore.getInstance().collection("events").document(eventID)
-                    .update("posterUrl", posterUrl)
-                    .addOnSuccessListener(aVoid -> Log.d("Upload", "Poster uploaded successfully"))
-                    .addOnFailureListener(e -> Log.e("Upload", "Failed to upload poster", e));
-        })).addOnFailureListener(e -> Log.e("Upload", "Failed to upload poster", e));
+            callback.onSuccess(posterUrl);
+        })).addOnFailureListener(e -> callback.onFailure(e));
     }
-
 }
