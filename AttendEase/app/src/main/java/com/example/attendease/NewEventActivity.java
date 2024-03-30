@@ -1,6 +1,7 @@
 package com.example.attendease;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -23,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -70,6 +73,7 @@ public class NewEventActivity extends AppCompatActivity {
     private Event newEvent;
     private String posterUrl;
     private Uri eventPosterUri = null;
+    private boolean reused;
 
     /**
      * Initializes the activity, setting the content view and configuring UI interactions.
@@ -90,6 +94,7 @@ public class NewEventActivity extends AppCompatActivity {
         Button btnUploadPhoto = findViewById(R.id.btnUploadPhoto);
         Button btnRemovePhoto = findViewById(R.id.btnRemovePhoto);
 
+        reused = false;
         buttonGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +129,33 @@ public class NewEventActivity extends AppCompatActivity {
             ivCoverPhoto.setImageResource(0); // Remove the image from the ImageView
             eventPosterUri = null; // Clear the image URI
         });
+
+
+        ActivityResultLauncher<Intent> getExistingQR = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult o) {
+                if (o.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = o.getData();
+                    String resultString = data.getStringExtra("result");
+                    reused = true;
+                    eventID = resultString;
+                    // Handle the resultString here
+                    Log.d("MainActivity", "Result: " + resultString);
+                    createEvent();
+                }
+            }
+        });
+
+        Button btnReuse = findViewById(R.id.btnReuseQR);
+        btnReuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewEventActivity.this, QRScannerActivity.class);
+                intent.putExtra("prevActivity", "NewEventActivity");
+                getExistingQR.launch(intent);
+            }
+        });
+
 
     }
 
@@ -203,7 +235,7 @@ public class NewEventActivity extends AppCompatActivity {
 
         // Save the new event to Firestore.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events").document(eventID)
+        db.collection("events").document(getDocID())
                 .set(newEvent)
                 .addOnSuccessListener(aVoid -> {
                     // Once the event is successfully added, generate and upload the QR code.
@@ -307,7 +339,19 @@ public class NewEventActivity extends AppCompatActivity {
      * @return A String representing the unique event ID.
      */
     private String generateEventId() {
-        return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
+        if (eventID == null) {
+            return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
+        } else {
+            return eventID;
+        }
+    }
+
+    private String getDocID() {
+        if (reused) {
+            return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
+        } else {
+            return eventID;
+        }
     }
 
     /**

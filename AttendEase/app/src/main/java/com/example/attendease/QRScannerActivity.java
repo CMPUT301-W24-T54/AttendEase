@@ -1,5 +1,6 @@
 package com.example.attendease;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class QRScannerActivity extends AppCompatActivity {
     private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
     private Attendee attendee;
+    private String prevActivity;
 
 
     @Override
@@ -44,8 +46,10 @@ public class QRScannerActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
 
         Intent intent = getIntent();
-        attendee = (Attendee) Objects.requireNonNull(intent.getExtras()).getSerializable("attendee");
-
+        prevActivity = intent.getStringExtra("prevActivity");
+        if (Objects.equals(prevActivity, "AttendeeDashboardActivity")) {
+            attendee = (Attendee) Objects.requireNonNull(intent.getExtras()).getSerializable("attendee");
+        }
 
         // OpenAI, 2024, ChatGPT, ScanQR code using zxing IntentIntegrator
 
@@ -92,7 +96,14 @@ public class QRScannerActivity extends AppCompatActivity {
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedData = result.getContents();
-                landOnEventDetails(scannedData);
+                if (Objects.equals(prevActivity, "AttendeeDashboardActivity")) {
+                    landOnEventDetails(scannedData);
+                } else {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("result", scannedData);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }
                 // Handle the scanned QR code data as needed
                 // Toast.makeText(this, "Scanned: " + scannedData, Toast.LENGTH_LONG).show();
             } else {
