@@ -7,6 +7,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +65,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
         deviceID = attendee.getDeviceID();
+        //deviceID= Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         attendee_Ref=database.getAttendeesRef().document(deviceID);
         realeventsRef = database.getEventsRef();
         signInRef=database.getSignInsRef();

@@ -73,8 +73,10 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         //need to implements Serializable in Attendee class
         //attendee.getsignupids
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
-        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
-        deviceID = attendee.getDeviceID();
+        //attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        //deviceID = attendee.getDeviceID();
+        Intent intent=getIntent();
+        deviceID=intent.getStringExtra("deviceId");
         realeventsRef = database.getEventsRef();
         eventsRef=database.getNotificationsRef();
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");

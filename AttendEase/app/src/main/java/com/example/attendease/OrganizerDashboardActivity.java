@@ -97,6 +97,12 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
                 startActivity(intent);
                 return true;
+            }else if(id==R.id.nav_notifications){
+                String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                Intent intent = new Intent(this, OrganizerNotifications.class);
+                intent.putExtra("deviceId",organizerId);
+                startActivity(intent);
+                return true;
             }
             return false;
         });
