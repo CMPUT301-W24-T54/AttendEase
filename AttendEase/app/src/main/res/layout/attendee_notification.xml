@@ -16,11 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/inter_semibold"
             android:text="Notifications"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:textSize="24sp"
+            android:textStyle="normal" />
     </LinearLayout>
 
 
@@ -30,9 +31,9 @@
         android:id="@+id/Msg_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/footerview"
+
         android:layout_below="@id/linearLayout2"
-        android:listSelector="@android:color/holo_green_light"
+        android:listSelector="#DEFF81"
         android:longClickable="true">
 
     </ListView>
@@ -43,11 +44,11 @@
 
     <ImageView
         android:id="@+id/backgroundimageview"
-        android:layout_width="378dp"
-        android:layout_height="212dp"
+        android:layout_width="200dp"
+        android:layout_height="250dp"
         android:layout_centerInParent="true"
         android:clickable="false"
-        android:padding="20sp"
+        android:padding="5sp"
         android:scaleType="centerCrop"
         android:src="@drawable/no_new_notifications"
         tools:visibility="visible" />
@@ -59,9 +60,10 @@
         android:layout_below="@id/backgroundimageview"
         android:layout_centerInParent="true"
         android:clickable="false"
+        android:fontFamily="@font/inter_semibold"
         android:scaleType="centerCrop"
         android:text="No Notifications Yet"
-        android:textSize="30sp"
+        android:textSize="24sp"
         tools:visibility="visible" />
 
     <TextView
@@ -73,7 +75,7 @@
         android:clickable="false"
         android:scaleType="centerCrop"
         android:text="You have no notifications right now, come back later"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:visibility="visible" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
