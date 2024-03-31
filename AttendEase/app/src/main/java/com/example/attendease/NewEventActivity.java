@@ -1,6 +1,7 @@
 package com.example.attendease;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -23,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -117,6 +120,35 @@ public class NewEventActivity extends AppCompatActivity {
             eventPosterUri = null; // Clear the image URI
         });
 
+        ActivityResultLauncher<Intent> getExistingQR = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult o) {
+                if (o.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = o.getData();
+                    String resultString = data.getStringExtra("result");
+                    eventID = resultString;
+                    // Handle the resultString here
+                    Log.d("MainActivity", "Result: " + resultString);
+                    if (eventPosterUri != null) {
+                        uploadEventPoster(eventPosterUri, eventID, new UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                createEvent(imageUrl);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Toast.makeText(NewEventActivity.this, "Failed to upload image, please try again", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        // No image to upload, proceed with event creation without an image
+                        createEvent(null);
+                    }
+                }
+            }
+        });
+
         Button btnGenerate = findViewById(R.id.btnGenerateEvent);
         btnGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +172,16 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 
+
+        Button btnReuse = findViewById(R.id.btnReuseQR);
+        btnReuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewEventActivity.this, QRScannerActivity.class);
+                intent.putExtra("prevActivity", "NewEventActivity");
+                getExistingQR.launch(intent);
+            }
+        });
     }
 
     /**
@@ -321,7 +363,11 @@ public class NewEventActivity extends AppCompatActivity {
      * @return A String representing the unique event ID.
      */
     private String generateEventId() {
-        return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
+        if (eventID == null) {
+            return UUID.randomUUID().toString() + "_" + System.currentTimeMillis();
+        } else {
+            return eventID;
+        }
     }
 
     /**

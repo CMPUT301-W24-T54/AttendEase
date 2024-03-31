@@ -96,7 +96,7 @@ public class UserCheckIn extends AppCompatActivity {
 
         attendeesRef.document(deviceID)
                 .set(attendeeData)
-                .addOnSuccessListener(aVoid -> navigateToAttendeeDashboard())
+                .addOnSuccessListener(aVoid -> navigateToAttendeeDashboard(name))
                 .addOnFailureListener(e -> Toast.makeText(UserCheckIn.this, "Failed to check in. Please try again.", Toast.LENGTH_SHORT).show());
     }
 
@@ -104,9 +104,10 @@ public class UserCheckIn extends AppCompatActivity {
      * Navigates the user to the AttendeeDashboardActivity upon successful check-in.
      * Passes the device ID as an extra in the intent for further use.
      */
-    private void navigateToAttendeeDashboard() {
+    private void navigateToAttendeeDashboard(String name) {
         Intent intent = new Intent(UserCheckIn.this, AttendeeDashboardActivity.class);
-        intent.putExtra("deviceID", deviceID);
+        Attendee attendee = new Attendee(deviceID, name, "", "", "", false);
+        intent.putExtra("attendee", attendee);  // pass the serializable attendee object
         startActivity(intent);
         finish();
     }
