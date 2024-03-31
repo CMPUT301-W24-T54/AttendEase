@@ -31,7 +31,8 @@ public class ViewMsgTest {
         Bundle bundle = new Bundle();
         bundle.putString("Title", "Test Title");
         bundle.putString("Message", "Test Message");
-        bundle.putString("sentBy", "Test Sender");
+        bundle.putString("event_name", "Test Sender");
+        bundle.putString("event", "Test Sender");
 
         // Create an intent with the extras
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ViewMsg.class);

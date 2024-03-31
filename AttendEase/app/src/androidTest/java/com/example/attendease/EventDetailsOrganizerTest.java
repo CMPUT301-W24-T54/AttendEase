@@ -59,7 +59,7 @@ public class EventDetailsOrganizerTest {
     @Test
     public void testActivityDisplaysCorrectly() {
         Intent startIntent = new Intent(ApplicationProvider.getApplicationContext(), EventDetailsOrganizer.class)
-                .putExtra("eventDocumentId", testDocumentId);
+                .putExtra("event", testDocumentId);
 
         intentsTestRule.launchActivity(startIntent);
 
