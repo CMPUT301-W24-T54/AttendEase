@@ -63,6 +63,8 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_dashboard);
+        Intent serviceIntent = new Intent(this, FirebaseListener.class);
+        startService(serviceIntent);
 
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
 

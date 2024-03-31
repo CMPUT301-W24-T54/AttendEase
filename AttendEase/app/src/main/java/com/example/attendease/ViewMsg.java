@@ -18,12 +18,13 @@ public class ViewMsg extends AppCompatActivity {
         String Title=intent.getStringExtra("Title");
         String Message=intent.getStringExtra("Message");
         String event=intent.getStringExtra("event");
+        String event_name=intent.getStringExtra("event_name");
         TextView TitleText=findViewById(R.id.Title);
         TitleText.setText(Title);
         TextView MessageText=findViewById(R.id.body);
         MessageText.setText(Message);
-        TextView sentByText=findViewById(R.id.textView9);
-        sentByText.setText(event);
+        TextView sentByText=findViewById(R.id.event_name);
+        sentByText.setText(event_name);
 
 
 

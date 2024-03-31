@@ -9,12 +9,24 @@ public class Msg {
     private String unique_id;
 
     private String event;
+    private String event_name;
 
     public Msg(String title, String message, String event) {
         this.title = title;
         this.message = message;
         unique_id= UUID.randomUUID().toString();
         this.event=event;
+    }
+    public Msg(String title, String message, String event,String event_name) {
+        this.title = title;
+        this.message = message;
+        unique_id= UUID.randomUUID().toString();
+        this.event=event;
+        this.event_name=event_name;
+    }
+
+    public String getEvent_name() {
+        return event_name;
     }
 
     public String getTitle() {

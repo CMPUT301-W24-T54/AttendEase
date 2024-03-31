@@ -108,14 +108,16 @@
             android:id="@+id/body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/textView12"
-            tools:layout_editor_absoluteX="1dp">
+            android:padding="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView12">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="373dp"
+                android:id="@+id/body_text"
+                android:layout_width="341dp"
                 android:layout_height="348dp"
                 android:gravity="start|top"
-                android:id="@+id/body_text"
                 android:textAlignment="viewStart" />
         </com.google.android.material.textfield.TextInputLayout>
 
