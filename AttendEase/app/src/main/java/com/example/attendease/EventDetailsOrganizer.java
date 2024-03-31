@@ -35,7 +35,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button attendanceSeeAll;
     private ImageButton backButton;
     private Button shareQRButton;
-
+    private ImageView eventPosterImageView;
     private Intent intent;
     private Event event;
 
@@ -57,6 +57,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         attendanceSeeAll = findViewById(R.id.attendanceSeeAllButton);
         backButton = findViewById(R.id.back_button);
         shareQRButton = findViewById(R.id.shareQRButton);
+        eventPosterImageView = findViewById(R.id.imageView4);
 
 
         event = intent.getParcelableExtra("event");
@@ -91,9 +92,8 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             }
 
             // Load the event poster
-            ImageView eventPosterImageView = findViewById(R.id.imageView4);
             String posterUrl = event.getPosterUrl();
-            if (posterUrl != null && !posterUrl.equals("null") && !posterUrl.isEmpty()) {
+            if (posterUrl != null && !posterUrl.equals("null")) {
                 int cornerRadius = 24;
                 Glide.with(this)
                         .load(posterUrl)
@@ -104,12 +104,12 @@ public class EventDetailsOrganizer extends AppCompatActivity {
                 eventPosterImageView.setImageResource(R.drawable.splash);
             }
 
-            String qrCodeImageUrl = event.getCheckInQR();
             // Load QR code image into ImageView
+            String qrCodeImageUrl = event.getCheckInQR();
             if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
                 Glide.with(this)
                         .load(qrCodeImageUrl)
-                        .override(500, 500) // Adjust the size as per your requirement
+                        .override(500, 500)
                         .into(QRCodeImage);
             }
         }
