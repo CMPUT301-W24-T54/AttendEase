@@ -163,7 +163,6 @@ public class EditProfileActivity extends AppCompatActivity {
      * This method retrieves the profile information of the current Attendee user and populates the corresponding views.
      */
     private void populateViews() {
-        // TODO : Refactor to only use attendee class
         attendeesRef.document(deviceID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
