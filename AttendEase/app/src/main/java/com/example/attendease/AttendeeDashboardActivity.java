@@ -64,7 +64,15 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_dashboard);
 
-        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        if (getIntent().getExtras() != null) {
+            attendee = (Attendee) getIntent().getExtras().get("attendee");
+        }
+
+        if (attendee == null) {
+            Log.e(TAG, "Attendee object is null.");
+            finish();
+            return;
+        }
 
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
