@@ -15,9 +15,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -36,6 +38,7 @@ import java.util.Objects;
 public class MapActivity extends AppCompatActivity {
     private final Database database = Database.getInstance();
     private CollectionReference checkInsRef;
+    private CollectionReference attendeesRef;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
     private IMapController controller;
@@ -53,6 +56,7 @@ public class MapActivity extends AppCompatActivity {
 //        event = new Event();
 //        event.setEventId("0d7276f3-0353-4f3a-b05b-8de77a068f1c_1711067197366");
         checkInsRef = database.getCheckInsRef();
+        attendeesRef = database.getAttendeesRef();
 
         //handle permissions first, before map is created. not depicted here
 
@@ -132,6 +136,17 @@ public class MapActivity extends AppCompatActivity {
                                     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     marker.setTitle("Hello");
                                     map.getOverlays().add(marker);
+
+                                    attendeesRef.document(Objects.requireNonNull(document.getString("attendeeID")))
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()) {
+                                                        marker.setTitle(documentSnapshot.getString("name"));
+                                                    }
+                                                }
+                                            });
                                 }
                             }
                         }
