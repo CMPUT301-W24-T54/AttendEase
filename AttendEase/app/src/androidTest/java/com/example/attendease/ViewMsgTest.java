@@ -31,7 +31,8 @@ public class ViewMsgTest {
         Bundle bundle = new Bundle();
         bundle.putString("Title", "Test Title");
         bundle.putString("Message", "Test Message");
-        bundle.putString("sentBy", "Test Sender");
+        bundle.putString("event_name", "Test Sender");
+        bundle.putString("event", "Test Sender");
 
         // Create an intent with the extras
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), ViewMsg.class);
@@ -43,7 +44,7 @@ public class ViewMsgTest {
         // Check that the text views display the correct text
         onView(withId(R.id.Title)).check(matches(withText("Test Title")));
         onView(withId(R.id.body)).check(matches(withText("Test Message")));
-        onView(withId(R.id.textView9)).check(matches(withText("Test Sender")));
+        onView(withId(R.id.event_name)).check(matches(withText("Test Sender")));
     }
 
 }

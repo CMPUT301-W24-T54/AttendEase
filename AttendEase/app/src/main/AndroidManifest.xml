@@ -121,6 +121,11 @@
         <activity
             android:name=".EventDetailsOrganizer">
         </activity>
+        <service
+        android:name=".FirebaseListener"
+        android:enabled="true"
+        android:exported="false" />
+
 
     </application>
 
