@@ -130,6 +130,7 @@ public class MapActivity extends AppCompatActivity {
                                     Marker marker = new Marker(map);
                                     marker.setPosition(geoPoint);
                                     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                                    marker.setTitle("Hello");
                                     map.getOverlays().add(marker);
                                 }
                             }
