@@ -67,13 +67,13 @@ public class EventDetailsAttendee extends AppCompatActivity {
         setContentView(R.layout.activity_view_browsed_event);
 
         intent = getIntent();
+
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
         Log.d("DEBUG", String.format("onCreate: %s", attendee.getDeviceID()));
 
         if (attendee.isGeoTrackingEnabled()) {
             Log.d("DEBUG", String.format("onCreate: %s", "YIPPEE it works"));
         }
-
 
         eventID = intent.getStringExtra("eventID");
         prevActivity = intent.getStringExtra("prevActivity");
