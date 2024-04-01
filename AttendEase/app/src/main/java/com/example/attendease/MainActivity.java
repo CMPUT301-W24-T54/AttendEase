@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             String phone = documentSnapshot.getString("phone");
                             String email = documentSnapshot.getString("email");
                             String image = documentSnapshot.getString("image");
-                            Attendee attendee = new Attendee(deviceID, name, phone, email, image);
+                            Attendee attendee = new Attendee(deviceID, name, phone, email, image, false);
 
                             Intent intent = new Intent(MainActivity.this, AttendeeDashboardActivity.class);
                             intent.putExtra("attendee", attendee);  // pass the serializable attendee object
