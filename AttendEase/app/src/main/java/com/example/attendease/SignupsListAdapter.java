@@ -29,7 +29,7 @@ public class SignupsListAdapter extends ArrayAdapter<Attendee> {
 
         // Get the current item from the list
         Attendee attendee = getItem(position);
-        String profileUrl = attendee.getUrl();
+        String profileUrl = attendee.getImage();
 
         TextView attendeeNameTextView = listItemView.findViewById(R.id.attendee_name_textview);
         CircleImageView attendanceListPic = listItemView.findViewById(R.id.signups_list_pic);
