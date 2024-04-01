@@ -23,13 +23,19 @@ public class Attendee implements Serializable{
      * @param email Email
      * @param image Profile Picture
      */
-    public Attendee(String deviceID, String name, String phone, String email, String image) {
+    public Attendee(String deviceID, String name, String phone, String email, String image, boolean geoTrackingEnabled) {
         // Use this constructor if the Attendee already exists
         this.deviceID = deviceID;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.image = image;
+        this.geoTrackingEnabled = geoTrackingEnabled;
+    }
+
+    // Default constructor
+    public Attendee() {
+        // Required empty constructor for Firebase deserialization
     }
 
     /**
@@ -141,4 +147,11 @@ public class Attendee implements Serializable{
         this.image = image;
     }
 
+    public boolean isGeoTrackingEnabled() {
+        return geoTrackingEnabled;
+    }
+
+    public void setGeoTrackingEnabled(boolean geoTrackingEnabled) {
+        this.geoTrackingEnabled = geoTrackingEnabled;
+    }
 }

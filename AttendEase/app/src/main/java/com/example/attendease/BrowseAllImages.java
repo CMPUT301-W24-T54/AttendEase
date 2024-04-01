@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class BrowseAllImages extends AppCompatActivity {
     private RecyclerView rvImages;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference imagesRef = db.collection("images");
+    private final Database database = Database.getInstance();
+    private CollectionReference imagesRef;
     private ImageAdapter imageAdapter;
     private ArrayList<Image> imageList = new ArrayList<>();
 
@@ -36,6 +36,7 @@ public class BrowseAllImages extends AppCompatActivity {
         imageAdapter = new ImageAdapter(this, imageList);
         rvImages.setAdapter(imageAdapter);
 
+        imagesRef = database.getImagesRef();
         loadImagesFromFirestore();
 
         imageAdapter.setOnItemClickListener(new ImageAdapter.OnItemClickListener() {

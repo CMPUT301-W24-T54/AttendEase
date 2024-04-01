@@ -22,8 +22,8 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
     private List<Attendee> attendeeList;
     private Context context;
     private OnItemClickListener onItemClickListener;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference attendeesRef = db.collection("attendees");
+    private final Database database = Database.getInstance();
+    private CollectionReference attendeesRef;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);

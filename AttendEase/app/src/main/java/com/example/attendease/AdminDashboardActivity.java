@@ -1,9 +1,18 @@
 package com.example.attendease;
 
-import android.content.Intent;
+import static com.example.attendease.EventAdapter.TYPE_SMALL;
+import static com.google.firebase.appcheck.internal.util.Logger.TAG;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.content.Intent;
+import android.view.View;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,10 +23,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import java.util.ArrayList;
 
@@ -28,10 +43,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private TextView seeAll;
     private TextView seeAll2;
     private TextView seeAll3;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference eventsRef = db.collection("events");
-    private CollectionReference attendeesRef = db.collection("attendees");
-    private CollectionReference imagesRef = db.collection("images");
+    private final Database database = Database.getInstance();
+    private CollectionReference eventsRef;
+    private CollectionReference attendeesRef;
+    private CollectionReference imagesRef;
     private EventAdapter eventAdapter;
     private AttendeeAdapter attendeeAdapter;
     private ImageAdapter imageAdapter;
@@ -56,14 +71,25 @@ public class AdminDashboardActivity extends AppCompatActivity {
         rvAllAttendees.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvAllImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        eventAdapter = new EventAdapter(this, eventList, EventAdapter.TYPE_SMALL);
+        eventAdapter = new EventAdapter(this, eventList, TYPE_SMALL);
         attendeeAdapter = new AttendeeAdapter(this, attendeeList);
         imageAdapter = new ImageAdapter(this, imageList);
 
-        rvAllEvents.setAdapter(eventAdapter);
-        rvAllAttendees.setAdapter(attendeeAdapter);
-        rvAllImages.setAdapter(imageAdapter);
+        if (rvAllEvents != null && eventAdapter != null) {
+            rvAllEvents.setAdapter(eventAdapter);
+        }
 
+        if (rvAllAttendees != null && attendeeAdapter != null) {
+            rvAllAttendees.setAdapter(attendeeAdapter);
+        }
+
+        if (rvAllImages != null && imageAdapter != null) {
+            rvAllImages.setAdapter(imageAdapter);
+        }
+
+        eventsRef = database.getEventsRef();
+        attendeesRef = database.getAttendeesRef();
+        imagesRef = database.getImagesRef();
         loadEventsFromFirestore();
         loadAttendeesFromFirestore();
         loadImagesFromFirestore();
@@ -121,10 +147,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        /**
+        /*
         attendeeAdapter.setOnItemClickListener((view, position) -> {
             Attendee attendee = attendeeList.get(position);
-            Intent intent = new Intent(AdminDashboardActivity.this, AdminAttendeeDetailsActivity.class);
+            Intent intent = new Intent(AdminDashboardActivity.this, AttendeeDetailsAdmin.class);
             intent.putExtra("attendee", attendee);
             startActivity(intent);
         });*/

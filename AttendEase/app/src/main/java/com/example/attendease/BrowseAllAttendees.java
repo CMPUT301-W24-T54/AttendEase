@@ -17,10 +17,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class BrowseAllAttendees extends AppCompatActivity {
-    private TextView totalCountTextView; // Rename total_count to totalCountTextView
+    private TextView totalCountTextView;
     private RecyclerView rvProfiles;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference attendeesRef = db.collection("attendees");
+    private final Database database = Database.getInstance();
+    private CollectionReference attendeesRef;
     private AttendeeAdapter attendeeAdapter;
     private ArrayList<Attendee> attendeeList = new ArrayList<>();
 
@@ -29,12 +29,13 @@ public class BrowseAllAttendees extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_all_profiles);
 
-        totalCountTextView = findViewById(R.id.total_count); // Use the correct ID for the TextView
+        totalCountTextView = findViewById(R.id.total_count);
         rvProfiles = findViewById(R.id.rv_profiles);
         rvProfiles.setLayoutManager(new GridLayoutManager(this, 1));
         attendeeAdapter = new AttendeeAdapter(this, attendeeList);
         rvProfiles.setAdapter(attendeeAdapter);
 
+        attendeesRef = database.getAttendeesRef();
         loadAttendeesFromFirestore();
     }
 
