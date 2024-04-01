@@ -87,8 +87,26 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Jeremy Logan, 2009, Stack Overflow, Bundle Args in intent
         // https://stackoverflow.com/questions/768969/passing-a-bundle-on-startactivity
-        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
-        deviceID = attendee.getDeviceID();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            attendee = (Attendee) extras.get("attendee");
+            if (attendee != null) {
+                deviceID = attendee.getDeviceID();
+                if (deviceID == null || deviceID.isEmpty()) {
+                    // Device ID is missing
+                    Log.e("EditProfileActivity", "deviceID is null or empty.");
+                    return;
+                }
+            } else {
+                // Attendee information is missing
+                Log.e("EditProfileActivity", "Attendee is null.");
+                return;
+            }
+        } else {
+            // Intent extras are missing
+            Log.e("EditProfileActivity", "Intent extras are null.");
+            return;
+        }
 
         profileImage = findViewById(R.id.edit_profile_pic);
         uploadProfileImage = findViewById(R.id.edit_profile_upload_button);
