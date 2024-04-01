@@ -98,9 +98,14 @@ public class SignupsListActivity extends AppCompatActivity {
                         attendeeList = new ArrayList<>();
                         for (String attendeeID : attendeeIDs) {
                             attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+                                String deviceId = attendeeDocument.getString("deviceID");
                                 String attendeeName = attendeeDocument.getString("name");
-                                String url = attendeeDocument.getString("image");
-                                Attendee attendee = new Attendee(attendeeName, url);
+                                String email = attendeeDocument.getString("email");
+                                String phone = attendeeDocument.getString("phone");
+                                String imageUrl = attendeeDocument.getString("image");
+                                Boolean geo = attendeeDocument.getBoolean("geoTrackingEnabled");
+
+                                Attendee attendee = new Attendee(deviceId, attendeeName, phone, email, imageUrl, geo);
                                 attendeeList.add(attendee);
 
                                 // Updates the ListView with attendee names using the custom adapter
