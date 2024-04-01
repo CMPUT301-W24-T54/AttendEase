@@ -67,28 +67,13 @@ public class EventDetailsAttendee extends AppCompatActivity {
         setContentView(R.layout.activity_view_browsed_event);
 
         intent = getIntent();
-        if (intent == null || intent.getExtras() == null) {
-            Log.e("DEBUG", "Intent or Intent Extras are null");
-            finish(); // Close the Activity as critical data is missing
-            return;
-        }
+
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
-        if (attendee == null) {
-            Log.e("DEBUG", "Attendee data is missing");
-            finish(); // Close the Activity as critical Attendee data is missing
-            return;
-        }
         Log.d("DEBUG", String.format("onCreate: %s", attendee.getDeviceID()));
 
-        try {
-            if (attendee.isGeoTrackingEnabled()) {
-                Log.d("DEBUG", String.format("onCreate: %s", "YIPPEE it works"));
-            }
-        } catch (NullPointerException e) {
-            Log.e("DEBUG", "Error accessing Attendee data", e);
+        if (attendee.isGeoTrackingEnabled()) {
+            Log.d("DEBUG", String.format("onCreate: %s", "YIPPEE it works"));
         }
-
-
 
         eventID = intent.getStringExtra("eventID");
         prevActivity = intent.getStringExtra("prevActivity");

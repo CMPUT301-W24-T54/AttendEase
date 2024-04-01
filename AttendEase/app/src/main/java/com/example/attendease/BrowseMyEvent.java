@@ -44,21 +44,7 @@ public class BrowseMyEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_my_event);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            attendee = (Attendee) extras.getSerializable("attendee");
-            if (attendee == null) {
-                // Attendee is null, handle this case appropriately
-                Log.e("BrowseMyEvent", "No attendee data found.");
-                finish();
-                return;
-            }
-        } else {
-            // Extras are null, handle this case appropriately
-            Log.e("BrowseMyEvent", "Intent does not have extras.");
-            finish();
-            return;
-        }
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
         signInRef = database.getSignInsRef();
         eventsRef = database.getEventsRef();
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
