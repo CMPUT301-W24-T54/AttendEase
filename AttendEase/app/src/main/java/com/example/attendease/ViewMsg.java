@@ -17,13 +17,14 @@ public class ViewMsg extends AppCompatActivity {
         Intent intent=getIntent();
         String Title=intent.getStringExtra("Title");
         String Message=intent.getStringExtra("Message");
-        String sentBy=intent.getStringExtra("sentBy");
+        String event=intent.getStringExtra("event");
+        String event_name=intent.getStringExtra("event_name");
         TextView TitleText=findViewById(R.id.Title);
         TitleText.setText(Title);
         TextView MessageText=findViewById(R.id.body);
         MessageText.setText(Message);
-        TextView sentByText=findViewById(R.id.textView9);
-        sentByText.setText(sentBy);
+        TextView sentByText=findViewById(R.id.event_name);
+        sentByText.setText(event_name);
 
 
 
@@ -36,8 +37,9 @@ public class ViewMsg extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ViewMsg.this, AttendeeNotifications.class);
-                startActivity(intent);
+                /*Intent intent=new Intent(ViewMsg.this, AttendeeNotifications.class);
+                startActivity(intent);*/
+                finish();
             }
         });
     }

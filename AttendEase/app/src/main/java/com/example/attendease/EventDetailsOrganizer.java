@@ -14,6 +14,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.ByteArrayOutputStream;
 
@@ -32,7 +35,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private Button attendanceSeeAll;
     private ImageButton backButton;
     private Button shareQRButton;
-
+    private ImageView eventPosterImageView;
     private Intent intent;
     private Event event;
 
@@ -54,6 +57,7 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         attendanceSeeAll = findViewById(R.id.attendanceSeeAllButton);
         backButton = findViewById(R.id.back_button);
         shareQRButton = findViewById(R.id.shareQRButton);
+        eventPosterImageView = findViewById(R.id.imageView4);
 
 
         event = intent.getParcelableExtra("event");
@@ -87,12 +91,25 @@ public class EventDetailsOrganizer extends AppCompatActivity {
                 dateandtimeView.setText("No date provided");
             }
 
-            String qrCodeImageUrl = event.getCheckInQR();
+            // Load the event poster
+            String posterUrl = event.getPosterUrl();
+            if (posterUrl != null && !posterUrl.equals("null")) {
+                int cornerRadius = 24;
+                Glide.with(this)
+                        .load(posterUrl)
+                        .apply(new RequestOptions()
+                                .transform(new CenterCrop(), new RoundedCorners(cornerRadius)))
+                        .into(eventPosterImageView);
+            } else {
+                eventPosterImageView.setImageResource(R.drawable.splash);
+            }
+
             // Load QR code image into ImageView
+            String qrCodeImageUrl = event.getCheckInQR();
             if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
                 Glide.with(this)
                         .load(qrCodeImageUrl)
-                        .override(500, 500) // Adjust the size as per your requirement
+                        .override(500, 500)
                         .into(QRCodeImage);
             }
         }

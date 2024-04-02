@@ -7,6 +7,11 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<!--    <uses-permission android:name="android.permission.INTERNET" />-->
+<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />-->
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -74,6 +79,9 @@
         <activity
             android:name=".CaptureActivityPortraitMode"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".MapActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".NewEventActivity"
@@ -117,6 +125,11 @@
         <activity
             android:name=".EventDetailsOrganizer">
         </activity>
+        <service
+        android:name=".FirebaseListener"
+        android:enabled="true"
+        android:exported="false" />
+
 
     </application>
 

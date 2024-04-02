@@ -272,13 +272,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivCoverPhoto"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginStart="7dp"
         android:layout_marginTop="390dp"
         android:layout_marginEnd="7dp"
         android:backgroundTint="@color/black"
         android:elevation="4dp"
-        android:text="Generate" />
+        android:text="Generate new QR" />
+
+    <Button
+        android:id="@+id/btnReuseQR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivCoverPhoto"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="410dp"
+        android:layout_marginEnd="7dp"
+        android:backgroundTint="@color/black"
+        android:elevation="4dp"
+        android:text="Generate old QR" />
 
 </RelativeLayout>
 

@@ -17,10 +17,13 @@ public class ViewMsgOrganizer extends AppCompatActivity {
         Intent intent=getIntent();
         String Title=intent.getStringExtra("Title");
         String Message=intent.getStringExtra("Message");
+        String event_name=intent.getStringExtra("event_name");
         TextView TitleText=findViewById(R.id.Title);
         TitleText.setText(Title);
         TextView MessageText=findViewById(R.id.body);
         MessageText.setText(Message);
+        TextView eventholder=findViewById(R.id.event_name);
+        eventholder.setText(event_name);
 
 
     }

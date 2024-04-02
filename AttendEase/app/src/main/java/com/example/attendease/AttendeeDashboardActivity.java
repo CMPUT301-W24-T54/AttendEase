@@ -63,9 +63,9 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_dashboard);
-
+        Intent serviceIntent = new Intent(this, FirebaseListener.class);
+        startService(serviceIntent);
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
-
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
 
@@ -103,6 +103,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                 // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
                 intent.putExtra("attendee", attendee);
+                intent.putExtra("prevActivity", "AttendeeDashboardActivity");
                 startActivity(intent);
             }
         });
@@ -134,8 +135,12 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                     Log.d("DEBUG", "Home item clicked");
                 } else if (id == R.id.nav_events) {// Handle click on Events item
                     Log.d("DEBUG", "Events item clicked");
+
                 } else if (id == R.id.nav_bell) {// Handle click on Bell item
                     Log.d("DEBUG", "Bell item clicked");
+                    Intent intent=new Intent(AttendeeDashboardActivity.this, AttendeeNotifications.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 } else if (id == R.id.nav_profile) {// Handle click on Profile item
                     Log.d("DEBUG", "Profile item clicked");
                     Intent intent = new Intent(AttendeeDashboardActivity.this, EditProfileActivity.class);

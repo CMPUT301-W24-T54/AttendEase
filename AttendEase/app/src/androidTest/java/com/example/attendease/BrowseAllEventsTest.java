@@ -7,37 +7,17 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.IdlingRegistry;
-import androidx.test.espresso.IdlingResource;
-
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static
-        androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.core.AllOf.allOf;
+
 
 import android.app.UiAutomation;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
-import android.widget.EditText;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.IdlingRegistry;
-import androidx.test.espresso.IdlingResource;
-import androidx.test.espresso.action.ViewActions;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -45,7 +25,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.google.android.gms.tasks.OnFailureListener;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,21 +33,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BrowseAllEventsTest {
+    Attendee attendee = new Attendee("testDevice", "name", "phone", "email", "image", false);
     @Rule
-    public ActivityScenarioRule<BrowseAllEvents> scenario = new ActivityScenarioRule<BrowseAllEvents>(new Intent(ApplicationProvider.getApplicationContext(), BrowseAllEvents.class).putExtra("deviceID", "testDevice"));
+    public ActivityScenarioRule<BrowseAllEvents> scenario = new ActivityScenarioRule<BrowseAllEvents>(new Intent(ApplicationProvider.getApplicationContext(), BrowseAllEvents.class).putExtra("attendee", attendee));
     private static final String IDLING_RESOURCE_NAME = "FirebaseLoading";
     private CountingIdlingResource countingIdlingResource;
     String txt = "Sample text";
@@ -106,9 +85,7 @@ public class BrowseAllEventsTest {
                     }
                 });
 
-        /*db.collection("events").add(newEvent);
-        countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
-        IdlingRegistry.getInstance().register(countingIdlingResource);*/
+
     }
 
 
@@ -181,22 +158,6 @@ public class BrowseAllEventsTest {
 
         //onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
         boolean textFound=false;
-        /*while (true) {
-            if (textFound) {
-                break; // Exit the loop if the text is found
-            }
-
-            try {
-                onView(allOf(withId(R.id.EventTitle), withParent(withId(R.id.Event_list))))
-                        .check(matches(withText(txt)))
-                        .perform(click());
-
-                textFound = true; // Set flag to true if text is found
-            } catch (Exception e) {
-                // Swiping up
-                onView(withId(R.id.Event_list)).perform(ViewActions.swipeUp());
-            }
-        }*/
         onData(anything())
                 .inAdapterView(withId(R.id.Event_list))
                 .atPosition(0) // Check the presence of an item at position 0
@@ -206,37 +167,6 @@ public class BrowseAllEventsTest {
         //Intents.release();
         cleanup();
     }
-
-//    @Test
-//    public void testeventdetails() {
-//        onIdle();
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        //Intents.init();
-//
-//        //onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
-//        boolean textFound=false;
-//        while (true) {
-//            if (textFound) {
-//                break; // Exit the loop if the text is found
-//            }
-//
-//            try {
-//                onView(allOf(withText(txt), isDisplayed())).perform(click());
-//                textFound = true; // Set flag to true if text is found
-//            } catch (Exception e) {
-//                // Swiping up
-//                onView(withId(R.id.Event_list)).perform(ViewActions.swipeUp());
-//            }
-//        }
-//        onView(withId(R.id.EventTitle)).check(matches(withText(txt)));
-//        onView(withId(R.id.description)).check(matches(withText(txt)));
-//        //Intents.release();
-//    }
 
 
 }

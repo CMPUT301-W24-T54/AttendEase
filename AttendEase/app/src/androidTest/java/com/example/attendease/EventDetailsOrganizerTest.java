@@ -59,7 +59,7 @@ public class EventDetailsOrganizerTest {
     @Test
     public void testActivityDisplaysCorrectly() {
         Intent startIntent = new Intent(ApplicationProvider.getApplicationContext(), EventDetailsOrganizer.class)
-                .putExtra("eventDocumentId", testDocumentId);
+                .putExtra("event", testDocumentId);
 
         intentsTestRule.launchActivity(startIntent);
 
@@ -68,7 +68,6 @@ public class EventDetailsOrganizerTest {
         onView(withId(R.id.location)).check(matches(isDisplayed()));
         onView(withId(R.id.dateandtime)).check(matches(isDisplayed()));
         onView(withId(R.id.QRCodeImage)).check(matches(isDisplayed()));
-        onView(withId(R.id.tabLayout)).check(matches(isDisplayed()));
         onView(withId(R.id.signupscount)).check(doesNotExist());
         onView(withId(R.id.back_button)).perform(click());
     }

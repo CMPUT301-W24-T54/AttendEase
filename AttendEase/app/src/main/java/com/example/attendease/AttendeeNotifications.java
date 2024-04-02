@@ -1,18 +1,27 @@
 package com.example.attendease;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,9 +30,11 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * This class represents the Attendees Notifications page where an Attendee can see relevant information
@@ -33,15 +44,34 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
     private ArrayList<Msg> dataList;
     private ListView MsgList;
     private ArrayAdapter<Msg> MsgAdapter;
-    private FirebaseFirestore db;
+
     private CollectionReference eventsRef;
     private DocumentReference attendee_Ref;
     private ArrayList<String> stringArray;
-    private boolean Array_set=false;
+
+    private BottomNavigationView bottomNav;
+    private String deviceID;
+    private CollectionReference signInRef;
+
+    private ArrayList<String> eventArray;
+    private CollectionReference realeventsRef;
+    private Attendee attendee;
+    private CountingIdlingResource countingIdlingResource;
+    private final Database database = Database.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attendee_notification);
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+        attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
+        deviceID = attendee.getDeviceID();
+        //deviceID= Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        attendee_Ref=database.getAttendeesRef().document(deviceID);
+        realeventsRef = database.getEventsRef();
+        signInRef=database.getSignInsRef();
+        eventsRef=database.getNotificationsRef();
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+        bottomNav = findViewById(R.id.attendee_bottom_nav);
         ImageView imageview=findViewById(R.id.backgroundimageview);
         TextView textview=findViewById(R.id.textView7);
         TextView textview2=findViewById(R.id.textView8);
@@ -50,13 +80,19 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         textview.setVisibility(View.INVISIBLE);
         textview2.setVisibility(View.INVISIBLE);
 
-        Intent intent=getIntent();
+        //Intent intent=getIntent();
+
         //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
         //need to implements Serializable in Attendee class
         //attendee.getsignupids
-        db = FirebaseFirestore.getInstance();
+        /*db = FirebaseFirestore.getInstance();
+        signInRef = db.collection("signIns");
         eventsRef = db.collection("notifications");
-        attendee_Ref=db.collection("attendees").document("atharva");
+        realeventsRef = db.collection("events");
+        Log.d("DEBUG", "Deviceid");
+        attendee_Ref=db.collection("attendees").document(deviceID);*/
+        //attendee_Ref=db.collection("attendees").document("atharva");
+        eventArray=new ArrayList<>();
 
 
 
@@ -72,6 +108,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         }*/
         MsgAdapter = new MsgAdapter(this, dataList);
         MsgList.setAdapter(MsgAdapter);
+        getallnotifications();
 
 
 
@@ -117,26 +154,37 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
 
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        attendee_Ref.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            // Document exists in the database
-                            stringArray = (ArrayList<String>) documentSnapshot.get("notification_deleted");
-                            eve();
-                            // Now 'variableValue' contains the value of the variable from the Firestore
-                        } else {
-                            stringArray=null;
-                            eve();
-                            // Document does not exist
-                        }
-                    }
-                });
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Log.d("DEBUG", String.format("onNavigationItemSelected: %d", id));
+                if (id == R.id.nav_home) {// Handle click on Home item
+                    Log.d("DEBUG", "Home item clicked");
+                    Intent intent = new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+                } else if (id == R.id.nav_events) {// Handle click on Events item
+                    Log.d("DEBUG", "Events item clicked");
+                } else if (id == R.id.nav_bell) {// Handle click on Bell item
+                    Log.d("DEBUG", "Bell item clicked");
+                } else if (id == R.id.nav_profile) {// Handle click on Profile item
+                    Log.d("DEBUG", "Profile item clicked");
+                    Intent intent = new Intent(AttendeeNotifications.this, EditProfileActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+
+                }
+                return true;
+            }
+        });
+
+
 
         MsgList.setOnItemLongClickListener((parent, views, position, id) ->{
             Msg selectedMsg = dataList.get(position);
@@ -153,11 +201,14 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
             Msg selectedMsg = dataList.get(position);
             String Title=selectedMsg.getTitle().toString();
             String Message=selectedMsg.getMessage().toString();
-            String sentBy=selectedMsg.getSent_By().toString();
+            String event=selectedMsg.getEvent().toString();
+            String event_name=selectedMsg.getEvent_name().toString();
             Intent intent= new Intent(AttendeeNotifications.this, ViewMsg.class);
             intent.putExtra("Title",Title);
             intent.putExtra("Message",Message);
-            intent.putExtra("sentBy",sentBy);
+            intent.putExtra("event",event);
+            intent.putExtra("event_name",event_name);
+
             startActivity(intent);
             //new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
             /*Bundle bundle = new Bundle();
@@ -177,6 +228,30 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
     }
+    private void getallnotifications(){
+        attendee_Ref.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            // Document exists in the database
+                            if (documentSnapshot.contains("notification_deleted")) {
+                                // 'notification_deleted' field exists in the document
+                                stringArray = (ArrayList<String>) documentSnapshot.get("notification_deleted");
+                            } else {
+                                // 'notification_deleted' field doesn't exist in the document
+                                stringArray = null;
+                            }
+                            eventlist();
+                            // Now 'variableValue' contains the value of the variable from the Firestore
+                        } else {
+                            stringArray=null;
+                            eventlist();
+                            // Document does not exist
+                        }
+                    }
+                });
+    }
     private void eve(){
         //forattendee only
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -195,8 +270,12 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                             case MODIFIED:
                                 String Title = doc.getDocument().getString("title");
                                 String Notification = doc.getDocument().getString("message");
-                                String sentBy=doc.getDocument().getString("sentBy");
+                                String event=doc.getDocument().getString("event");
+                                String event_name=doc.getDocument().getString("event_name");
                                 String Unique_id=doc.getDocument().getId().toString();
+                                if(!eventArray.contains(event)){
+                                    break;
+                                }
 
 
                                 if(stringArray!=null){
@@ -208,7 +287,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                                 //String sent_by= doc.getDocument().getString("sentBy");
                                 Log.d("Firestore", String.format("City(%s, %s) fetched", Title,
                                         Notification));
-                                Msg add_Msg=new Msg(Title, Notification,sentBy);
+                                Msg add_Msg=new Msg(Title, Notification,event,event_name);
                                 add_Msg.setUnique_id(Unique_id);
                                 dataList.add(add_Msg);
                                 break;
@@ -218,15 +297,40 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                         }
 
                     }
-                    for (String test : test_array){
-                        attendee_Ref.update("notification_deleted",FieldValue.arrayRemove(test));
+                    if(test_array!=null){
+                        for (String test : test_array){
+                            attendee_Ref.update("notification_deleted",FieldValue.arrayRemove(test));
+                        }
                     }
+
 
                     makeinvisible();
 
                     //addCitiesInit();
                     MsgAdapter.notifyDataSetChanged();
                 }
+            }
+        });
+
+    }
+    private void eventlist(){
+        signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        // Document found where fieldName is equal to desiredValue
+                        eventArray.add(doc.getString("eventID"));
+
+
+
+                    }
+                    eve();
+
+                }
+
+
+
             }
         });
     }

@@ -32,6 +32,7 @@ public class SignupsListActivity extends AppCompatActivity {
     private Intent intent;
     private String eventDocID;
     private Event event;
+    private List<Attendee> attendeeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,18 +95,25 @@ public class SignupsListActivity extends AppCompatActivity {
                         }
 
                         // Retrieves the attendee names associated with the attendeeIDs
-                        List<String> attendeeNames = new ArrayList<>();
+                        attendeeList = new ArrayList<>();
                         for (String attendeeID : attendeeIDs) {
                             attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+                                String deviceId = attendeeDocument.getString("deviceID");
                                 String attendeeName = attendeeDocument.getString("name");
-                                attendeeNames.add(attendeeName);
+                                String email = attendeeDocument.getString("email");
+                                String phone = attendeeDocument.getString("phone");
+                                String imageUrl = attendeeDocument.getString("image");
+                                Boolean geo = attendeeDocument.getBoolean("geoTrackingEnabled");
 
-                                // Updates the ListView with attendee names
-                                ArrayAdapter<String> adapter = new ArrayAdapter<>(SignupsListActivity.this, android.R.layout.simple_list_item_1, attendeeNames);
+                                Attendee attendee = new Attendee(deviceId, attendeeName, phone, email, imageUrl, geo);
+                                attendeeList.add(attendee);
+
+                                // Updates the ListView with attendee names using the custom adapter
+                                SignupsListAdapter adapter = new SignupsListAdapter(SignupsListActivity.this, attendeeList);
                                 signUpsListView.setAdapter(adapter);
 
                                 // Updates the signupscount TextView with the count of attendees
-                                String totalCountText = "Total: " + attendeeNames.size();
+                                String totalCountText = "Total: " + attendeeList.size();
                                 signUpsCount.setText(totalCountText);
                             });
                         }
