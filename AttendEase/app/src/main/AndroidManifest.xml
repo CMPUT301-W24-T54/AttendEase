@@ -113,6 +113,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".AttendanceListActivity">
         </activity>
         <activity
