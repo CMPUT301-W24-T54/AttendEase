@@ -65,9 +65,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.attendee_dashboard);
         Intent serviceIntent = new Intent(this, FirebaseListener.class);
         startService(serviceIntent);
-
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
-
         checkInButton = findViewById(R.id.scan_new_qr);
         bottomNav = findViewById(R.id.attendee_bottom_nav);
 
