@@ -63,6 +63,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     }
 
     public void deleteImage(int position) {
+        // TODO : set the image of whatever it was to be a default
         imageList.remove(position);
         notifyItemRemoved(position);
     }

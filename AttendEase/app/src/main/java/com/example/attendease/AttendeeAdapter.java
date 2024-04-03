@@ -80,6 +80,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         }).addOnFailureListener(e -> {
             Log.e("AttendeeAdapter", "Failed to delete attendee: " + e.getMessage());
         });
+        // TODO : Delete all the check-ins, sign-ups, images
     }
 
     static class AttendeeViewHolder extends RecyclerView.ViewHolder {

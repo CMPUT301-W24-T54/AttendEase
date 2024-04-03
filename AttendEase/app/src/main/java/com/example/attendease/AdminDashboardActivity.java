@@ -161,6 +161,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 eventList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    // TODO : FIX THIS LINE OF CODE
                     Event event = document.toObject(Event.class);
                     eventList.add(event);
                 }
@@ -176,6 +177,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 attendeeList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    // TODO : FIX THIS LINE OF CODE
                     Attendee attendee = document.toObject(Attendee.class);
                     attendeeList.add(attendee);
                 }
@@ -187,6 +189,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadImagesFromFirestore() {
+        // TODO : THIS SHOULD USE A STORAGE REFERENCE NOT A COLLECTION REFERENCE
+        // TODO : The image adapter class should still work
         imagesRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 imageList.clear();
