@@ -6,6 +6,7 @@ import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -92,8 +94,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
         attendeesRef = database.getAttendeesRef();
         imagesRef = database.getImagesRef();
-//        loadEventsFromFirestore();
-//        loadAttendeesFromFirestore();
+        loadEventsFromFirestore();
+        loadAttendeesFromFirestore();
         loadImagesFromFirestore();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
@@ -120,26 +122,26 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.admin_bottom_nav);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                return true;
-            } else if (id == R.id.nav_events) {
-                Intent intent = new Intent(this, BrowseAllEvents.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_profile) {
-                Intent intent = new Intent(this, BrowseAllAttendees.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_image) {
-                Intent intent = new Intent(this, BrowseAllImages.class);
-                startActivity(intent);
-                return true;
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.admin_bottom_nav);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    // Already on the AdminDashboardActivity, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(AdminDashboardActivity.this, BrowseAllEventsAdmin.class));
+                    return true;
+                } else if (id == R.id.nav_image) {
+                    startActivity(new Intent(AdminDashboardActivity.this, BrowseAllImages.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(AdminDashboardActivity.this, BrowseAllAttendees.class));
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
 
         eventAdapter.setOnItemClickListener((view, position) -> {
