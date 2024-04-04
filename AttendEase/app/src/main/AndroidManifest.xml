@@ -131,6 +131,8 @@
             android:name=".BrowseAllEventsAdmin" />
         <activity
             android:name=".EventDetailsAdmin" />
+        <activity
+            android:name=".BrowseAllImages" />
         <service
         android:name=".FirebaseListener"
         android:enabled="true"
