@@ -16,9 +16,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 
 public class EventDetailsAdmin extends AppCompatActivity {
     private TextView eventName;
@@ -32,6 +38,12 @@ public class EventDetailsAdmin extends AppCompatActivity {
     private ImageButton trashButton;
 
     private Event event;
+
+    private final Database database = Database.getInstance();
+    private final StorageReference storageRef = database.getStorageRef();
+    private final CollectionReference eventsRefs = database.getEventsRef();
+    private final CollectionReference checkInsRef = database.getCheckInsRef();
+    private final CollectionReference signInsRef = database.getSignInsRef();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +104,44 @@ public class EventDetailsAdmin extends AppCompatActivity {
     }
 
     private void deleteEvent() {
-        // TODO : DELETE from events, check-ins, sign-ups
-        Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
-        finish();
+        // TODO : DELETE from check-ins, sign-ups
+        eventsRefs.document(event.getEventId()).delete().addOnSuccessListener(aVoid -> {
+            Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+            finish();
+        }).addOnFailureListener(e -> {
+            Log.e("EventDetailsAdmin", "Failed to delete event: " + e.getMessage());
+        });
     }
 
     private void removeEventCover() {
-        // TODO : Code to remove event cover image
-        eventCover.setImageResource(R.drawable.item_removed_successfully); //placeholder image
-        Toast.makeText(this, "Event cover photo removed", Toast.LENGTH_SHORT).show();
+        if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null")) {
+            // StackOverflow, https://stackoverflow.com/questions/42930619/how-to-delete-image-from-firebase-storage
+            // Delete image from firestore storage
+            StorageReference photoRef = database.getStorage().getReferenceFromUrl(event.getPosterUrl());
+            photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                    Log.d("DEBUG", "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Log.d("DEBUG", "onFailure: did not delete file");
+                }
+            });
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("posterUrl", "null");
+            eventsRefs.document(event.getEventId()).update(data).addOnSuccessListener(aVoid -> {
+                Toast.makeText(this, "Poster deleted successfully", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                Log.e("EventDetailsAdmin", "Failed to delete poster: " + e.getMessage());
+            });
+
+            eventCover.setImageResource(R.drawable.item_removed_successfully); //placeholder image
+            Toast.makeText(this, "Event cover photo removed", Toast.LENGTH_SHORT).show();
+        }
     }
 }

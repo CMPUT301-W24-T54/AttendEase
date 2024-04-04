@@ -92,9 +92,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
         attendeesRef = database.getAttendeesRef();
         imagesRef = database.getImagesRef();
-        loadEventsFromFirestore();
+//        loadEventsFromFirestore();
 //        loadAttendeesFromFirestore();
-//        loadImagesFromFirestore();
+        loadImagesFromFirestore();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
