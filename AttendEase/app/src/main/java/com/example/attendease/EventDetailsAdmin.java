@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,6 +26,7 @@ public class EventDetailsAdmin extends AppCompatActivity {
     private TextView locationView;
     private TextView dateandtimeView;
     private ImageView eventCover;
+    private ImageView qrImage;
     private Button removeCoverButton;
     private ImageButton backButton;
     private ImageButton trashButton;
@@ -41,6 +44,7 @@ public class EventDetailsAdmin extends AppCompatActivity {
         locationView = findViewById(R.id.location);
         dateandtimeView = findViewById(R.id.date_time);
         eventCover = findViewById(R.id.event_cover);
+        qrImage = findViewById(R.id.qr_code_image);
         removeCoverButton = findViewById(R.id.remove_cover_button);
         backButton = findViewById(R.id.nav_left);
         trashButton = findViewById(R.id.trash);
@@ -76,6 +80,14 @@ public class EventDetailsAdmin extends AppCompatActivity {
                         .override(500, 500)
                         .into(eventCover);
             }*/
+            // Check if the event has a valid poster URL and load it; otherwise set a placeholder
+            if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null")) {
+                int image_size=100;
+                Bitmap CoverPhoto = RandomImageGenerator.generateProfilePicture(event.getPosterUrl(), image_size);
+                eventCover.setImageBitmap(CoverPhoto);
+            } else {
+                eventCover.setImageResource(R.drawable.splash);
+            }
         }
     }
 
