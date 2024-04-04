@@ -1,13 +1,16 @@
 package com.example.attendease;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,9 +19,11 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.example.attendease.EventAdapter.TYPE_LARGE;
+import static com.example.attendease.R.id.admin_bottom_nav;
 import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -35,12 +40,13 @@ public class BrowseAllEventsAdmin extends AppCompatActivity {
     private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_my_events);
+        setContentView(R.layout.admin_all_events);
 
-        recyclerViewMyEvents = findViewById(R.id.rvMyEvents);
+        recyclerViewMyEvents = findViewById(R.id.rv_events);
 
         recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(this));
 
@@ -52,19 +58,26 @@ public class BrowseAllEventsAdmin extends AppCompatActivity {
 
         loadEventsFromFirestore();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
-        bottomNavigationView.setSelectedItemId(R.id.nav_events);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_events) {
-                return true;
+        BottomNavigationView bottomNavEventsAdmin = findViewById(admin_bottom_nav);
+        bottomNavEventsAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(BrowseAllEventsAdmin.this, AdminDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    // Already on the BrowseAllEventsAdmin, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_image) {
+                    startActivity(new Intent(BrowseAllEventsAdmin.this, BrowseAllImages.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(BrowseAllEventsAdmin.this, BrowseAllAttendees.class));
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
     }
     @Override

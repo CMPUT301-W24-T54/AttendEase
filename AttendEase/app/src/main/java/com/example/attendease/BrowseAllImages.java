@@ -1,7 +1,11 @@
 package com.example.attendease;
 
+import static com.example.attendease.R.id.admin_bottom_nav;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,6 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -60,6 +65,28 @@ public class BrowseAllImages extends AppCompatActivity {
             @Override
             public void onDeleteClick(int position) {
                 deleteImageFromFirestore(position);
+            }
+        });
+
+        BottomNavigationView bottomNavAttendeesAdmin = findViewById(admin_bottom_nav);
+        bottomNavAttendeesAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(BrowseAllImages.this, AdminDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(BrowseAllImages.this, BrowseAllEventsAdmin.class));
+                    return true;
+                } else if (id == R.id.nav_image) {
+                    // Already on the BrowseAllImages, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(BrowseAllImages.this, BrowseAllAttendees.class));
+                    return true;
+                }
+                return false;
             }
         });
     }
