@@ -13,9 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.squareup.picasso.Picasso;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
 
@@ -28,6 +36,8 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
     private OnItemClickListener onItemClickListener;
     private final Database database = Database.getInstance();
     private final CollectionReference attendeesRef = database.getAttendeesRef();
+    private final CollectionReference checkInsRef = database.getCheckInsRef();
+    private final CollectionReference signInsRef = database.getSignInsRef();
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -86,6 +96,8 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
             Log.e("AttendeeAdapter", "Failed to delete attendee: " + e.getMessage());
         });
         // TODO : Delete all the check-ins, sign-ups, images
+        signInsRef.whereEqualTo("attendeeID", attendeeId)
+                .get();
     }
 
     static class AttendeeViewHolder extends RecyclerView.ViewHolder {

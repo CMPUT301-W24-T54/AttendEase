@@ -93,13 +93,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
         attendeesRef = database.getAttendeesRef();
         imagesRef = database.getImagesRef();
 //        loadEventsFromFirestore();
-        loadAttendeesFromFirestore();
-//        loadImagesFromFirestore();
+//        loadAttendeesFromFirestore();
+        loadImagesFromFirestore();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, BrowseAllEvents.class);
+                Intent intent = new Intent(AdminDashboardActivity.this, BrowseAllEventsAdmin.class);
                 startActivity(intent);
             }
         });
