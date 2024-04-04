@@ -26,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -92,8 +93,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
         attendeesRef = database.getAttendeesRef();
         imagesRef = database.getImagesRef();
-//        loadEventsFromFirestore();
-//        loadAttendeesFromFirestore();
+        loadEventsFromFirestore();
+        loadAttendeesFromFirestore();
         loadImagesFromFirestore();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +128,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 return true;
             } else if (id == R.id.nav_events) {
-                Intent intent = new Intent(this, BrowseAllEvents.class);
+                Intent intent = new Intent(this, BrowseAllEventsAdmin.class);
                 startActivity(intent);
                 return true;
             } else if (id == R.id.nav_profile) {
@@ -175,7 +176,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadAttendeesFromFirestore() {
-        attendeesRef.get().addOnCompleteListener(task -> {
+        attendeesRef.limit(4).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 attendeeList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -196,18 +197,40 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadImagesFromFirestore() {
-        // TODO : THIS SHOULD USE A STORAGE REFERENCE NOT A COLLECTION REFERENCE
-        // TODO : The image adapter class should still work
-        imagesRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                imageList.clear();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Image image = document.toObject(Image.class);
-                    imageList.add(image);
+
+        eventsRef.limit(3).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        String imageUrl = documentSnapshot.getString("posterUrl");
+                        if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.equals("")) {
+                            Image image = new Image(imageUrl);
+                            imageList.add(image);
+                        }
+                        imageAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Log.d("DEBUG", "onComplete: Could not load event posters");
                 }
-                imageAdapter.notifyDataSetChanged();
-            } else {
-                Log.d("AdminDashboardActivity", "Error getting images: ", task.getException());
+            }
+        });
+
+        attendeesRef.limit(3).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        String imageUrl = documentSnapshot.getString("image");
+                        if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.equals("")) {
+                            Image image= new Image(imageUrl);
+                            imageList.add(image);
+                        }
+                        imageAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Log.d("DEBUG", "onComplete: Could not load attendee images");
+                }
             }
         });
     }
