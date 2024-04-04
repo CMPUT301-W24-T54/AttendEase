@@ -125,6 +125,8 @@
         <activity
             android:name=".EventDetailsOrganizer">
         </activity>
+        <activity
+            android:name=".BrowseAllAttendees" />
         <service
         android:name=".FirebaseListener"
         android:enabled="true"

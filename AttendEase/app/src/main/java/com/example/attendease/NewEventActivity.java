@@ -35,16 +35,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -77,6 +82,8 @@ public class NewEventActivity extends AppCompatActivity {
     private Event newEvent;
     private String posterUrl;
     private Uri eventPosterUri = null;
+    private final Database database = Database.getInstance();
+    private CollectionReference eventsRef;
 
     /**
      * Initializes the activity, setting the content view and configuring UI interactions.
@@ -97,6 +104,7 @@ public class NewEventActivity extends AppCompatActivity {
         Button btnUploadPhoto = findViewById(R.id.btnUploadPhoto);
         Button btnRemovePhoto = findViewById(R.id.btnRemovePhoto);
 
+        eventsRef = database.getEventsRef();
         buttonGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,25 +138,39 @@ public class NewEventActivity extends AppCompatActivity {
                 if (o.getResultCode() == Activity.RESULT_OK) {
                     Intent data = o.getData();
                     String resultString = data.getStringExtra("result");
-                    eventID = resultString;
-                    // Handle the resultString here
-                    Log.d("MainActivity", "Result: " + resultString);
-                    if (eventPosterUri != null) {
-                        uploadEventPoster(eventPosterUri, eventID, new UploadCallback() {
-                            @Override
-                            public void onSuccess(String imageUrl) {
-                                createEvent(imageUrl);
-                            }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                Toast.makeText(NewEventActivity.this, "Failed to upload image, please try again", Toast.LENGTH_SHORT).show();
+                    eventsRef.document(resultString).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Toast.makeText(NewEventActivity.this, "QR Code already in use", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else {
+                                    eventID = resultString;
+                                    // Handle the resultString here
+                                    Log.d("MainActivity", "Result: " + resultString);
+                                    if (eventPosterUri != null) {
+                                        uploadEventPoster(eventPosterUri, eventID, new UploadCallback() {
+                                            @Override
+                                            public void onSuccess(String imageUrl) {
+                                                createEvent(imageUrl);
+                                            }
+
+                                            @Override
+                                            public void onFailure(Exception e) {
+                                                Toast.makeText(NewEventActivity.this, "Failed to upload image, please try again", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        // No image to upload, proceed with event creation without an image
+                                        createEvent(null);
+                                    }
+                                }
                             }
-                        });
-                    } else {
-                        // No image to upload, proceed with event creation without an image
-                        createEvent(null);
-                    }
+                        }
+                    });
                 }
             }
         });

@@ -67,15 +67,17 @@ public class EventDetailsAttendee extends AppCompatActivity {
         setContentView(R.layout.activity_view_browsed_event);
 
         intent = getIntent();
-
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
         Log.d("DEBUG", String.format("onCreate: %s", attendee.getDeviceID()));
 
-        if (attendee.isGeoTrackingEnabled()) {
-            Log.d("DEBUG", String.format("onCreate: %s", "YIPPEE it works"));
-        }
 
         eventID = intent.getStringExtra("eventID");
+
+        if (eventID == null) {
+            Toast.makeText(this, "Invalid Event", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
         prevActivity = intent.getStringExtra("prevActivity");
 
         signUpsRef = database.getSignInsRef();
@@ -159,11 +161,6 @@ public class EventDetailsAttendee extends AppCompatActivity {
                 data.put("attendeeID", attendee.getDeviceID());
                 data.put("timeStamp", dateString);
 
-                // TODO : Check Geo Location enabled
-
-
-                // TODO : Add Geo Point data
-
                 checkInsRef.document(unique_id).set(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -203,11 +200,13 @@ public class EventDetailsAttendee extends AppCompatActivity {
      * @param docID The ID of the document.
      */
     private void getGeoPoint(String docID) {
+
+        // Check if user permission enabled
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
-            return;
         }
+
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
