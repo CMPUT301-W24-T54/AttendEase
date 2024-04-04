@@ -44,9 +44,9 @@ public class BrowseAllEventsAdmin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.organizer_my_events);
+        setContentView(R.layout.admin_all_events);
 
-        recyclerViewMyEvents = findViewById(R.id.rvMyEvents);
+        recyclerViewMyEvents = findViewById(R.id.rv_events);
 
         recyclerViewMyEvents.setLayoutManager(new LinearLayoutManager(this));
 
