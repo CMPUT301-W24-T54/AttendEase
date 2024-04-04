@@ -30,6 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,9 +92,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
         attendeesRef = database.getAttendeesRef();
         imagesRef = database.getImagesRef();
-        loadEventsFromFirestore();
+//        loadEventsFromFirestore();
         loadAttendeesFromFirestore();
-        loadImagesFromFirestore();
+//        loadImagesFromFirestore();
 
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,8 +179,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 attendeeList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    // TODO : FIX THIS LINE OF CODE
-                    Attendee attendee = document.toObject(Attendee.class);
+                    String id = document.getId();
+                    String name = document.getString("name");
+                    String phone = document.getString("phone");
+                    String email = document.getString("email");
+                    String image = document.getString("image");
+                    boolean geoTrackingEnabled = Boolean.TRUE.equals(document.getBoolean("geoTrackingEnabled"));
+                    Attendee attendee = new Attendee(id, name, phone, email, image, geoTrackingEnabled);
                     attendeeList.add(attendee);
                 }
                 attendeeAdapter.notifyDataSetChanged();

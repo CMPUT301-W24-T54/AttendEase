@@ -1,6 +1,7 @@
 package com.example.attendease;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.AttendeeViewHolder> {
 
@@ -23,7 +27,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
     private Context context;
     private OnItemClickListener onItemClickListener;
     private final Database database = Database.getInstance();
-    private CollectionReference attendeesRef;
+    private final CollectionReference attendeesRef = database.getAttendeesRef();
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -73,6 +77,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
     private void deleteAttendee(int position) {
         String attendeeId = attendeeList.get(position).getDeviceID(); //Unsure?
+        Log.d("DEBUG", String.format("deleteAttendee: %s", attendeeId));
         attendeesRef.document(attendeeId).delete().addOnSuccessListener(aVoid -> {
             attendeeList.remove(position);
             notifyItemRemoved(position);
@@ -85,19 +90,33 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
     static class AttendeeViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView profilePhotoImageView;
+        CircleImageView profilePhotoImageView;
         TextView usernameTextView;
         ImageView trashButton;
 
         AttendeeViewHolder(View itemView) {
             super(itemView);
-            profilePhotoImageView = itemView.findViewById(R.id.imageView);
-            usernameTextView = itemView.findViewById(R.id.textView14);
+            profilePhotoImageView = itemView.findViewById(R.id.attendee_profile_photo);
+            usernameTextView = itemView.findViewById(R.id.attendee_username);
             trashButton = itemView.findViewById(R.id.trash);
         }
 
         void bind(Attendee attendee) {
-            Glide.with(itemView.getContext()).load(attendee.getImage()).into(profilePhotoImageView);
+//            Glide.with(itemView.getContext()).load(attendee.getImage()).into(profilePhotoImageView);
+            // Creates or Retrieves profile picture of the attendee
+            if (profilePhotoImageView == null) {
+                Log.d("DEBUG", "bind: image view is null");
+            }
+
+            if (attendee.getImage() == null || attendee.getImage() == ""){
+                int image_size=100;
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(attendee.getName(), image_size);
+                profilePhotoImageView.setImageBitmap(profilePicture);
+            }
+            else {
+                Log.d("DEBUG", String.format("bind: %s", attendee.getImage()));
+                Picasso.get().load(attendee.getImage()).into(profilePhotoImageView);
+            }
             usernameTextView.setText(attendee.getName());
         }
     }
