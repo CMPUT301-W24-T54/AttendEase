@@ -35,6 +35,10 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * This activity displays a map with markers representing check-in locations for a specific event.
+ * It retrieves check-in locations from Firestore, converts them to GeoPoints, and adds markers to the map accordingly.
+ */
 public class MapActivity extends AppCompatActivity {
     private final Database database = Database.getInstance();
     public CollectionReference checkInsRef;
@@ -109,9 +113,10 @@ public class MapActivity extends AppCompatActivity {
         map.getOverlays().add(locationOverlay);
     }
 
-
+    /**
+     * Populates the map with markers representing check-in locations.
+     */
     // OpenAI, ChatGPT, 2024, Refactor populateMapWithMarkers for better mock testing
-
     public void populateMapWithMarkers(CollectionReference checkInsRef, CollectionReference attendeesRef) {
         checkInsRef
                 .whereEqualTo("eventID", event.getEventId())

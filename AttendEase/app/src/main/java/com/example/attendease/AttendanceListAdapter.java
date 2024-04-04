@@ -17,6 +17,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * ArrayAdapter for displaying attendee information in a ListView.
+ */
 public class AttendanceListAdapter extends ArrayAdapter<Attendee> {
 
     private Context mContext;
