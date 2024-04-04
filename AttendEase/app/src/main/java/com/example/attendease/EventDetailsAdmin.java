@@ -13,12 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -102,7 +107,7 @@ public class EventDetailsAdmin extends AppCompatActivity {
                         .into(eventCover);
             }*/
             // Check if the event has a valid poster URL and load it; otherwise set a placeholder
-            if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null")) {
+            if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null") && !event.getPosterUrl().equals("")) {
                 int image_size=100;
                 Bitmap CoverPhoto = RandomImageGenerator.generateProfilePicture(event.getPosterUrl(), image_size);
                 eventCover.setImageBitmap(CoverPhoto);
@@ -117,12 +122,48 @@ public class EventDetailsAdmin extends AppCompatActivity {
      * TODO: Implement deletion logic.
      */
     private void deleteEvent() {
-        // TODO : DELETE from check-ins, sign-ups
         eventsRefs.document(event.getEventId()).delete().addOnSuccessListener(aVoid -> {
             Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
             finish();
         }).addOnFailureListener(e -> {
             Log.e("EventDetailsAdmin", "Failed to delete event: " + e.getMessage());
+        });
+
+        signInsRef.whereEqualTo("eventID", event.getEventId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                deleteReference(documentSnapshot);
+                            }
+                        }
+                    }
+                });
+
+        checkInsRef.whereEqualTo("eventID", event.getEventId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                deleteReference(documentSnapshot);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void deleteReference(DocumentSnapshot documentSnapshot) {
+        documentSnapshot.getReference().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("DEBUG", "onComplete: Deleted signin");
+                }
+            }
         });
     }
 
