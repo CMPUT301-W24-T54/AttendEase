@@ -33,6 +33,10 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * This activity displays a map with markers representing check-in locations for a specific event.
+ * It retrieves check-in locations from Firestore, converts them to GeoPoints, and adds markers to the map accordingly.
+ */
 public class MapActivity extends AppCompatActivity {
     private final Database database = Database.getInstance();
     private CollectionReference checkInsRef;
@@ -115,7 +119,9 @@ public class MapActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-
+    /**
+     * Populates the map with markers representing check-in locations.
+     */
     private void populateMapWithMarkers() {
         checkInsRef
                 .whereEqualTo("eventID", event.getEventId())
@@ -139,6 +145,12 @@ public class MapActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Converts a Firestore GeoPoint to an osmdroid GeoPoint.
+     *
+     * @param firebaseGeoPoint The GeoPoint from Firestore
+     * @return The converted osmdroid GeoPoint
+     */
     private static GeoPoint convertFirebaseGeoPoint(com.google.firebase.firestore.GeoPoint firebaseGeoPoint) {
         if (firebaseGeoPoint != null) {
             double latitude = firebaseGeoPoint.getLatitude();

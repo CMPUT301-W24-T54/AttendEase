@@ -152,11 +152,20 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Loads events from Firestore by collecting event IDs for the current attendee
+     * and loading the newest events. It then updates the RecyclerViews accordingly.
+     */
     private void loadEventsFromFirestore() {
         collectEventIdsForUser();
         loadNewestEvents();
     }
 
+    /**
+     * Collects event IDs for the currently logged-in attendee from Firestore.
+     * The event IDs are then used to fetch corresponding events.
+     */
     private void collectEventIdsForUser() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String attendeeId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -179,6 +188,10 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Fetches events from Firestore based on their IDs.
+     * @param eventIds List of event IDs to fetch events for.
+     */
     private void fetchEventsForIds(List<String> eventIds) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<Event> events = new ArrayList<>();
@@ -209,6 +222,9 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Loads the newest events from Firestore and updates the RecyclerView.
+     */
     private void loadNewestEvents() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

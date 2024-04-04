@@ -31,7 +31,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
-
+/**
+ * Activity for managing notifications sent by the organizer to attendees.
+ * Allows organizers to view, add, and delete notifications.
+ */
 public class OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ActivityResultLauncher<Intent> addMsgLauncher;
     private ArrayList<Msg> dataList;
@@ -122,6 +125,13 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
 
 
     }
+
+    /**
+     * Deletes a notification from the list and Firestore.
+     *
+     * @param message   The notification message to delete.
+     * @param position  The position of the notification in the list.
+     */
     public void deleteMsg(Msg message, int position){
         MsgAdapter.remove(message);
         MsgAdapter.notifyDataSetChanged();
@@ -129,7 +139,11 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         makeinvisible();
     }
 
-    //for organizers
+    /**
+     * Adds a new notification to the list and Firestore.
+     *
+     * @param message   The notification message to add.
+     */
     public void addMsg(Msg message){
         MsgAdapter.add(message);
         MsgAdapter.notifyDataSetChanged();
@@ -158,6 +172,10 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                 });
     }
 
+    /**
+     * Controls the visibility of UI elements based on the presence of notifications.
+     * Hides background image and text if notifications exist, otherwise shows them.
+     */
     public void makeinvisible(){
         if (dataList.isEmpty()){
             ImageView imageview=findViewById(R.id.backgroundimageview);
@@ -178,6 +196,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
             textview2.setVisibility(View.INVISIBLE);
         }
     }
+
 
     @Override
     protected void onResume() {

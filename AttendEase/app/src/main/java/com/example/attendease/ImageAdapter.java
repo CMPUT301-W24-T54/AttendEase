@@ -13,6 +13,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
+/**
+ * Adapter for displaying a list of images in a RecyclerView.
+ */
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     private List<Image> imageList;
     private Context context;
@@ -52,21 +55,36 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         });
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return the total number of items
+     */
     @Override
     public int getItemCount() {
         return imageList.size();
     }
 
+    /**
+     * Updates the list of images.
+     * @param imageList the new list of images
+     */
     public void setImageList(List<Image> imageList) {
         this.imageList = imageList;
         notifyDataSetChanged();
     }
 
+    /**
+     * Removes an image from the list.
+     * @param position the position of the image to be removed
+     */
     public void deleteImage(int position) {
         imageList.remove(position);
         notifyItemRemoved(position);
     }
 
+    /**
+     * ViewHolder class for holding image views.
+     */
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         ImageButton trashButton;

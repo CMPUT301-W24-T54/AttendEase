@@ -18,6 +18,10 @@ import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * This activity displays detailed information about an event for administrators.
+ * Administrators can view event details, delete events, and remove event cover photos.
+ */
 public class EventDetailsAdmin extends AppCompatActivity {
     private TextView eventName;
     private TextView aboutDescription;
@@ -58,6 +62,11 @@ public class EventDetailsAdmin extends AppCompatActivity {
         removeCoverButton.setOnClickListener(v -> removeEventCover());
     }
 
+    /**
+     * Populates the UI with event details.
+     *
+     * @param event The event object containing details to populate the UI.
+     */
     private void populateUIWithEvent(Event event) {
         if (event != null) {
             eventName.setText(event.getTitle());
@@ -79,12 +88,20 @@ public class EventDetailsAdmin extends AppCompatActivity {
         }
     }
 
+    /**
+     * Deletes the event.
+     * TODO: Implement deletion logic.
+     */
     private void deleteEvent() {
         //TODO
         Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
         finish();
     }
 
+    /**
+     * Removes the event cover photo.
+     * TODO: Implement logic to remove the cover photo.
+     */
     private void removeEventCover() {
         // Code to remove event cover image TODO
         eventCover.setImageResource(R.drawable.item_removed_successfully); //placeholder image

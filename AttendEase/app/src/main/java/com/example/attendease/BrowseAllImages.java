@@ -19,6 +19,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents an activity for browsing all images stored in Firestore.
+ * Images are retrieved from Firestore and displayed in a RecyclerView.
+ */
 public class BrowseAllImages extends AppCompatActivity {
     private RecyclerView rvImages;
     private final Database database = Database.getInstance();
@@ -47,6 +51,9 @@ public class BrowseAllImages extends AppCompatActivity {
         });
     }
 
+    /**
+     * Retrieves images from Firestore and populates the RecyclerView.
+     */
     private void loadImagesFromFirestore() {
         imagesRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -62,6 +69,11 @@ public class BrowseAllImages extends AppCompatActivity {
         });
     }
 
+    /**
+     * Deletes an image from Firestore and updates the RecyclerView.
+     *
+     * @param position The position of the image in the RecyclerView.
+     */
     private void deleteImageFromFirestore(int position) {
         Image image = imageList.get(position);
         imagesRef.document(image.getImageUrl()).delete();

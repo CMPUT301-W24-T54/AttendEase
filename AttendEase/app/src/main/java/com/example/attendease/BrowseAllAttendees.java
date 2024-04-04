@@ -16,6 +16,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * This activity represents browsing of all attendee profiles.
+ * Retrieves attendee profiles from Firestore and displays them in a RecyclerView.
+ */
 public class BrowseAllAttendees extends AppCompatActivity {
     private TextView totalCountTextView;
     private RecyclerView rvProfiles;
@@ -39,6 +43,10 @@ public class BrowseAllAttendees extends AppCompatActivity {
         loadAttendeesFromFirestore();
     }
 
+    /**
+     * Retrieves all attendee profiles from Firestore and populates the RecyclerView with the data.
+     * Updates the total count of attendees displayed.
+     */
     private void loadAttendeesFromFirestore() {
         attendeesRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

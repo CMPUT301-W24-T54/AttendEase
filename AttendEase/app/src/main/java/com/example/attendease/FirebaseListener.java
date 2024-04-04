@@ -29,6 +29,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * This class listener represents a Service.
+ * It listens to Firestore database notifications and displaying toast messages for new notifications.
+ */
 public class FirebaseListener extends Service{
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
     //CollectionReference collectionRef = db.collection("notifications");
@@ -117,6 +121,10 @@ public class FirebaseListener extends Service{
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    /**
+     * Sets the initial timestamp if it doesn't exist.
+     */
     private void setTimeStamp() {
         long currentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -126,11 +134,21 @@ public class FirebaseListener extends Service{
         saveTimeStamp(TimeStamp);
     }
 
+    /**
+     * Retrieves the timestamp from SharedPreferences.
+     *
+     * @return The timestamp string.
+     */
     private String retrieveTimeStamp() {
         // Retrieve TimeStamp from SharedPreferences
         return getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TimeStamp", "");
     }
 
+    /**
+     * Saves the timestamp in SharedPreferences.
+     *
+     * @param timeStamp The timestamp to save.
+     */
     private void saveTimeStamp(String timeStamp) {
         // Save TimeStamp in SharedPreferences
         getSharedPreferences("MyPrefs", MODE_PRIVATE).edit().putString("TimeStamp", timeStamp).apply();

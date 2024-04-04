@@ -1,5 +1,8 @@
 package com.example.attendease;
 
+/**
+ * Represents an image object with its URL.
+ */
 public class Image {
     private String imageUrl;
 

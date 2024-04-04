@@ -113,6 +113,13 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
     }
+
+    /**
+     * Deletes the selected message from the list and Firestore.
+     *
+     * @param message The message to be deleted.
+     * @param position The position of the message in the list.
+     */
     public void deleteMsg(Msg message, int position){
         MsgAdapter.remove(message);
         MsgAdapter.notifyDataSetChanged();
@@ -125,11 +132,20 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
     }
+
+    /**
+     * Adds a message to the list.
+     *
+     * @param message The message to be added.
+     */
     public void addMsg(Msg message){
         MsgAdapter.add(message);
         MsgAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Makes certain views invisible if the list of messages is empty.
+     */
     public void makeinvisible(){
         if (dataList.isEmpty()){
             ImageView imageview=findViewById(R.id.backgroundimageview);
@@ -228,6 +244,10 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
 
     }
+
+    /**
+     * This method fetches notifications from Firestore.
+     */
     private void getallnotifications(){
         attendee_Ref.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -252,6 +272,10 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                     }
                 });
     }
+
+    /**
+     * Retrieves notifications from Firestore and populates the notification list based on the attendee's events.
+     */
     private void eve(){
         //forattendee only
         eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -313,6 +337,10 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         });
 
     }
+
+    /**
+     * Fetches events associated with the attendee from Firestore.
+     */
     private void eventlist(){
         signInRef.whereEqualTo("attendeeID",deviceID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

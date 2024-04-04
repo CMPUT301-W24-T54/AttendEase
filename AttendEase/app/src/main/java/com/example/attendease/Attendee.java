@@ -155,20 +155,42 @@ public class Attendee implements Serializable{
         this.image = image;
     }
 
+    /**
+     * Checks if geo tracking is enabled for this attendee.
+     * @return true if geo tracking is enabled, false otherwise.
+     */
     public boolean isGeoTrackingEnabled() {
         return geoTrackingEnabled;
     }
 
+    /**
+     * Sets whether geo tracking is enabled for this attendee.
+     * @param geoTrackingEnabled true to enable geo tracking, false to disable.
+     */
     public void setGeoTrackingEnabled(boolean geoTrackingEnabled) {
         this.geoTrackingEnabled = geoTrackingEnabled;
     }
+
+    /**
+     * Gets the check-in count for this attendee.
+     * @return The check-in count.
+     */
     public int getCheckInCount() {
         return checkInCount;
     }
 
+    /**
+     * Sets the check-in count for this attendee.
+     * @param checkInCount The new check-in count to set.
+     */
     public void setCheckInCount(int checkInCount) {
         this.checkInCount = checkInCount;
     }
+
+    /**
+     * Gets the URL associated with this user.
+     * @return The URL.
+     */
     public String getUrl() {
         return url;
     }
