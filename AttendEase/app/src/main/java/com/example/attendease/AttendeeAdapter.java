@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.units.qual.C;
@@ -87,6 +90,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
     private void deleteAttendee(int position) {
         String attendeeId = attendeeList.get(position).getDeviceID(); //Unsure?
+        String attendeeProfileImage = attendeeList.get(position).getDeviceID();
+
+        // Delete from attendees collection
         Log.d("DEBUG", String.format("deleteAttendee: %s", attendeeId));
         attendeesRef.document(attendeeId).delete().addOnSuccessListener(aVoid -> {
             attendeeList.remove(position);
@@ -95,9 +101,62 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         }).addOnFailureListener(e -> {
             Log.e("AttendeeAdapter", "Failed to delete attendee: " + e.getMessage());
         });
+
         // TODO : Delete all the check-ins, sign-ups, images
         signInsRef.whereEqualTo("attendeeID", attendeeId)
-                .get();
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                deleteReference(documentSnapshot);
+                            }
+                        }
+                    }
+                });
+
+        checkInsRef.whereEqualTo("attendeeID", attendeeId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                deleteReference(documentSnapshot);
+                            }
+                        }
+                    }
+                });
+
+        // Delete Profile Image
+        if (attendeeProfileImage != null && !attendeeProfileImage.equals("null") && !attendeeProfileImage.equals("")) {
+            StorageReference photoRef = database.getStorage().getReferenceFromUrl(attendeeProfileImage);
+            photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                    Log.d("DEBUG", "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Log.d("DEBUG", "onFailure: did not delete file");
+                }
+            });
+        }
+    }
+
+    private void deleteReference(DocumentSnapshot documentSnapshot) {
+        documentSnapshot.getReference().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("DEBUG", "onComplete: Deleted signin");
+                }
+            }
+        });
     }
 
     static class AttendeeViewHolder extends RecyclerView.ViewHolder {
