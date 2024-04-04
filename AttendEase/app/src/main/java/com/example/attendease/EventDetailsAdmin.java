@@ -80,13 +80,13 @@ public class EventDetailsAdmin extends AppCompatActivity {
     }
 
     private void deleteEvent() {
-        //TODO
+        // TODO : DELETE from events, check-ins, sign-ups
         Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private void removeEventCover() {
-        // Code to remove event cover image TODO
+        // TODO : Code to remove event cover image
         eventCover.setImageResource(R.drawable.item_removed_successfully); //placeholder image
         Toast.makeText(this, "Event cover photo removed", Toast.LENGTH_SHORT).show();
     }

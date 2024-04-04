@@ -33,10 +33,11 @@ import java.util.concurrent.CountDownLatch;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EventDetailsAttendeeSignUpTest {
-
+    Attendee testAttendee = new Attendee("testDevice", "name", "phone", "email", "image", false);
     @Rule
     public ActivityScenarioRule<EventDetailsAttendee> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EventDetailsAttendee.class)
-            .putExtra("deviceID", "testDevice")
+            .putExtra("attendee", "testAttendee")
+            .putExtra("prevActivity", "BrowseAllEvents")
             .putExtra("eventID", "testEvent")
             .putExtra("title","Teset Event")
             .putExtra("description","Event for testing purposes")

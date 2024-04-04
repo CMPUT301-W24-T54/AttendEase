@@ -44,7 +44,13 @@ public class BrowseAllAttendees extends AppCompatActivity {
             if (task.isSuccessful()) {
                 attendeeList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Attendee attendee = document.toObject(Attendee.class);
+                    String id = document.getId();
+                    String name = document.getString("name");
+                    String phone = document.getString("phone");
+                    String email = document.getString("email");
+                    String image = document.getString("image");
+                    boolean geoTrackingEnabled = Boolean.TRUE.equals(document.getBoolean("geoTrackingEnabled"));
+                    Attendee attendee = new Attendee(id, name, phone, email, image, geoTrackingEnabled);
                     attendeeList.add(attendee);
                 }
                 attendeeAdapter.notifyDataSetChanged();

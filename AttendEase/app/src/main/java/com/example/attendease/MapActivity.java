@@ -15,9 +15,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -35,7 +37,8 @@ import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
     private final Database database = Database.getInstance();
-    private CollectionReference checkInsRef;
+    public CollectionReference checkInsRef;
+    public CollectionReference attendeesRef;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
     private IMapController controller;
@@ -43,34 +46,41 @@ public class MapActivity extends AppCompatActivity {
     private Event event;
     private ArrayList<Marker> markerList = new ArrayList<>();
 
-
+    // OpenAI, ChatGPT, Refactor code (check previous commit)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeComponents();
+        populateMapWithMarkers(checkInsRef, attendeesRef);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void initializeComponents() {
         event = getIntent().getParcelableExtra("event");
-        Log.d("DEBUG", String.format("onCreate: %s", event.getEventId()));
-//        event = new Event();
-//        event.setEventId("0d7276f3-0353-4f3a-b05b-8de77a068f1c_1711067197366");
         checkInsRef = database.getCheckInsRef();
+        attendeesRef = database.getAttendeesRef();
 
-        //handle permissions first, before map is created. not depicted here
+        initializeMap();
+        initializeLocationOverlay();
+    }
 
-        //load/initialize the osmdroid configuration, this can be done
+    public void initializeMap() {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        //inflate and create the map
         setContentView(R.layout.activity_map);
-
-        // Code borrowed from QRScannerActivity Re-purposed for location access
-        // Check if user permission for camera access
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-
-        // Create the map view
-        map = (MapView) findViewById(R.id.map);
+        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
@@ -78,10 +88,9 @@ public class MapActivity extends AppCompatActivity {
         map.setMaxZoomLevel(20.0);
         map.setMinZoomLevel(3.0);
 
-
         GeoPoint myLocationGeoPoint = new GeoPoint(0, 0);
-        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
         controller = map.getController();
+        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
 
         locationOverlay.enableMyLocation();
         locationOverlay.setDrawAccuracyEnabled(false);
@@ -91,32 +100,19 @@ public class MapActivity extends AppCompatActivity {
         controller.setZoom(1);
 
         map.getOverlays().add(locationOverlay);
-        populateMapWithMarkers();
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    public void initializeLocationOverlay() {
+        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
+        locationOverlay.enableMyLocation();
+        locationOverlay.setDrawAccuracyEnabled(false);
+        map.getOverlays().add(locationOverlay);
     }
 
 
-    private void populateMapWithMarkers() {
+    // OpenAI, ChatGPT, 2024, Refactor populateMapWithMarkers for better mock testing
+
+    public void populateMapWithMarkers(CollectionReference checkInsRef, CollectionReference attendeesRef) {
         checkInsRef
                 .whereEqualTo("eventID", event.getEventId())
                 .get()
@@ -124,22 +120,45 @@ public class MapActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                GeoPoint geoPoint = convertFirebaseGeoPoint(document.getGeoPoint("geoPoint"));
-                                if (geoPoint != null) {
-                                    Marker marker = new Marker(map);
-                                    marker.setPosition(geoPoint);
-                                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                                    marker.setTitle("Hello");
-                                    map.getOverlays().add(marker);
-                                }
-                            }
+                            processCheckInDocuments(attendeesRef, task.getResult());
                         }
                     }
                 });
     }
 
-    private static GeoPoint convertFirebaseGeoPoint(com.google.firebase.firestore.GeoPoint firebaseGeoPoint) {
+    public void processCheckInDocuments(CollectionReference attendeesRef, QuerySnapshot querySnapshot) {
+        for (QueryDocumentSnapshot document : querySnapshot) {
+            GeoPoint geoPoint = convertFirebaseGeoPoint(document.getGeoPoint("geoPoint"));
+            if (geoPoint != null) {
+                Marker marker = createMarker(geoPoint);
+                map.getOverlays().add(marker);
+                fetchAttendeeName(attendeesRef, document.getString("attendeeID"), marker);
+            }
+        }
+    }
+
+    public Marker createMarker(GeoPoint geoPoint) {
+        Marker marker = new Marker(map);
+        marker.setPosition(geoPoint);
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        return marker;
+    }
+
+    public void fetchAttendeeName(CollectionReference attendees, String attendeeID, Marker marker) {
+        attendees.document(attendeeID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            marker.setTitle(documentSnapshot.getString("name"));
+                            Log.d("DEBUG", "onSuccess: marker.setTitle() is called");
+                        }
+                    }
+                });
+    }
+
+    public GeoPoint convertFirebaseGeoPoint(com.google.firebase.firestore.GeoPoint firebaseGeoPoint) {
         if (firebaseGeoPoint != null) {
             double latitude = firebaseGeoPoint.getLatitude();
             double longitude = firebaseGeoPoint.getLongitude();
