@@ -2,6 +2,9 @@ package com.example.attendease;
 
 import java.util.UUID;
 
+/**
+ * This represents a message with a title, message content, and related event information.
+ */
 public class Msg {
     private String title;
     private String message;
@@ -10,6 +13,7 @@ public class Msg {
 
     private String event;
     private String event_name;
+
 
     public Msg(String title, String message, String event) {
         this.title = title;

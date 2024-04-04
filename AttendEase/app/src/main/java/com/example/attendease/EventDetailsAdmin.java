@@ -26,6 +26,10 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
+/**
+ * This activity displays detailed information about an event for administrators.
+ * Administrators can view event details, delete events, and remove event cover photos.
+ */
 public class EventDetailsAdmin extends AppCompatActivity {
     private TextView eventName;
     private TextView aboutDescription;
@@ -74,6 +78,11 @@ public class EventDetailsAdmin extends AppCompatActivity {
         removeCoverButton.setOnClickListener(v -> removeEventCover());
     }
 
+    /**
+     * Populates the UI with event details.
+     *
+     * @param event The event object containing details to populate the UI.
+     */
     private void populateUIWithEvent(Event event) {
         if (event != null) {
             eventName.setText(event.getTitle());
@@ -103,6 +112,10 @@ public class EventDetailsAdmin extends AppCompatActivity {
         }
     }
 
+    /**
+     * Deletes the event.
+     * TODO: Implement deletion logic.
+     */
     private void deleteEvent() {
         // TODO : DELETE from check-ins, sign-ups
         eventsRefs.document(event.getEventId()).delete().addOnSuccessListener(aVoid -> {
@@ -113,6 +126,10 @@ public class EventDetailsAdmin extends AppCompatActivity {
         });
     }
 
+    /**
+     * Removes the event cover photo.
+     * TODO: Implement logic to remove the cover photo.
+     */
     private void removeEventCover() {
         if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null")) {
             // StackOverflow, https://stackoverflow.com/questions/42930619/how-to-delete-image-from-firebase-storage

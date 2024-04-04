@@ -115,6 +115,12 @@ public class EventDetailsAttendee extends AppCompatActivity {
         addListeners();
     }
 
+    /**
+     * Sets up listeners for sign-up or check-in based on the event and attendee details.
+     *
+     * @param eventID      The ID of the event.
+     * @param canCheckIn   A boolean flag indicating whether the attendee can check in.
+     */
     private void setListener(String eventID, boolean canCheckIn) {
         signUpsRef
                 .whereEqualTo("attendeeID", attendee.getDeviceID())
@@ -135,6 +141,9 @@ public class EventDetailsAttendee extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Adds a listener for the check-in button.
+     */
     private void addCheckInListener() {
         interactButton.setText("Check In");
         toggleInteractButton(true);
@@ -166,6 +175,11 @@ public class EventDetailsAttendee extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks if geo-tracking is enabled for the attendee and retrieves the current location.
+     *
+     * @param docID The ID of the document.
+     */
     private void checkAndGetGeoPoint(String docID) {
         attendeesRef.document(attendee.getDeviceID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -180,6 +194,11 @@ public class EventDetailsAttendee extends AppCompatActivity {
         });
     }
 
+    /**
+     * Retrieves the geo-point based on the device's location.
+     *
+     * @param docID The ID of the document.
+     */
     private void getGeoPoint(String docID) {
 
         // Check if user permission enabled
@@ -208,6 +227,11 @@ public class EventDetailsAttendee extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Adds the geo-point to the document.
+     *
+     * @param docID The ID of the document.
+     */
     private void addGeoPoint(String docID) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("geoPoint", geoPoint);
@@ -219,6 +243,11 @@ public class EventDetailsAttendee extends AppCompatActivity {
         });
     }
 
+    /**
+     * Adds a listener for the sign-up button.
+     *
+     * @param canCheckIn A boolean flag indicating whether the attendee can check in.
+     */
     private void addSignUpListener(boolean canCheckIn) {
         toggleInteractButton(true);
         interactButton.setOnClickListener(new View.OnClickListener() {
@@ -295,6 +324,11 @@ public class EventDetailsAttendee extends AppCompatActivity {
         });
     }
 
+    /**
+     * Toggles the visibility and clickability of the interactButton.
+     *
+     * @param interactable A boolean flag indicating whether the interactButton should be interactable.
+     */
     private void toggleInteractButton(boolean interactable){
         if (interactable) {
             interactButton.setVisibility(View.VISIBLE);

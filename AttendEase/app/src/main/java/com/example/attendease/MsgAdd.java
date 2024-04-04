@@ -18,6 +18,10 @@ import com.google.protobuf.StringValue;
 
 import java.util.ArrayList;
 
+/**
+ * This represents adding a new message (notification).
+ * This activity allows users to create and post a new message with a title, body, and associated event.
+ */
 public class MsgAdd extends AppCompatActivity {
     public ArrayList<String> eventIDs=new ArrayList<>();
     public ArrayList<String> eventslist=new ArrayList<>();

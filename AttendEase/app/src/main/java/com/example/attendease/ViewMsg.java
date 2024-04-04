@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * Represents an Activity for displaying a single message.
+ */
 public class ViewMsg extends AppCompatActivity {
 
     @Override

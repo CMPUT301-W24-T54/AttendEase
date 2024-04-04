@@ -72,6 +72,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * This activity represents creation of a new event.
+ * It allows organizers to create a new event, including setting its details and uploading event poster and QR code.
+ */
 public class NewEventActivity extends AppCompatActivity {
     private String eventName;
     private String eventID;
@@ -209,7 +213,6 @@ public class NewEventActivity extends AppCompatActivity {
     /**
      * Displays a DatePickerDialog for selecting the event date.
      */
-
     void showDatePickerDialog() {
         Calendar c = Calendar.getInstance();
         new DatePickerDialog(this,
@@ -226,7 +229,6 @@ public class NewEventActivity extends AppCompatActivity {
     /**
      * Displays a TimePickerDialog for selecting the event time.
      */
-
     void showTimePickerDialog() {
         Calendar c = Calendar.getInstance();
         new TimePickerDialog(this,
@@ -245,7 +247,6 @@ public class NewEventActivity extends AppCompatActivity {
      * It then saves the event data to Firebase Firestore and handles QR code generation
      * and uploading to Firebase Storage.
      */
-
     private void createEvent(@Nullable String imageUrl) {
         // Capture data from EditTexts, CheckBoxes, etc.
         eventID = generateEventId();
@@ -300,7 +301,6 @@ public class NewEventActivity extends AppCompatActivity {
      * Retrieves the device ID to be used as the owner ID for the event.
      * @return A String representing the Android device ID.
      */
-
     private String getOwnerId() {
         // Get the Android device ID
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -311,7 +311,6 @@ public class NewEventActivity extends AppCompatActivity {
      * Generates a unique event data using UUID and the current system time.
      * @return A String representing the unique event date.
      */
-
     private String getEventDate() {
         TextView tvEventDate = findViewById(R.id.tvEventDate);
         String date = tvEventDate.getText().toString();
@@ -327,7 +326,6 @@ public class NewEventActivity extends AppCompatActivity {
      *
      * @return A String representing the selected event time, or null if no time has been selected.
      */
-
     private String getEventTime() {
         TextView tvEventTime = findViewById(R.id.tvEventTime);
         String time = tvEventTime.getText().toString();
@@ -605,6 +603,13 @@ public class NewEventActivity extends AppCompatActivity {
         void onFailure(Exception e);
     }
 
+    /**
+     * Uploads the event poster image to Firebase Storage.
+     *
+     * @param posterUri The URI of the event poster image to upload.
+     * @param eventID   The unique ID of the event.
+     * @param callback  An UploadCallback interface to handle success or failure of the upload operation.
+     */
     private void uploadEventPoster(Uri posterUri, String eventID, UploadCallback callback) {
         StorageReference posterRef = FirebaseStorage.getInstance().getReference("images/" + eventID + "/eventposter.png");
 

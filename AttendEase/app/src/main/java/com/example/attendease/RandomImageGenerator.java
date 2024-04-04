@@ -5,7 +5,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+/**
+ * Represents a utility class for generating profile pictures with initials.
+ */
 public class RandomImageGenerator {
+
+    /**
+     * Generates a profile picture bitmap based on the given profile name and image size.
+     *
+     * @param profileName The name used to generate initials for the profile picture.
+     * @param imageSize   The size (width and height) of the square profile picture.
+     * @return A Bitmap object representing the generated profile picture.
+     */
     public static Bitmap generateProfilePicture(String profileName, int imageSize) {
         // Extract initials
         String initials = getInitials(profileName);
@@ -36,6 +47,12 @@ public class RandomImageGenerator {
         return bitmap;
     }
 
+    /**
+     * Extracts the initials from the given profile name.
+     *
+     * @param profileName The profile name from which to extract initials.
+     * @return A String representing the extracted initials.
+     */
     private static String getInitials(String profileName) {
         StringBuilder initials = new StringBuilder();
         String[] words = profileName.split(" ");
@@ -45,6 +62,12 @@ public class RandomImageGenerator {
         return initials.toString();
     }
 
+    /**
+     * Generates a background color based on the initials.
+     *
+     * @param initials The initials used to generate the background color.
+     * @return An integer representing the generated background color.
+     */
     private static int generateBackgroundColor(String initials) {
         // Generate a color based on initials
         // Example: Use hash function to convert initials to color
@@ -52,6 +75,12 @@ public class RandomImageGenerator {
         return Color.rgb((hash & 0xFF0000) >> 16, (hash & 0xFF00) >> 8, hash & 0xFF);
     }
 
+    /**
+     * Generates a contrasting text color based on the background color.
+     *
+     * @param backgroundColor The background color for which to generate the text color.
+     * @return An integer representing the generated text color.
+     */
     private static int generateTextColor(int backgroundColor) {
         // Generate contrasting text color based on background color
         // Example: Use luminance to determine if black or white text is more suitable
