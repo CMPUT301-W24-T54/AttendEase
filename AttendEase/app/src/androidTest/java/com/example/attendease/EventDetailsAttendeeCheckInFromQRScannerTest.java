@@ -29,11 +29,13 @@ import java.util.concurrent.CountDownLatch;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class EventDetailsAttendeeCheckInTest {
+public class EventDetailsAttendeeCheckInFromQRScannerTest {
+    Attendee testAttendee = new Attendee("testDevice", "name", "phone", "email", "image", false);
     @Rule
     public ActivityScenarioRule<EventDetailsAttendee> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EventDetailsAttendee.class)
-            .putExtra("deviceID", "testDevice")
+            .putExtra("attendee", testAttendee)
             .putExtra("eventID", "testEvent")
+            .putExtra("prevActivity", "QRScanncerActivity")
             .putExtra("title","Teset Event")
             .putExtra("description","Event for testing purposes")
             .putExtra("dateTime", "March 6, 2024 at 2:24:11")
@@ -42,7 +44,6 @@ public class EventDetailsAttendeeCheckInTest {
 
     @Test
     public void testCheckIn() throws InterruptedException {
-        onView(withId(R.id.signup_or_checkin)).check(matches(isDisplayed()));
         onView(withId(R.id.signup_or_checkin)).check(matches(withText("Check In")));
         onView(withId(R.id.signup_or_checkin)).perform(ViewActions.click());
 

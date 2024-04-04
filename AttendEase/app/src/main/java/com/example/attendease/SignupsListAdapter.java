@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Represents an ArrayAdapter for displaying a list of attendees and their signups.
+ */
 public class SignupsListAdapter extends ArrayAdapter<Attendee> {
 
     public SignupsListAdapter(Context context, List<Attendee> signupsList) {

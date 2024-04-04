@@ -48,33 +48,28 @@ public class SignupsListTest {
 
     @Test
     public void setUpEventName() {
-        // Assert
         onView(withId(R.id.event_textview)).check(matches(withText("Test Event")));
     }
 
     @Test
     public void backButton() {
-        // Act
         onView(withId(R.id.back_button)).perform(click());
-
-        // Assert
         assert(activityRule.getActivity().isFinishing());
     }
 
     @Test
     public void signUpsCount_isVisible() {
-        // Assert
         onView(withId(R.id.signupscount)).check(matches(isDisplayed()));
     }
 
     @Test
     public void setUpSignUpsListView_setsCorrectSignUpsCount() throws Exception {
-        // Act
+
         Method method = SignupsListActivity.class.getDeclaredMethod("setUpSignUpsListView", String.class);
         method.setAccessible(true);
         method.invoke(activityRule.getActivity(), "123");
 
-        // Assert
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference signInsRef = db.collection("signIns");
         final CountDownLatch latch = new CountDownLatch(1);
@@ -85,7 +80,7 @@ public class SignupsListTest {
             latch.countDown();
         });
 
-        latch.await(); 
+        latch.await();
 
         onView(withId(R.id.signupscount)).check(matches(withText("Total: " + count.get())));
     }

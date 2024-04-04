@@ -7,32 +7,35 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/tvMyEvents"
+        android:id="@+id/admin_all_events"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Events"
-        android:textSize="24sp"
-        android:textColor="#000000"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/inter"
+        android:text="@string/all_events"
+        android:textColor="#000000"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvMyEvents"
+        android:id="@+id/rv_events"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tvMyEvents"
-        app:layout_constraintBottom_toTopOf="@id/organizer_bottom_nav"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toTopOf="@id/admin_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/admin_all_events"
         tools:ignore="MissingConstraints"
         tools:listitem="@layout/event_card_large" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/organizer_bottom_nav"
+        android:id="@+id/admin_bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-2dp"
@@ -44,5 +47,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/organizer_bottom_nav" />
+        app:menu="@menu/admin_bottom_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

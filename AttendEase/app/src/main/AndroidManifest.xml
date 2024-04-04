@@ -113,6 +113,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".AttendanceListActivity">
         </activity>
         <activity
@@ -121,6 +125,12 @@
         <activity
             android:name=".EventDetailsOrganizer">
         </activity>
+        <activity
+            android:name=".BrowseAllAttendees" />
+        <activity
+            android:name=".BrowseAllEventsAdmin" />
+        <activity
+            android:name=".EventDetailsAdmin" />
         <service
         android:name=".FirebaseListener"
         android:enabled="true"

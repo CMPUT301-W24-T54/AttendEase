@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        For testing the Map Activity
-//        Intent intent = new Intent(MainActivity.this, MapActivity.class);
-//        startActivity(intent);
-
         Button checkInButton = findViewById(R.id.check_in_button);
         Button createEventButton = findViewById(R.id.create_event_button);
         Button adminButton = findViewById(R.id.admin_button);
@@ -87,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AdminAccountActivity.class);
-                startActivity(intent);}
-
+                Intent intent = new Intent(MainActivity.this, AdminDashboardActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }
