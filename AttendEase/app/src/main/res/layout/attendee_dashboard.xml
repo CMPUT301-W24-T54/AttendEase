@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/stroke_grey"
     tools:ignore="MissingDefaultResource">
 
     <ImageView
@@ -61,9 +61,9 @@
                     android:id="@+id/see_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:fontFamily="@font/inter_semibold"
                     android:text="@string/see_all"
-                    android:clickable="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -82,12 +82,12 @@
                     android:id="@+id/rvMyEvents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
                     android:elevation="4dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/my_events"
-                    tools:listitem="@layout/event_card_large"
-                    tools:ignore="NotSibling" />
+                    tools:ignore="NotSibling"
+                    tools:listitem="@layout/event_card_large" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -123,9 +123,9 @@
                     android:id="@+id/see_all2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:fontFamily="@font/inter_semibold"
                     android:text="@string/see_all"
-                    android:clickable="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -143,12 +143,12 @@
                     android:id="@+id/rvBrowseEvents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
                     android:elevation="4dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/tvMyEvents"
-                    tools:listitem="@layout/event_card_small"
-                    tools:ignore="NotSibling"/>
+                    tools:ignore="NotSibling"
+                    tools:listitem="@layout/event_card_small" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

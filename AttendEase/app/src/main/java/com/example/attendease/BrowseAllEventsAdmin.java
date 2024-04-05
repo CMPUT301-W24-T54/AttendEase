@@ -59,6 +59,7 @@ public class BrowseAllEventsAdmin extends AppCompatActivity {
         loadEventsFromFirestore();
 
         BottomNavigationView bottomNavEventsAdmin = findViewById(admin_bottom_nav);
+        bottomNavEventsAdmin.setSelectedItemId(R.id.nav_events);
         bottomNavEventsAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

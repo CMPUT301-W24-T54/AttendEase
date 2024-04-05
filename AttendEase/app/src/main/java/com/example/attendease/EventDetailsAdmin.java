@@ -1,5 +1,7 @@
 package com.example.attendease;
 
+import static com.example.attendease.R.id.admin_bottom_nav;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -7,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -81,6 +86,28 @@ public class EventDetailsAdmin extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
         trashButton.setOnClickListener(v -> deleteEvent());
         removeCoverButton.setOnClickListener(v -> removeEventCover());
+
+        BottomNavigationView bottomNavAttendeesAdmin = findViewById(admin_bottom_nav);
+        bottomNavAttendeesAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(EventDetailsAdmin.this, AdminDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(EventDetailsAdmin.this, BrowseAllEventsAdmin.class));
+                    return true;
+                } else if (id == R.id.nav_image) {
+                    startActivity(new Intent(EventDetailsAdmin.this, BrowseAllImages.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(EventDetailsAdmin.this, BrowseAllAttendees.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**

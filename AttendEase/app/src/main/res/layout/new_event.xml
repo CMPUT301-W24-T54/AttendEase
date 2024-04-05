@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bottom_nav_stroke"
+    android:background="@color/stroke_grey"
     android:padding="16dp">
 
     <ImageButton
@@ -15,9 +15,9 @@
         android:layout_marginEnd="105dp"
         android:layout_toStartOf="@+id/tvNewEventHeader"
         android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/cross"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:src="@drawable/cross" />
 
     <TextView
         android:id="@+id/tvNewEventHeader"

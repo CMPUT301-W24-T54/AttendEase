@@ -28,7 +28,7 @@
     <string name="attendance">Attendance</string>
     <string name="map">Map</string>
     <string name="admin">Admin</string>
-    <string name="all_profiles">All Profiles</string>
+    <string name="all_attendees">All Attendees</string>
     <string name="all_images">All Images</string>
 
     //Bottom navigation strings
