@@ -46,7 +46,7 @@ public class MainActivityTest {
     public void testAdminDashboard() {
         Intents.init();
         onView(withId(R.id.admin_button)).perform(ViewActions.click());
-        intended(hasComponent(AdminAccountActivity.class.getName()));
+        intended(hasComponent(AdminDashboardActivity.class.getName()));
         Intents.release();
     }
 
