@@ -62,6 +62,13 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizer_dashboard);
+        /*if(!MilestoneListener.HasStarted){
+            Intent serviceIntent = new Intent(this, MilestoneListener.class);
+            startService(serviceIntent);
+            MilestoneListener.HasStarted=true;
+
+        }*/
+
 
         createEventButton = findViewById(R.id.createEvent);
         createEventButton.setOnClickListener(new View.OnClickListener() {
