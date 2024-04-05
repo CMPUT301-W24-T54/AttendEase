@@ -68,7 +68,7 @@ public class BrowseMyEvent extends AppCompatActivity {
                 Intent intent=new Intent(BrowseMyEvent.this, EventDetailsAttendee.class);
                 intent.putExtra("attendee", attendee);
                 intent.putExtra("eventID", event.getEventId());
-                intent.putExtra("Title",event.getTitle());
+                intent.putExtra("title",event.getTitle());
                 intent.putExtra("QR",event.getCheckInQR());
                 intent.putExtra("description",event.getDescription());
                 intent.putExtra("dateTime",event.getDateTime().toDate().toString());
@@ -113,6 +113,11 @@ public class BrowseMyEvent extends AppCompatActivity {
 
                                 String location=eventDocument.getString("location");
                                 String posterUrl=eventDocument.getString("posterUrl");
+
+                                if (posterUrl == null) {
+                                    Log.d("DEBUG", String.format("onComplete: PosterURL was null here for event : %s", eventId));
+                                }
+
                                 Boolean isGeoTrackingEnabled=eventDocument.getBoolean("isGeoTrackingEnabled");
                                 //not able to import this?
                                 int maxAttendees=0;

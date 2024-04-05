@@ -70,6 +70,7 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
             Glide.with(view)
                     .load(Url)
                     .into(image);
+
         }
 
 

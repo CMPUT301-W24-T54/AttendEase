@@ -20,7 +20,7 @@
             android:layout_marginTop="13dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/nav_left"
-            android:text=""
+            android:contentDescription="Back Button"
             app:layout_scrollFlags="scroll|enterAlways" />
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -285,17 +285,6 @@
 
             <View
                 android:id="@+id/divider5"
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-            <Button
-                android:id="@+id/sendNotificationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Send Notification" />
-
-            <View
-                android:id="@+id/divider6"
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
 
