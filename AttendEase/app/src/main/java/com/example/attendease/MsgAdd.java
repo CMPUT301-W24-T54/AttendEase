@@ -35,7 +35,13 @@ public class MsgAdd extends AppCompatActivity {
         setContentView(R.layout.activity_msg_add);
         Intent intent=getIntent();
         eventIDs=intent.getStringArrayListExtra("eventIDs");
+        if (eventIDs == null) {
+            eventIDs = new ArrayList<>();
+        }
         eventslist=intent.getStringArrayListExtra("eventslist");
+        if (eventslist == null) {
+            eventslist = new ArrayList<>();
+        }
         Spinner events_opt=findViewById(R.id.Event);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, eventslist);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
