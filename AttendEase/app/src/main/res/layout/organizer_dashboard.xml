@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bottom_nav_stroke"
+    android:background="@color/stroke_grey"
     android:padding="16dp">
 
     <ImageView
@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="84px"
         android:layout_marginLeft="24px"
+        android:layout_marginTop="84px"
         android:src="@drawable/ae"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -67,8 +67,8 @@
         android:id="@+id/rvMyEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/tvMyEvents"
         tools:listitem="@layout/event_card_small" />
 
@@ -91,19 +91,19 @@
         android:id="@+id/organizer_bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="-16dp"
+        android:layout_marginRight="-14dp"
+        android:layout_marginBottom="-15dp"
         android:background="@drawable/bottom_nav_stroke"
         android:contentDescription="@string/bottom_nav_content_description"
-        android:layout_marginRight="-14dp"
-        android:layout_marginLeft="-16dp"
-        android:layout_marginBottom="-15dp"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/organizer_bottom_nav"
-        tools:layout_editor_absoluteY="806dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="806dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

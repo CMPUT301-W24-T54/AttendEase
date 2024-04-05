@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/stroke_grey">
 
     <TextView
         android:id="@+id/mapText"
@@ -28,8 +29,8 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="13dp"
         android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/nav_left"
         android:contentDescription="Back image button"
+        android:src="@drawable/nav_left"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
