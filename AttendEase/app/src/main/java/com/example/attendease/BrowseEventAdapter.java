@@ -63,6 +63,8 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
         String Url = event.getPosterUrl();
         if (!Url.equals("null") && !Url.equals("")){
             Picasso.get().load(Url).into(image);
+        } else {
+            image.setImageResource(R.drawable.splash);
         }
 
 
