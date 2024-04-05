@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * This class represents an Array Adapter which handles list views
@@ -60,15 +63,17 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
         Log.d("EventAdapter", "Event id: " + event.getEventId());
         String info=event.getDescription();
         event_info.setText(info);
-        String Url = event.getPosterUrl();
-        if (!Url.equals("null") && !Url.equals("")){
-            Picasso.get().load(Url).into(image);
+
+        String Url=event.getPosterUrl();
+        Log.d("EventAdapter",Url);
+        //CountDownLatch latch = new CountDownLatch(1);
+        if (!Url.equals("null")){
+            Glide.with(view)
+                    .load(Url)
+                    .into(image);
         } else {
             image.setImageResource(R.drawable.splash);
         }
-
-
-
         return view;
     }
 }
