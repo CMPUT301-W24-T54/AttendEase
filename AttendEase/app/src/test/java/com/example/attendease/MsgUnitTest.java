@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class MsgTest {
+public class MsgUnitTest {
     private Msg msg;
 
     @Before

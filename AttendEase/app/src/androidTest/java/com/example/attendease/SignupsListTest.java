@@ -64,12 +64,12 @@ public class SignupsListTest {
 
     @Test
     public void setUpSignUpsListView_setsCorrectSignUpsCount() throws Exception {
-       
+
         Method method = SignupsListActivity.class.getDeclaredMethod("setUpSignUpsListView", String.class);
         method.setAccessible(true);
         method.invoke(activityRule.getActivity(), "123");
 
-     
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference signInsRef = db.collection("signIns");
         final CountDownLatch latch = new CountDownLatch(1);
@@ -80,7 +80,7 @@ public class SignupsListTest {
             latch.countDown();
         });
 
-        latch.await(); 
+        latch.await();
 
         onView(withId(R.id.signupscount)).check(matches(withText("Total: " + count.get())));
     }
