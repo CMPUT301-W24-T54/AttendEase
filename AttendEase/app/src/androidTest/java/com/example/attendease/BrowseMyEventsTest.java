@@ -103,7 +103,7 @@ public class BrowseMyEventsTest {
 
 
 
-        FirebaseLoadingTestHelper.increment();
+        //FirebaseLoadingTestHelper.increment();
         scenario = ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), BrowseMyEvent.class).putExtra("attendee", attendee));
 
         /*db.collection("events").add(newEvent);
