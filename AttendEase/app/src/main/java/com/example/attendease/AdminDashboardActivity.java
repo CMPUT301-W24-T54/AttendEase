@@ -124,6 +124,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.admin_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_home);
         bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

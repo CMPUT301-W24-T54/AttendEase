@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="109dp"
     android:layout_height="100dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp"
-    android:layout_marginEnd="6dp"
     android:layout_marginStart="6dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="6dp"
     android:layout_marginBottom="10dp"
-    android:layout_marginTop="10dp">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,10 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@color/neon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/trash"
-            tools:ignore="ContentDescription,TouchTargetSizeCheck" />
+            tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

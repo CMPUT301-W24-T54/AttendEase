@@ -68,8 +68,9 @@ public class BrowseAllImages extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView bottomNavAttendeesAdmin = findViewById(admin_bottom_nav);
-        bottomNavAttendeesAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        BottomNavigationView bottomNavImagesAdmin = findViewById(admin_bottom_nav);
+        bottomNavImagesAdmin.setSelectedItemId(R.id.nav_image);
+        bottomNavImagesAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();

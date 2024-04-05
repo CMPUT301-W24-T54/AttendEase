@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/stroke_grey"
     tools:ignore="MissingDefaultResource">
 
     <ImageView
@@ -109,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_semibold"
-                    android:text="@string/all_profiles"
+                    android:text="@string/all_attendees"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -143,8 +143,8 @@
                     android:id="@+id/rvAllProfiles"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/profile_card_small" />
             </HorizontalScrollView>
 
@@ -219,6 +219,8 @@
         android:layout_marginTop="-2dp"
         android:background="@drawable/bottom_nav_stroke"
         android:contentDescription="@string/bottom_nav_content_description"
+        style="@style/Theme.App"
+        app:itemActiveIndicatorStyle="@style/Theme.App"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"

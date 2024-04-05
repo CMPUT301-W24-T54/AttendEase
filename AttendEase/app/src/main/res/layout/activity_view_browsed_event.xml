@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/stroke_grey"
     tools:context=".EventDetailsAttendee">
 
     <TextView
@@ -94,6 +95,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <LinearLayout
+        android:id="@+id/slot1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -103,8 +105,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description"
-        android:id="@+id/slot1">
+        app:layout_constraintTop_toBottomOf="@+id/description">
 
 
         <ImageButton
@@ -133,9 +134,9 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/slot2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/slot2"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
