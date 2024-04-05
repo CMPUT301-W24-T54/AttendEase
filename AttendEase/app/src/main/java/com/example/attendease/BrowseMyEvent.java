@@ -113,6 +113,11 @@ public class BrowseMyEvent extends AppCompatActivity {
 
                                 String location=eventDocument.getString("location");
                                 String posterUrl=eventDocument.getString("posterUrl");
+
+                                if (posterUrl == null) {
+                                    Log.d("DEBUG", String.format("onComplete: PosterURL was null here for event : %s", eventId));
+                                }
+
                                 Boolean isGeoTrackingEnabled=eventDocument.getBoolean("isGeoTrackingEnabled");
                                 //not able to import this?
                                 int maxAttendees=0;

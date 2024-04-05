@@ -60,8 +60,8 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
         Log.d("EventAdapter", "Event id: " + event.getEventId());
         String info=event.getDescription();
         event_info.setText(info);
-        String Url=event.getPosterUrl();
-        if (!Url.equals("null")){
+        String Url = event.getPosterUrl();
+        if (!Url.equals("null") && !Url.equals("")){
             Picasso.get().load(Url).into(image);
         }
 
