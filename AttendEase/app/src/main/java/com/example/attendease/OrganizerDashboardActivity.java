@@ -7,6 +7,7 @@ import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -94,24 +96,28 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         loadEventsFromFirestore();
         setUpCreateEvent();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                return true;
-            } else if (id == R.id.nav_events) {
-                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
-                startActivity(intent);
-                return true;
-            }else if(id==R.id.nav_notifications){
-                String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                Intent intent = new Intent(this, OrganizerNotifications.class);
-                intent.putExtra("deviceId",organizerId);
-                startActivity(intent);
-                return true;
+        BottomNavigationView bottomNavOrganizerDashboard = findViewById(R.id.organizer_bottom_nav);
+        bottomNavOrganizerDashboard.setSelectedItemId(R.id.nav_home);
+        bottomNavOrganizerDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    // Already on the OrganizerDashboardActivity, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    Intent intent = new Intent(OrganizerDashboardActivity.this, OrganizerMyEventsActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (id == R.id.nav_notifications) {
+                    String organizerId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                    Intent intent = new Intent(OrganizerDashboardActivity.this, OrganizerNotifications.class);
+                    intent.putExtra("deviceId", organizerId);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
 
         adapterLarge.setOnItemClickListener(new EventAdapter.OnItemClickListener() {

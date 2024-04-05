@@ -10,11 +10,11 @@
         android:icon="@drawable/nav_events"
         android:title="@string/nav_events" />
     <item
-        android:id="@+id/nav_image"
-        android:icon="@drawable/nav_image"
-        android:title="@string/nav_image" />
-    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/nav_profile"
         android:title="@string/nav_profile" />
+    <item
+        android:id="@+id/nav_image"
+        android:icon="@drawable/nav_image"
+        android:title="@string/nav_image" />
 </menu>

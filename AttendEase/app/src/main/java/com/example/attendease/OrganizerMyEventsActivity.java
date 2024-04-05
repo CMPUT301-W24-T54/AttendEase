@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import static com.example.attendease.EventAdapter.TYPE_LARGE;
 import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -52,24 +55,26 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
 
         loadEventsFromFirestore();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
-        bottomNavigationView.setSelectedItemId(R.id.nav_events);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_events) {
-                return true;
-            } else if (id == R.id.nav_notifications) {
-                Intent intent = new Intent(this, OrganizerNotifications.class);
-                startActivity(intent);
-            } else if (id == R.id.nav_map) {
-                //TODO
+        BottomNavigationView bottomNavOrganizerNotifications = findViewById(R.id.organizer_bottom_nav);
+        bottomNavOrganizerNotifications.setSelectedItemId(R.id.nav_events);
+        bottomNavOrganizerNotifications.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    Intent intent = new Intent(OrganizerMyEventsActivity.this, OrganizerDashboardActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    // Already on the OrganizerNotification, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_notifications) {
+                    Intent intent = new Intent(OrganizerMyEventsActivity.this, OrganizerNotifications.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
     }
     @Override
