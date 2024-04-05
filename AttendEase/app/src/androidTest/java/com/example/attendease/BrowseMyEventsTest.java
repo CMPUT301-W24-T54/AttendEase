@@ -58,6 +58,7 @@ public class BrowseMyEventsTest {
             uiAutomation.executeShellCommand("settings put global window_animation_scale 0");
             uiAutomation.executeShellCommand("settings put global animator_duration_scale 0");
         }
+        IdlingRegistry.getInstance().register(FirebaseLoadingTestHelper.getIdlingResource());
         CountDownLatch latch = new CountDownLatch(2);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -99,13 +100,10 @@ public class BrowseMyEventsTest {
             // Handle interruption
         }
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        countingIdlingResource = new CountingIdlingResource(IDLING_RESOURCE_NAME);
-        IdlingRegistry.getInstance().register(countingIdlingResource);
+
+
+
+        FirebaseLoadingTestHelper.increment();
         scenario = ActivityScenario.launch(new Intent(ApplicationProvider.getApplicationContext(), BrowseMyEvent.class).putExtra("attendee", attendee));
 
         /*db.collection("events").add(newEvent);

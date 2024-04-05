@@ -194,14 +194,14 @@ public class AttendanceListActivity extends AppCompatActivity {
 //    }
 //
 //    private void showMilestoneDialog(int milestone) {
-////        // Implement the logic to show the milestone dialog for the specified milestone
-////        // For example, you can create a custom dialog
-////        Dialog dialog = new Dialog(this);
-////        dialog.setContentView(R.layout.milestone_dialog);
-////        TextView milestoneTextView = dialog.findViewById(R.id.milestoneTextView);
-////        milestoneTextView.setText("Congratulations! Your Event Has Reached " + milestone + " Attendees!");
-////        dialog.show();
-////    }
+//        // Implement the logic to show the milestone dialog for the specified milestone
+//        // For example, you can create a custom dialog
+//        Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.milestone_dialog);
+//        TextView milestoneTextView = dialog.findViewById(R.id.milestoneTextView);
+//        milestoneTextView.setText("Congratulations! Your Event Has Reached " + milestone + " Attendees!");
+//        dialog.show();
+//    }
 
 
     private void setUpMap() {
