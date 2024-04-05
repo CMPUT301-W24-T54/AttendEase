@@ -86,11 +86,14 @@ public class BrowseMyEvent extends AppCompatActivity {
      * Updates the event list array adapter with the events on the attendee has signed up for
      */
     private void updateDatalist(){
+        //Log.d("error","2nddb_decrement_Before");
+        FirebaseLoadingTestHelper.increment();
+
         signInRef.whereEqualTo("attendeeID",attendee.getDeviceID()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    countingIdlingResource.increment();
+
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         // Document found where fieldName is equal to desiredValue
                         eventID = doc.getString("eventID");
@@ -122,8 +125,9 @@ public class BrowseMyEvent extends AppCompatActivity {
 
 
                     }
+                    FirebaseLoadingTestHelper.decrement();
                 }
-                countingIdlingResource.decrement();
+
 
             }
         });

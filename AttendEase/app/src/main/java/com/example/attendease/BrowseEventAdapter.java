@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,8 +57,14 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
         TextView event_info=view.findViewById(R.id.event_info);
         event_name.setText(event.getTitle());
         Log.d("EventAdapter", "Event name: " + event.getTitle());
+        Log.d("EventAdapter", "Event id: " + event.getEventId());
         String info=event.getDescription();
         event_info.setText(info);
+        String Url=event.getPosterUrl();
+        if (!Url.equals("null")){
+            Picasso.get().load(Url).into(image);
+        }
+
 
 
         return view;
