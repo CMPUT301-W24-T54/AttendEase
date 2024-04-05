@@ -219,6 +219,8 @@
         android:layout_marginTop="-2dp"
         android:background="@drawable/bottom_nav_stroke"
         android:contentDescription="@string/bottom_nav_content_description"
+        style="@style/Theme.App"
+        app:itemActiveIndicatorStyle="@style/Theme.App"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"

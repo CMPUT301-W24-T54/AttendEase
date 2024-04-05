@@ -49,6 +49,8 @@ public class BrowseAllAttendees extends AppCompatActivity {
         loadAttendeesFromFirestore();
 
         BottomNavigationView bottomNavAttendeesAdmin = findViewById(admin_bottom_nav);
+        bottomNavAttendeesAdmin.setSelectedItemId(R.id.nav_profile);
+        bottomNavAttendeesAdmin.setBackgroundResource(R.drawable.bottom_nav_item_background);
         bottomNavAttendeesAdmin.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

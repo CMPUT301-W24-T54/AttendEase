@@ -1,5 +1,7 @@
 package com.example.attendease;
 
+import static com.example.attendease.R.id.organizer_bottom_nav;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -9,6 +11,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -121,9 +126,27 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
             dataList.add(new Msg(Title[i], Messages[i]));
         }*/
 
-
-
-
+        BottomNavigationView bottomNavAdminDashboard = findViewById(organizer_bottom_nav);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(OrganizerNotifications.this, OrganizerDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(OrganizerNotifications.this, OrganizerMyEventsActivity.class));
+                    return true;
+                } else if (id == R.id.nav_notifications) {
+                    // Already on the AdminDashboardActivity, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_map) {
+                    //TODO
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
