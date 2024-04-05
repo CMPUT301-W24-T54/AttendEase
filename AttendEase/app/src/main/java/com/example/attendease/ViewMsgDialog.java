@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * A dialog fragment for viewing or adding messages.
+ */
 public class ViewMsgDialog extends DialogFragment {
     interface AddMsgDialogListener {
 

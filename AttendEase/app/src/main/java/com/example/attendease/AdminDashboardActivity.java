@@ -6,6 +6,7 @@ import static com.google.firebase.appcheck.internal.util.Logger.TAG;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,11 +25,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,7 +102,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminDashboardActivity.this, BrowseAllEvents.class);
+                Intent intent = new Intent(AdminDashboardActivity.this, BrowseAllEventsAdmin.class);
                 startActivity(intent);
             }
         });
@@ -118,26 +123,26 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.admin_bottom_nav);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                return true;
-            } else if (id == R.id.nav_events) {
-                Intent intent = new Intent(this, BrowseAllEvents.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_profile) {
-                Intent intent = new Intent(this, BrowseAllAttendees.class);
-                startActivity(intent);
-                return true;
-            } else if (id == R.id.nav_image) {
-                Intent intent = new Intent(this, BrowseAllImages.class);
-                startActivity(intent);
-                return true;
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.admin_bottom_nav);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    // Already on the AdminDashboardActivity, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(AdminDashboardActivity.this, BrowseAllEventsAdmin.class));
+                    return true;
+                } else if (id == R.id.nav_image) {
+                    startActivity(new Intent(AdminDashboardActivity.this, BrowseAllImages.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(AdminDashboardActivity.this, BrowseAllAttendees.class));
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
 
         eventAdapter.setOnItemClickListener((view, position) -> {
@@ -161,6 +166,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 eventList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    // TODO : FIX THIS LINE OF CODE
                     Event event = document.toObject(Event.class);
                     eventList.add(event);
                 }
@@ -172,11 +178,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadAttendeesFromFirestore() {
-        attendeesRef.get().addOnCompleteListener(task -> {
+        attendeesRef.limit(4).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 attendeeList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Attendee attendee = document.toObject(Attendee.class);
+                    String id = document.getId();
+                    String name = document.getString("name");
+                    String phone = document.getString("phone");
+                    String email = document.getString("email");
+                    String image = document.getString("image");
+                    boolean geoTrackingEnabled = Boolean.TRUE.equals(document.getBoolean("geoTrackingEnabled"));
+                    Attendee attendee = new Attendee(id, name, phone, email, image, geoTrackingEnabled);
                     attendeeList.add(attendee);
                 }
                 attendeeAdapter.notifyDataSetChanged();
@@ -187,16 +199,40 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadImagesFromFirestore() {
-        imagesRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                imageList.clear();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Image image = document.toObject(Image.class);
-                    imageList.add(image);
+
+        eventsRef.limit(3).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        String imageUrl = documentSnapshot.getString("posterUrl");
+                        if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.equals("")) {
+                            Image image = new Image(imageUrl);
+                            imageList.add(image);
+                        }
+                        imageAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Log.d("DEBUG", "onComplete: Could not load event posters");
                 }
-                imageAdapter.notifyDataSetChanged();
-            } else {
-                Log.d("AdminDashboardActivity", "Error getting images: ", task.getException());
+            }
+        });
+
+        attendeesRef.limit(3).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                        String imageUrl = documentSnapshot.getString("image");
+                        if (imageUrl != null && !imageUrl.equals("null") && !imageUrl.equals("")) {
+                            Image image= new Image(imageUrl);
+                            imageList.add(image);
+                        }
+                        imageAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Log.d("DEBUG", "onComplete: Could not load attendee images");
+                }
             }
         });
     }

@@ -80,6 +80,11 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         });
     }
 
+    /**
+     * Populate UI components with event details.
+     *
+     * @param event The event object containing details.
+     */
     private void populateUIWithEvent(Event event) {
         if (event != null) {
             eventName.setText(event.getTitle());
@@ -115,6 +120,9 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         }
     }
 
+    /**
+     * Shares the QR code image of the event.
+     */
     private void shareQRCodeImage() {
         // Get the QR code Bitmap from the ImageView
         Bitmap qrCodeBitmap = getBitmapFromImageView(QRCodeImage);
@@ -139,6 +147,12 @@ public class EventDetailsOrganizer extends AppCompatActivity {
         }
     }
 
+    /**
+     * Extracts Bitmap from ImageView.
+     *
+     * @param imageView The ImageView containing the QR code image.
+     * @return The Bitmap image extracted from the ImageView.
+     */
     private Bitmap getBitmapFromImageView(ImageView imageView) {
         if (imageView.getDrawable() instanceof BitmapDrawable) {
             return ((BitmapDrawable) imageView.getDrawable()).getBitmap();

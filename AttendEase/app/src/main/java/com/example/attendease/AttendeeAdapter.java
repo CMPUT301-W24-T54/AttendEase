@@ -1,6 +1,7 @@
 package com.example.attendease;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.AttendeeViewHolder> {
 
@@ -23,7 +38,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
     private Context context;
     private OnItemClickListener onItemClickListener;
     private final Database database = Database.getInstance();
-    private CollectionReference attendeesRef;
+    private final CollectionReference attendeesRef = database.getAttendeesRef();
+    private final CollectionReference checkInsRef = database.getCheckInsRef();
+    private final CollectionReference signInsRef = database.getSignInsRef();
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -73,6 +90,10 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
     private void deleteAttendee(int position) {
         String attendeeId = attendeeList.get(position).getDeviceID(); //Unsure?
+        String attendeeProfileImage = attendeeList.get(position).getDeviceID();
+
+        // Delete from attendees collection
+        Log.d("DEBUG", String.format("deleteAttendee: %s", attendeeId));
         attendeesRef.document(attendeeId).delete().addOnSuccessListener(aVoid -> {
             attendeeList.remove(position);
             notifyItemRemoved(position);
@@ -80,23 +101,93 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         }).addOnFailureListener(e -> {
             Log.e("AttendeeAdapter", "Failed to delete attendee: " + e.getMessage());
         });
+
+        // TODO : Delete all the check-ins, sign-ups, images
+        signInsRef.whereEqualTo("attendeeID", attendeeId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                deleteReference(documentSnapshot);
+                            }
+                        }
+                    }
+                });
+
+        checkInsRef.whereEqualTo("attendeeID", attendeeId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                deleteReference(documentSnapshot);
+                            }
+                        }
+                    }
+                });
+
+        // Delete Profile Image
+        if (attendeeProfileImage != null && !attendeeProfileImage.equals("null") && !attendeeProfileImage.equals("")) {
+            StorageReference photoRef = database.getStorage().getReferenceFromUrl(attendeeProfileImage);
+            photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                    Log.d("DEBUG", "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Log.d("DEBUG", "onFailure: did not delete file");
+                }
+            });
+        }
+    }
+
+    private void deleteReference(DocumentSnapshot documentSnapshot) {
+        documentSnapshot.getReference().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("DEBUG", "onComplete: Deleted signin");
+                }
+            }
+        });
     }
 
     static class AttendeeViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView profilePhotoImageView;
+        CircleImageView profilePhotoImageView;
         TextView usernameTextView;
         ImageView trashButton;
 
         AttendeeViewHolder(View itemView) {
             super(itemView);
-            profilePhotoImageView = itemView.findViewById(R.id.imageView);
-            usernameTextView = itemView.findViewById(R.id.textView14);
+            profilePhotoImageView = itemView.findViewById(R.id.attendee_profile_photo);
+            usernameTextView = itemView.findViewById(R.id.attendee_username);
             trashButton = itemView.findViewById(R.id.trash);
         }
 
         void bind(Attendee attendee) {
-            Glide.with(itemView.getContext()).load(attendee.getImage()).into(profilePhotoImageView);
+//            Glide.with(itemView.getContext()).load(attendee.getImage()).into(profilePhotoImageView);
+            // Creates or Retrieves profile picture of the attendee
+            if (profilePhotoImageView == null) {
+                Log.d("DEBUG", "bind: image view is null");
+            }
+
+            if (attendee.getImage() == null || attendee.getImage() == ""){
+                int image_size=100;
+                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(attendee.getName(), image_size);
+                profilePhotoImageView.setImageBitmap(profilePicture);
+            }
+            else {
+                Log.d("DEBUG", String.format("bind: %s", attendee.getImage()));
+                Picasso.get().load(attendee.getImage()).into(profilePhotoImageView);
+            }
             usernameTextView.setText(attendee.getName());
         }
     }

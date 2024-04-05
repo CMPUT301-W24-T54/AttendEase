@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * Represents an activity to view messages for organizers.
+ */
 public class ViewMsgOrganizer extends AppCompatActivity {
 
     @Override
