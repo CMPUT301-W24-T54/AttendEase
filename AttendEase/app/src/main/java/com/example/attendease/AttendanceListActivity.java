@@ -33,6 +33,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -225,6 +227,12 @@ public class AttendanceListActivity extends AppCompatActivity {
         IMapController controller = mapView.getController();
         controller.setZoom(3);
 
+        GeoPoint myLocationGeoPoint = new GeoPoint(53.5409192657743, -113.47904085523885);
+        MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
+        controller.setCenter(myLocationGeoPoint);
+        controller.animateTo(myLocationGeoPoint);
+        controller.setZoom(12);
+        mapView.getOverlays().add(locationOverlay);
         // StackOverflow, NeoKerd, Click listener in open street maps
         // https://stackoverflow.com/questions/67850072/set-onclicklistener-for-mapview-using-open-street-map
 
