@@ -162,6 +162,8 @@ public class QRScannerActivity extends AppCompatActivity {
                                 String location = document.getString("location");
                                 String eventID = document.getId();
                                 Timestamp dateTime = document.getTimestamp("dateTime");
+                                String QR = document.getString("checkInQR");
+                                String posterUrl = document.getString("posterUrl");
 
                                 Intent intent = new Intent(QRScannerActivity.this, EventDetailsAttendee.class);
                                 intent.putExtra("attendee", attendee);
@@ -170,6 +172,8 @@ public class QRScannerActivity extends AppCompatActivity {
                                 intent.putExtra("description",description);
                                 intent.putExtra("dateTime",dateTime.toDate().toString());
                                 intent.putExtra("location",location);
+                                intent.putExtra("QR",QR);
+                                intent.putExtra("posterUrl",posterUrl);
                                 intent.putExtra("prevActivity", "QRScannerActivity");
                                 startActivity(intent);
                             }

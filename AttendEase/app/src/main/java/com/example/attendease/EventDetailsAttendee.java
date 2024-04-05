@@ -16,9 +16,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,6 +65,9 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private GeoPoint geoPoint;
     private FusedLocationProviderClient fusedLocationClient;
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    private ImageView QRCodeImage;
+    private ImageView eventPosterImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +98,35 @@ public class EventDetailsAttendee extends AppCompatActivity {
         descriptionText = findViewById(R.id.description);
         locationText = findViewById(R.id.Location);
         dateText = findViewById(R.id.DateTime);
+        QRCodeImage = findViewById(R.id.QRCodeImageAtt);
+        eventPosterImageView = findViewById(R.id.imageView2);
 
         titleText.setText(intent.getStringExtra("title"));
         descriptionText.setText(intent.getStringExtra("description"));
         locationText.setText(intent.getStringExtra("location"));
         dateText.setText(intent.getStringExtra("dateTime"));
+
+        // Load the event poster
+        String posterUrl = intent.getStringExtra("posterUrl");
+        if (posterUrl != null && !posterUrl.equals("null")) {
+            int cornerRadius = 24;
+            Glide.with(this)
+                    .load(posterUrl)
+                    .apply(new RequestOptions()
+                            .transform(new CenterCrop(), new RoundedCorners(cornerRadius)))
+                    .into(eventPosterImageView);
+        } else {
+            eventPosterImageView.setImageResource(R.drawable.splash);
+        }
+
+        // Load QR code image into ImageView
+        String qrCodeImageUrl = intent.getStringExtra("QR");
+        if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(qrCodeImageUrl)
+                    .override(350, 350)
+                    .into(QRCodeImage);
+        }
 
         backButton = findViewById(R.id.imageButton);
         interactButton = findViewById(R.id.signup_or_checkin); // This becomes a check in button if QR Code Scanned
