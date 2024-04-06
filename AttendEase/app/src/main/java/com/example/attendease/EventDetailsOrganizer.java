@@ -31,8 +31,8 @@ public class EventDetailsOrganizer extends AppCompatActivity {
     private TextView locationView;
     private TextView dateandtimeView;
     private ImageView QRCodeImage;
-    private Button signUpsSeeAll;
-    private Button attendanceSeeAll;
+    private TextView signUpsSeeAll;
+    private TextView attendanceSeeAll;
     private ImageButton backButton;
     private Button shareQRButton;
     private ImageView eventPosterImageView;
