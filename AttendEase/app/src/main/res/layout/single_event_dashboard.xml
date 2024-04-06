@@ -1,112 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/stroke_grey">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout13"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        android:background="@color/stroke_grey"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <ImageButton
             android:id="@+id/back_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="24dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="13dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/nav_left"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:contentDescription="Back Button"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="128dp"
-            android:layout_marginEnd="127dp"
-            android:text="@string/event"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/back_button"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/rounded_corners"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout13"
-        app:srcCompat="@drawable/item_removed_successfully" />
-
-    <TextView
-        android:id="@+id/eventName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/event"
-        android:textAlignment="viewStart"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        tools:ignore="MissingConstraints" />
-
-    <ScrollView
-        android:id="@+id/sv_event_details"
-        android:layout_width="0dp"
-        android:layout_height="460dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventName">
-
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="22dp"
+                android:layout_marginBottom="9dp"
+                android:background="@drawable/rounded_corners"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ae"
+                app:layout_collapseMode="parallax" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollViewEventDetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
+        android:fillViewport="true"
+        android:paddingTop="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            <TextView
+                android:id="@+id/eventName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"
+                android:text="Event Name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/detailsAboutHeader"
-                android:layout_width="49dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="@string/about"
+                android:paddingBottom="10dp"
+                android:text="About"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                tools:ignore="ObsoleteLayoutParam" />
-
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/detailsAboutContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
                 android:paddingBottom="10dp"
                 android:text="@string/LoremIpsum"
                 android:textColor="@color/black" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,13 +89,11 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/location_icon"
+                    android:contentDescription="LOCATION ICON"
                     android:src="@drawable/nav_events" />
-
                 <TextView
                     android:id="@+id/location"
                     android:layout_width="0dp"
@@ -130,14 +101,13 @@
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="@string/location"
+                    android:text="Location"
                     android:textColor="@color/black" />
             </LinearLayout>
-
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,13 +117,11 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="TIME ICON"
                     android:src="@drawable/time" />
-
                 <TextView
                     android:id="@+id/dateandtime"
                     android:layout_width="0dp"
@@ -161,21 +129,19 @@
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="@string/date_time"
+                    android:text="Date and Time"
                     android:textColor="@color/black" />
             </LinearLayout>
-
             <View
+                android:id="@+id/divider2"
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/neon"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -185,23 +151,20 @@
                     android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp">
-
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="@string/share_event_qr_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="SCAN ICON"
                         android:src="@drawable/scan" />
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:text="@string/qr_code"
+                        android:text="QR Code"
                         android:textColor="@color/black" />
                 </LinearLayout>
-
                 <ImageView
                     android:id="@+id/QRCodeImage"
                     android:layout_width="wrap_content"
@@ -209,13 +172,11 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="8dp"
                     android:src="@drawable/scan" />
-
             </LinearLayout>
-
             <View
+                android:id="@+id/divider3"
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -225,13 +186,11 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/sign_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="SIGN UPS ICON"
                     android:src="@drawable/sign_up" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -241,27 +200,21 @@
                     android:gravity="start"
                     android:text="Sign Ups"
                     android:textColor="@color/black" />
-
-                <TextView
+                <Button
                     android:id="@+id/signUpsSeeAllButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:fontFamily="@font/inter_semibold"
-                    android:paddingRight="8dp"
-                    android:text="@string/see_all"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="See all"
+                    android:textAlignment="viewEnd"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
+                    android:textSize="14sp" />
             </LinearLayout>
-
             <View
+                android:id="@+id/divider4"
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -271,73 +224,41 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
-                    android:layout_width="24dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/attendance_icon"
+                    android:contentDescription="Attendance Icon"
                     android:src="@drawable/nav_map" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="20dp"
-
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="@string/attendance"
+                    android:text="Attendance"
                     android:textColor="@color/black" />
-
-                <TextView
+                <Button
                     android:id="@+id/attendanceSeeAllButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:fontFamily="@font/inter_semibold"
-                    android:paddingRight="8dp"
-                    android:text="@string/see_all"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="See all"
+                    android:textAlignment="viewEnd"
                     android:textColor="@color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
+                    android:textSize="14sp" />
             </LinearLayout>
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
+            <Button
+                android:id="@+id/shareQRButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Share Event QR Code" />
         </LinearLayout>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/shareQRButton"
-        android:layout_width="355dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/black"
-        android:fontFamily="@font/inter_semibold"
-        android:text="Share QR Code"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        app:cornerRadius="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/organizer_bottom_nav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/organizer_bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-2dp"
-        android:background="@drawable/bottom_nav_stroke"
-        android:contentDescription="@string/bottom_nav_content_description"
-        app:itemHorizontalTranslationEnabled="false"
-        app:itemIconTint="@color/black"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/organizer_bottom_nav" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
