@@ -2,11 +2,16 @@ package com.example.attendease;
 
 import static com.example.attendease.R.id.admin_bottom_nav;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +26,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
@@ -177,6 +180,7 @@ public class BrowseAllImages extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 // File deleted successfully
+                showRemovalDialog();
                 Log.d("DEBUG", "onSuccess: deleted file");
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -202,5 +206,25 @@ public class BrowseAllImages extends AppCompatActivity {
         }
 
         return result;
+    }
+
+    private void showRemovalDialog() {
+        if (!isFinishing()) {
+            View view = LayoutInflater.from(this).inflate(R.layout.photo_removed_dialog, null);
+            Button okayButton = view.findViewById(R.id.button);
+
+            TextView milestoneTextView = view.findViewById(R.id.photoRemovedTextView);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(view);
+            Dialog dialog = builder.create();
+            okayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
     }
 }

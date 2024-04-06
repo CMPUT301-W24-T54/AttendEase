@@ -63,6 +63,7 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
         Log.d("EventAdapter", "Event id: " + event.getEventId());
         String info=event.getDescription();
         event_info.setText(info);
+
         String Url=event.getPosterUrl();
         Log.d("EventAdapter",Url);
         //CountDownLatch latch = new CountDownLatch(1);
@@ -70,17 +71,9 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
             Glide.with(view)
                     .load(Url)
                     .into(image);
-
         } else {
             image.setImageResource(R.drawable.splash);
         }
-
-
-
-
-
-
-
         return view;
     }
 }

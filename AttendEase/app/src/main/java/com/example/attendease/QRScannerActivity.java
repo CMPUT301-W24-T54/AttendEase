@@ -15,6 +15,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
@@ -96,14 +98,7 @@ public class QRScannerActivity extends AppCompatActivity {
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedData = result.getContents().replaceAll("[./#$\\[\\]]", "_");
-                if (Objects.equals(prevActivity, "AttendeeDashboardActivity")) {
-                    landOnEventDetails(scannedData);
-                } else {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("result", scannedData);
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();
-                }
+                checkEventExists(scannedData);
                 // Handle the scanned QR code data as needed
                 // Toast.makeText(this, "Scanned: " + scannedData, Toast.LENGTH_LONG).show();
             } else {
@@ -176,6 +171,41 @@ public class QRScannerActivity extends AppCompatActivity {
                                 intent.putExtra("posterUrl",posterUrl);
                                 intent.putExtra("prevActivity", "QRScannerActivity");
                                 startActivity(intent);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void checkEventExists(String eventID) {
+        eventsRef.document(eventID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                if (Objects.equals(prevActivity, "AttendeeDashboardActivity")) {
+                                    landOnEventDetails(eventID);
+                                    Log.d("DEBUG", "onComplete: not an event");
+
+                                    finish();
+                                } else {
+                                    Toast.makeText(QRScannerActivity.this, "QR Code already in use", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            } else {
+                                if (Objects.equals(prevActivity, "AttendeeDashboardActivity")) {
+                                    Log.d("DEBUG", "onComplete: not an event");
+                                    Toast.makeText(getApplicationContext(), "Not an event", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra("result", eventID);
+                                    setResult(Activity.RESULT_OK, resultIntent);
+                                    finish();
+                                }
                             }
                         }
                     }
