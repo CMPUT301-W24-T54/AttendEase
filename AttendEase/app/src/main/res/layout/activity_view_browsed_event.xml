@@ -154,48 +154,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/neon"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/neon"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="SCAN ICON"
-                        android:src="@drawable/scan" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:text="QR Code"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/QRCodeImageAtt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingBottom="20dp"
-                    android:src="@drawable/scan" />
-
-            </LinearLayout>
 
             <View
                 android:id="@+id/divider2"
