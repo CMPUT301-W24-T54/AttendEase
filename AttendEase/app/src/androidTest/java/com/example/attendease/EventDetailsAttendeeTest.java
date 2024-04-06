@@ -2,21 +2,19 @@ package com.example.attendease;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import static org.junit.Assert.assertEquals;
 
 import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,33 +30,37 @@ import java.util.concurrent.CountDownLatch;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class EventDetailsAttendeeSignUpTest {
+public class EventDetailsAttendeeTest {
     Attendee testAttendee = new Attendee("testDevice", "name", "phone", "email", "image", false);
+
     @Rule
     public ActivityScenarioRule<EventDetailsAttendee> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EventDetailsAttendee.class)
-            .putExtra("attendee", "testAttendee")
-            .putExtra("prevActivity", "BrowseAllEvents")
+            .putExtra("attendee", testAttendee)
             .putExtra("eventID", "testEvent")
+            .putExtra("prevActivity", "QRScannerActivity")
             .putExtra("title","Teset Event")
             .putExtra("description","Event for testing purposes")
             .putExtra("dateTime", "March 6, 2024 at 2:24:11")
             .putExtra("location","tester spot")
-            .putExtra("canCheckIn", false));
+            .putExtra("posterUrl", "null")
+            .putExtra("canCheckIn", true));
 
     @Test
-    public void testSignUp() throws InterruptedException {
-        onView(withId(R.id.signup_or_checkin)).check(matches(isDisplayed()));
-        onView(withId(R.id.signup_or_checkin)).check(matches(withText("Sign Up")));
+    public void testCheckIn() throws InterruptedException {
+        Thread.sleep(2000);
+
+        IdlingRegistry.getInstance().register(FirebaseLoadingTestHelper.getIdlingResource());
+
         onView(withId(R.id.signup_or_checkin)).perform(ViewActions.click());
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference signUpsRef = db.collection("signIns");
+        CollectionReference checkInsRef = db.collection("checkIns");
 
         String deviceID = "testDevice";
 
         final CountDownLatch latch = new CountDownLatch(1);
 
-        signUpsRef
+        checkInsRef
                 .whereEqualTo("attendeeID", deviceID)
                 .whereEqualTo("eventID", "testEvent")
                 .get()
@@ -73,7 +75,7 @@ public class EventDetailsAttendeeSignUpTest {
                 });
         latch.await(); // Make sure to await the latch countdown
 
-        signUpsRef.whereEqualTo("attendeeID", deviceID)
+        checkInsRef.whereEqualTo("attendeeID", deviceID)
                 .whereEqualTo("eventID", "testEvent")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
