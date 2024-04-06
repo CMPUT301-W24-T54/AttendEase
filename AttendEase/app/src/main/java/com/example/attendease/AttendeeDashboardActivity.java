@@ -246,4 +246,11 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadEventsFromFirestore();
+        addListeners();
+    }
+
 }
