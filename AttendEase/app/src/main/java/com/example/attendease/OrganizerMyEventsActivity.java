@@ -52,18 +52,6 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
 
         loadEventsFromFirestore();
 
-        ImageButton buttonGoBack = findViewById(R.id.nav_left);
-        buttonGoBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OrganizerMyEventsActivity.this, OrganizerDashboardActivity.class);
-                // Clears activity from the stack before returning to previous screen
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.nav_events);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

@@ -97,18 +97,9 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         loadEventsFromFirestore();
         setUpCreateEvent();
 
-        seeMyEvents = findViewById(R.id.see_all);
         seeAllEvents = findViewById(R.id.see_all2);
 
         seeAllEvents.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OrganizerDashboardActivity.this, OrganizerMyEventsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        seeMyEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OrganizerDashboardActivity.this, OrganizerMyEventsActivity.class);
