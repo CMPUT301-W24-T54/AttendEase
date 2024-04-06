@@ -44,7 +44,7 @@
 
     <Button
         android:id="@+id/check_in_button"
-        android:layout_width="314dp"
+        android:layout_width="355dp"
         android:layout_height="55dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="24dp"
@@ -63,7 +63,7 @@
 
     <Button
         android:id="@+id/create_event_button"
-        android:layout_width="314dp"
+        android:layout_width="355dp"
         android:layout_height="55dp"
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
