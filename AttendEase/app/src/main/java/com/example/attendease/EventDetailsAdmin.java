@@ -2,6 +2,8 @@ package com.example.attendease;
 
 import static com.example.attendease.R.id.admin_bottom_nav;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,7 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -150,8 +154,7 @@ public class EventDetailsAdmin extends AppCompatActivity {
      */
     private void deleteEvent() {
         eventsRefs.document(event.getEventId()).delete().addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
-            finish();
+            Log.d("EventDetailsAdmin", "Success to delete event");
         }).addOnFailureListener(e -> {
             Log.e("EventDetailsAdmin", "Failed to delete event: " + e.getMessage());
         });
@@ -181,6 +184,20 @@ public class EventDetailsAdmin extends AppCompatActivity {
                         }
                     }
                 });
+
+        View view = LayoutInflater.from(EventDetailsAdmin.this).inflate(R.layout.event_removed_dialog, null);
+        Button okayButton = view.findViewById(R.id.eventRokay);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsAdmin.this);
+        builder.setView(view);
+        Dialog dialog = builder.create();
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EventDetailsAdmin.this, BrowseAllEventsAdmin.class);
+                startActivity(intent);
+            }
+        });
+        dialog.show();
     }
 
     private void deleteReference(DocumentSnapshot documentSnapshot) {
