@@ -92,7 +92,7 @@ public class MapActivity extends AppCompatActivity {
         map.setMaxZoomLevel(20.0);
         map.setMinZoomLevel(3.0);
 
-        GeoPoint myLocationGeoPoint = new GeoPoint(0, 0);
+        GeoPoint myLocationGeoPoint = new GeoPoint(53.5409192657743, -113.47904085523885);
         controller = map.getController();
         locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
 
@@ -101,7 +101,7 @@ public class MapActivity extends AppCompatActivity {
 
         controller.setCenter(myLocationGeoPoint);
         controller.animateTo(myLocationGeoPoint);
-        controller.setZoom(1);
+        controller.setZoom(12);
 
         map.getOverlays().add(locationOverlay);
     }
