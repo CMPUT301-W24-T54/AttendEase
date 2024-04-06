@@ -47,10 +47,7 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
     private TextView seeAllEvents;
     private TextView seeMyEvents;
-
     private Attendee attendee;
-
-
     private RecyclerView recyclerViewBrowseEvents;
     private RecyclerView recyclerViewMyEvents;
     private EventAdapter adapterLarge;
@@ -83,6 +80,15 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
 
         recyclerViewMyEvents.setAdapter(adapterLarge);
         recyclerViewBrowseEvents.setAdapter(adapterSmall);
+
+        // Find the TextView by its ID
+        TextView welcomeUserTextView = findViewById(R.id.welcomeUser);
+
+        // Get the username from the Attendee object
+        String username = attendee.getName();
+
+        // Set the text of the TextView to the username
+        welcomeUserTextView.setText(username);
 
         loadEventsFromFirestore();
         addListeners();
