@@ -268,7 +268,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
+
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
         </LinearLayout>
     </ScrollView>
     <Button
