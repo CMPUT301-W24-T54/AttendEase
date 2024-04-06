@@ -78,8 +78,6 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
             } else if (id == R.id.nav_notifications) {
                 Intent intent = new Intent(this, OrganizerNotifications.class);
                 startActivity(intent);
-            } else if (id == R.id.nav_map) {
-                //TODO
             }
             return false;
         });
