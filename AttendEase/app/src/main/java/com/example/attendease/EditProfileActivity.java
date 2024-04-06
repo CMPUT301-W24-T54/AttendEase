@@ -283,6 +283,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d("DEBUG", "Changes Saved");
+                        Toast.makeText(EditProfileActivity.this, "Changes Saved", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -41,7 +41,7 @@ import java.util.Objects;
  * Activity for managing notifications sent by the organizer to attendees.
  * Allows organizers to view, add, and delete notifications.
  */
-public class OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
+public class    OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ActivityResultLauncher<Intent> addMsgLauncher;
     private ArrayList<Msg> dataList;
     private ListView MsgList;
