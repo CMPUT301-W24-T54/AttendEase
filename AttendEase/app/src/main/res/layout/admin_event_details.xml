@@ -59,7 +59,7 @@
     <ImageView
         android:id="@+id/event_cover"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="246dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
@@ -88,12 +88,10 @@
     <ScrollView
         android:id="@+id/sv_event_details"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/admin_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_name">
@@ -321,20 +319,18 @@
                     tools:ignore="KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp" />
         </LinearLayout>
     </ScrollView>
 
     <Button
         android:id="@+id/remove_cover_button"
-        android:layout_width="314dp"
+        android:layout_width="355dp"
         android:layout_height="55dp"
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/black"
+        android:fontFamily="@font/inter_semibold"
         android:text="@string/remove_cover_photo"
         android:textAlignment="center"
         android:textSize="14sp"
