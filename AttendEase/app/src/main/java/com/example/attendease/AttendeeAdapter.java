@@ -1,32 +1,29 @@
 package com.example.attendease;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
 
@@ -90,19 +87,18 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
     private void deleteAttendee(int position) {
         String attendeeId = attendeeList.get(position).getDeviceID(); //Unsure?
-        String attendeeProfileImage = attendeeList.get(position).getDeviceID();
+        String attendeeProfileImage = attendeeList.get(position).getImage();
 
         // Delete from attendees collection
-        Log.d("DEBUG", String.format("deleteAttendee: %s", attendeeId));
         attendeesRef.document(attendeeId).delete().addOnSuccessListener(aVoid -> {
+            showRemovalDialog();
             attendeeList.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, attendeeList.size());
+
         }).addOnFailureListener(e -> {
             Log.e("AttendeeAdapter", "Failed to delete attendee: " + e.getMessage());
         });
-
-        // TODO : Delete all the check-ins, sign-ups, images
         signInsRef.whereEqualTo("attendeeID", attendeeId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -131,6 +127,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
         // Delete Profile Image
         if (attendeeProfileImage != null && !attendeeProfileImage.equals("null") && !attendeeProfileImage.equals("")) {
+            Log.d("DEBGU", String.format("deleteAttendee: %s", attendeeProfileImage));
             StorageReference photoRef = database.getStorage().getReferenceFromUrl(attendeeProfileImage);
             photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -190,5 +187,23 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
             }
             usernameTextView.setText(attendee.getName());
         }
+    }
+
+    private void showRemovalDialog() {
+        View view = LayoutInflater.from(context).inflate(R.layout.profile_removed_dialog, null);
+        Button okayButton = view.findViewById(R.id.button);
+
+        TextView milestoneTextView = view.findViewById(R.id.profileRemovedTextView);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(view);
+        Dialog dialog = builder.create();
+        okayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

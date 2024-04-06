@@ -1,5 +1,6 @@
 package com.example.attendease;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ListActivity;
@@ -10,7 +11,9 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final Database database = Database.getInstance();
     private CollectionReference attendeesRef;
+    private CollectionReference adminsRef;
     private String deviceID;
 
     @SuppressLint("HardwareIds")
@@ -36,10 +40,28 @@ public class MainActivity extends AppCompatActivity {
         Button checkInButton = findViewById(R.id.check_in_button);
         Button createEventButton = findViewById(R.id.create_event_button);
         Button adminButton = findViewById(R.id.admin_button);
+        adminButton.setVisibility(View.INVISIBLE);
+        adminButton.setClickable(false);
 
         attendeesRef = database.getAttendeesRef();
+        adminsRef = database.getAdminRef();
 
         deviceID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        // Remove Admin button if not admin
+        adminsRef.document(deviceID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        adminButton.setVisibility(View.VISIBLE);
+                        adminButton.setClickable(true);
+                    }
+                }
+            }
+        });
+
 
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
