@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayOutputStream;
 
@@ -77,6 +78,25 @@ public class EventDetailsOrganizer extends AppCompatActivity {
             Intent intent = new Intent(EventDetailsOrganizer.this, AttendanceListActivity.class);
             intent.putExtra("event", event);
             startActivity(intent);
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setSelectedItemId(R.id.nav_events);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_events) {
+                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_notifications) {
+                Intent intent = new Intent(this, OrganizerNotifications.class);
+                startActivity(intent);
+            }
+            return false;
         });
     }
 
