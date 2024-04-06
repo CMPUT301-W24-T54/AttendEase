@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -88,6 +89,25 @@ public class AttendanceListActivity extends AppCompatActivity {
         eventDocID = event.getEventId();
         setUpEventName(event, eventDocID);
         setUpMap();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setSelectedItemId(R.id.nav_events);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_events) {
+                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_notifications) {
+                Intent intent = new Intent(this, OrganizerNotifications.class);
+                startActivity(intent);
+            }
+            return false;
+        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
