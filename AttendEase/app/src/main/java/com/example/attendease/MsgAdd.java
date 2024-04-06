@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.protobuf.StringValue;
 
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ public class MsgAdd extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, eventslist);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         events_opt.setAdapter(adapter);
-
     }
 
     @Override

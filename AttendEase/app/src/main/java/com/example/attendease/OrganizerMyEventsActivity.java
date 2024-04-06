@@ -68,7 +68,6 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.nav_events);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
-
             if (id == R.id.nav_home) {
                 Intent intent = new Intent(this, OrganizerDashboardActivity.class);
                 startActivity(intent);
