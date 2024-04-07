@@ -9,6 +9,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -18,6 +19,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,6 +57,7 @@ public class MapActivityTest {
     @Before
     public void setUp() {
         // Initialize Mockito annotations
+        Intents.init();
         MockitoAnnotations.initMocks(this);
 
         // Launch the activity
@@ -81,5 +84,10 @@ public class MapActivityTest {
         // For example, verify that certain UI elements are displayed or perform actions on them
         onView(withId(R.id.map)).perform(ViewActions.swipeLeft());
         onView(withId(R.id.map)).perform(ViewActions.swipeRight());
+    }
+
+    @After
+    public void teardown() {
+        Intents.release();
     }
 }

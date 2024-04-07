@@ -1,7 +1,10 @@
 package com.example.attendease;
 
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -11,6 +14,10 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTest {
 
+    @Before
+    public void setup() {
+        Intents.init();
+    }
     @Test
     public void testDatabase() {
         // Context of the app under test.
@@ -36,5 +43,10 @@ public class DatabaseTest {
         // Additional test to verify singleton property
         Database anotherDbInstance = Database.getInstance();
         assertTrue(dbInstance == anotherDbInstance);
+    }
+
+    @After
+    public void teardown() {
+        Intents.release();
     }
 }
