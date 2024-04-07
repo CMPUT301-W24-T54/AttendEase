@@ -29,6 +29,7 @@ public class Msg {
         this.event_name=event_name;
     }
 
+    // GETTERS AND SETTERS
     public String getEvent_name() {
         return event_name;
     }

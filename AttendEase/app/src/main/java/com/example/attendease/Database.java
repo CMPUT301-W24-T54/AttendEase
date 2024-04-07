@@ -44,6 +44,7 @@ public class Database {
         notificationsRef = db.collection("notifications");
     }
 
+    // GETTERS AND SETTERS
     public static synchronized Database getInstance() {
         if (instance == null) {
             instance = new Database();

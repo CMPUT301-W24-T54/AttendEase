@@ -33,13 +33,11 @@ import java.util.Objects;
  * must use to check into an event
  */
 public class QRScannerActivity extends AppCompatActivity {
-
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private final Database database = Database.getInstance();
     private CollectionReference eventsRef;
     private Attendee attendee;
     private String prevActivity;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +175,12 @@ public class QRScannerActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Checks if the event exists in the Firestore database.
+     * If it exists, it redirects the user to the event details page.
+     * If not, it either displays a message or returns the event ID as a result.
+     * @param eventID The ID of the event scanned from the QR code.
+     */
     private void checkEventExists(String eventID) {
         eventsRef.document(eventID)
                 .get()

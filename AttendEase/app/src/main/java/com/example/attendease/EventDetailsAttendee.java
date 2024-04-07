@@ -191,7 +191,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
                             public void onSuccess(Void unused) {
                                 Log.d("Firestore", "DocumentSnapshot successfully written!");
                                 toggleInteractButton(false);
-                                showRemovalDialog();
+                                showCheckInDialog();
                                 checkAndGetGeoPoint(unique_id);
                             }
                         });
@@ -199,7 +199,10 @@ public class EventDetailsAttendee extends AppCompatActivity {
         });
     }
 
-    private void showRemovalDialog() {
+    /**
+     * Inflates a dialog to notify the attendee that they have successfully checked-in.
+     */
+    private void showCheckInDialog() {
         if (!isFinishing()) {
             View view = LayoutInflater.from(this).inflate(R.layout.congratulations_dialog, null);
             Button okayButton = view.findViewById(R.id.button);

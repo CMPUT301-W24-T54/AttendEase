@@ -50,7 +50,6 @@ public class MapActivity extends AppCompatActivity {
     private Event event;
     private ArrayList<Marker> markerList = new ArrayList<>();
 
-    // OpenAI, ChatGPT, Refactor code (check previous commit)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +69,9 @@ public class MapActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
+    /**
+     * Initializes components required for the map activity.
+     */
     public void initializeComponents() {
         event = getIntent().getParcelableExtra("event");
         checkInsRef = database.getCheckInsRef();
@@ -79,6 +81,9 @@ public class MapActivity extends AppCompatActivity {
         initializeLocationOverlay();
     }
 
+    /**
+     * Initializes the map view.
+     */
     public void initializeMap() {
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -106,6 +111,9 @@ public class MapActivity extends AppCompatActivity {
         map.getOverlays().add(locationOverlay);
     }
 
+    /**
+     * Initializes the location overlay on the map.
+     */
     public void initializeLocationOverlay() {
         locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), map);
         locationOverlay.enableMyLocation();
@@ -115,6 +123,8 @@ public class MapActivity extends AppCompatActivity {
 
     /**
      * Populates the map with markers representing check-in locations.
+     * @param checkInsRef The reference to the collection containing check-in data.
+     * @param attendeesRef The reference to the collection containing attendee data.
      */
     // OpenAI, ChatGPT, 2024, Refactor populateMapWithMarkers for better mock testing
     public void populateMapWithMarkers(CollectionReference checkInsRef, CollectionReference attendeesRef) {
@@ -131,6 +141,11 @@ public class MapActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Processes the documents retrieved from Firestore to create markers on the map.
+     * @param attendeesRef The reference to the collection containing attendee data.
+     * @param querySnapshot The snapshot of documents retrieved from Firestore.
+     */
     public void processCheckInDocuments(CollectionReference attendeesRef, QuerySnapshot querySnapshot) {
         for (QueryDocumentSnapshot document : querySnapshot) {
             GeoPoint geoPoint = convertFirebaseGeoPoint(document.getGeoPoint("geoPoint"));
@@ -142,6 +157,11 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates a marker on the map at the specified GeoPoint.
+     * @param geoPoint The GeoPoint where the marker should be placed.
+     * @return The created marker.
+     */
     public Marker createMarker(GeoPoint geoPoint) {
         Marker marker = new Marker(map);
         marker.setPosition(geoPoint);
@@ -149,6 +169,12 @@ public class MapActivity extends AppCompatActivity {
         return marker;
     }
 
+    /**
+     * Fetches the attendee name associated with a check-in and sets it as the marker title.
+     * @param attendees The reference to the collection containing attendee data.
+     * @param attendeeID The ID of the attendee associated with the check-in.
+     * @param marker The marker to which the attendee name will be attached.
+     */
     public void fetchAttendeeName(CollectionReference attendees, String attendeeID, Marker marker) {
         attendees.document(attendeeID)
                 .get()
@@ -163,6 +189,11 @@ public class MapActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Converts a Firebase GeoPoint to an OSMDroid GeoPoint.
+     * @param firebaseGeoPoint The Firebase GeoPoint to be converted.
+     * @return The converted OSMDroid GeoPoint.
+     */
     public GeoPoint convertFirebaseGeoPoint(com.google.firebase.firestore.GeoPoint firebaseGeoPoint) {
         if (firebaseGeoPoint != null) {
             double latitude = firebaseGeoPoint.getLatitude();
