@@ -86,7 +86,7 @@ public class AttendanceListTest {
                     }
                 });
 
-        // Adjust sleep time as needed, or consider using Espresso Idling Resources for better practice
+        
         Thread.sleep(5000);
 
         // Launch the activity with a test intent containing the event ID
@@ -94,7 +94,7 @@ public class AttendanceListTest {
         intent.putExtra("eventDocID", eventDocID);
         ActivityScenario.launch(AttendanceListActivity.class);
 
-        // Assuming your Activity updates a TextView with the attendee count
+    
         onView(withId(R.id.attendancecount)).check(matches(withText(containsString(String.valueOf(expectedCount.get())))));
     }
 

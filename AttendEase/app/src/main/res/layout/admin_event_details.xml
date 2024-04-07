@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="128dp"
             android:layout_marginEnd="127dp"
-            android:text="@string/event"
+            android:text="@string/event_details"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -59,13 +59,11 @@
     <ImageView
         android:id="@+id/event_cover"
         android:layout_width="0dp"
-        android:layout_height="246dp"
+        android:layout_height="200dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
         android:background="@drawable/rounded_corners"
-        app:layout_constraintBottom_toTopOf="@+id/event_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout13"
@@ -76,14 +74,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
+        android:layout_marginTop="24dp"
         android:text="@string/event"
         android:textAlignment="viewStart"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="341dp" />
+        app:layout_constraintTop_toBottomOf="@+id/event_cover"
+        tools:ignore="MissingConstraints" />
 
     <ScrollView
         android:id="@+id/sv_event_details"
@@ -121,6 +120,10 @@
                 android:text="@string/LoremIpsum"
                 android:textColor="@color/black" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,7 +144,7 @@
                     android:id="@+id/location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/location"
@@ -172,7 +175,7 @@
                     android:id="@+id/date_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/date_time"
@@ -209,7 +212,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:gravity="start"
                         android:text="@string/qr_code"
@@ -249,7 +252,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:gravity="start"
@@ -295,7 +298,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="20dp"
 
                     android:layout_weight="1"

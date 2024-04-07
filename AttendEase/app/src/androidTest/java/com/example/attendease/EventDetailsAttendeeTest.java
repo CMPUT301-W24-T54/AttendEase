@@ -8,8 +8,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -22,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +35,7 @@ import java.util.concurrent.CountDownLatch;
 @LargeTest
 public class EventDetailsAttendeeTest {
     Attendee testAttendee = new Attendee("testDevice", "name", "phone", "email", "image", false);
+    CountingIdlingResource countingIdlingResource;
 
     @Rule
     public ActivityScenarioRule<EventDetailsAttendee> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EventDetailsAttendee.class)
@@ -45,9 +49,17 @@ public class EventDetailsAttendeeTest {
             .putExtra("posterUrl", "null")
             .putExtra("canCheckIn", true));
 
+    @Before
+    public void setup() {
+        scenario.getScenario().onActivity(activity -> {
+            countingIdlingResource = activity.getCountingIdlingResource();
+        });
+        IdlingRegistry.getInstance().register(countingIdlingResource);
+    }
+
     @Test
     public void testCheckIn() throws InterruptedException {
-        Thread.sleep(2000);
+//        Thread.sleep(2000);
 
         IdlingRegistry.getInstance().register(FirebaseLoadingTestHelper.getIdlingResource());
 

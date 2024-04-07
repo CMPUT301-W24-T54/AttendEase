@@ -3,6 +3,7 @@ package com.example.attendease;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,6 +31,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
@@ -67,7 +71,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private ImageView QRCodeImage;
     private ImageView eventPosterImageView;
-
+    private CountingIdlingResource countingIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,8 @@ public class EventDetailsAttendee extends AppCompatActivity {
         locationText.setText(intent.getStringExtra("location"));
         dateText.setText(intent.getStringExtra("dateTime"));
 
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
+
         // Load the event poster
         String posterUrl = intent.getStringExtra("posterUrl");
         if (posterUrl != null && !posterUrl.equals("null")) {
@@ -135,6 +141,29 @@ public class EventDetailsAttendee extends AppCompatActivity {
         }
 
         addListeners();
+
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_events);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(EventDetailsAttendee.this, AttendeeDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(EventDetailsAttendee.this, BrowseAllEvents.class));
+                    return true;
+                } else if (id == R.id.nav_bell) {
+                    startActivity(new Intent(EventDetailsAttendee.this, AttendeeNotifications.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(EventDetailsAttendee.this, EditProfileActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -144,7 +173,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
      * @param canCheckIn   A boolean flag indicating whether the attendee can check in.
      */
     private void setListener(String eventID, boolean canCheckIn) {
-        FirebaseLoadingTestHelper.increment();
+        countingIdlingResource.increment();
         signUpsRef
                 .whereEqualTo("attendeeID", attendee.getDeviceID())
                 .whereEqualTo("eventID", eventID)
@@ -162,7 +191,6 @@ public class EventDetailsAttendee extends AppCompatActivity {
                         }
                     }
                 });
-        FirebaseLoadingTestHelper.decrement();
     }
 
     /**
@@ -191,15 +219,19 @@ public class EventDetailsAttendee extends AppCompatActivity {
                             public void onSuccess(Void unused) {
                                 Log.d("Firestore", "DocumentSnapshot successfully written!");
                                 toggleInteractButton(false);
-                                showRemovalDialog();
+                                showCheckInDialog();
                                 checkAndGetGeoPoint(unique_id);
                             }
                         });
             }
         });
+        countingIdlingResource.decrement();
     }
 
-    private void showRemovalDialog() {
+    /**
+     * Inflates a dialog to notify the attendee that they have successfully checked-in.
+     */
+    private void showCheckInDialog() {
         if (!isFinishing()) {
             View view = LayoutInflater.from(this).inflate(R.layout.congratulations_dialog, null);
             Button okayButton = view.findViewById(R.id.button);
@@ -390,5 +422,9 @@ public class EventDetailsAttendee extends AppCompatActivity {
 //            interactButton.setVisibility(View.VISIBLE);
 //            interactButton.setClickable(true);
 //        }
+    }
+
+    public CountingIdlingResource getCountingIdlingResource() {
+        return countingIdlingResource;
     }
 }

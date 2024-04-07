@@ -4,6 +4,9 @@ import android.util.Log;
 
 import androidx.test.espresso.idling.CountingIdlingResource;
 
+/**
+ * Helper class for managing idling resources during Firebase loading tests.
+ */
 public class FirebaseLoadingTestHelper {
     private static final String RESOURCE_NAME = "Firebase";
     private static CountingIdlingResource sIdlingResource = new CountingIdlingResource(RESOURCE_NAME);

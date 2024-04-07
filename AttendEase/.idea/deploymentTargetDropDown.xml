@@ -2,21 +2,17 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="EventDetailsAttendee">
+        <State />
+      </entry>
+      <entry key="EventDetailsAttendeeTest">
+        <State />
+      </entry>
+      <entry key="Tests in 'com.example.attendease'">
+        <State />
+      </entry>
       <entry key="app">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Sean Hill\.android\avd\Pixel_7_Pro_API_34.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-06T21:03:07.288303900Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>
