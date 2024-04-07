@@ -1,59 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/stroke_grey">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/stroke_grey"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="13dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="24dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/nav_left"
-            android:contentDescription="Back Button"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbarLayout"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:text="@string/event_details"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout13"
+        app:srcCompat="@drawable/item_removed_successfully" />
+    <TextView
+        android:id="@+id/EventTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/event"
+        android:textAlignment="viewStart"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        tools:ignore="MissingConstraints" />
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginEnd="22dp"
-                android:layout_marginBottom="9dp"
-                android:background="@drawable/rounded_corners"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ae"
-                app:layout_collapseMode="parallax" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollViewEventDetails"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="22dp"
-        android:fillViewport="true"
-        android:paddingTop="24dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <ScrollView
+        android:id="@+id/sv_event_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EventTitle">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -62,33 +83,27 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/EventTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:text="Event Name"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/detailsAboutHeader"
-                android:layout_width="wrap_content"
+                android:layout_width="49dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:paddingBottom="10dp"
-                android:text="About"
+                android:text="@string/about"
                 android:textColor="@color/black"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="ObsoleteLayoutParam" />
 
             <TextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
                 android:paddingBottom="10dp"
                 android:text="@string/LoremIpsum"
                 android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,22 +118,21 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="LOCATION ICON"
+                    android:contentDescription="@string/location_icon"
                     android:src="@drawable/nav_events" />
 
                 <TextView
                     android:id="@+id/Location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="Location"
+                    android:text="@string/location"
                     android:textColor="@color/black" />
             </LinearLayout>
 
             <View
-                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
 
@@ -133,39 +147,53 @@
                 android:paddingBottom="8dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="TIME ICON"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/time"
                     android:src="@drawable/time" />
 
                 <TextView
                     android:id="@+id/DateTime"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="Date and Time"
+                    android:text="@string/date_time"
                     android:textColor="@color/black" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/divider7"
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-            <Button
-                android:id="@+id/signup_or_checkin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign Up" />
-
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </ScrollView>
+    <Button
+        android:id="@+id/signup_or_checkin"
+        android:layout_width="355dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/black"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Sign Up"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:cornerRadius="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/attendee_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/attendee_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-2dp"
+        android:background="@drawable/bottom_nav_stroke"
+        android:contentDescription="@string/bottom_nav_content_description"
+        app:itemHorizontalTranslationEnabled="false"
+        app:itemIconTint="@color/black"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/attendee_bottom_nav" />
+</androidx.constraintlayout.widget.ConstraintLayout>

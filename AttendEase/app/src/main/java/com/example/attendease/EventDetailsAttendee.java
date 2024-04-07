@@ -14,6 +14,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -30,6 +31,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
@@ -138,6 +141,29 @@ public class EventDetailsAttendee extends AppCompatActivity {
         }
 
         addListeners();
+
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_events);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(EventDetailsAttendee.this, AttendeeDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(EventDetailsAttendee.this, BrowseAllEvents.class));
+                    return true;
+                } else if (id == R.id.nav_bell) {
+                    startActivity(new Intent(EventDetailsAttendee.this, AttendeeNotifications.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(EventDetailsAttendee.this, EditProfileActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
