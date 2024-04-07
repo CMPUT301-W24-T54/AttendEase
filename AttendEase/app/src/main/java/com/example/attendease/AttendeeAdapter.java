@@ -160,12 +160,16 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
 
         CircleImageView profilePhotoImageView;
         TextView usernameTextView;
+        TextView emailTextView;
+        TextView phoneTextView;
         ImageView trashButton;
 
         AttendeeViewHolder(View itemView) {
             super(itemView);
             profilePhotoImageView = itemView.findViewById(R.id.attendee_profile_photo);
             usernameTextView = itemView.findViewById(R.id.attendee_username);
+            emailTextView = itemView.findViewById(R.id.attendee_email);
+            phoneTextView = itemView.findViewById(R.id.attendee_phone);
             trashButton = itemView.findViewById(R.id.trash);
         }
 
@@ -186,6 +190,8 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
                 Picasso.get().load(attendee.getImage()).into(profilePhotoImageView);
             }
             usernameTextView.setText(attendee.getName());
+            emailTextView.setText(attendee.getEmail());
+            phoneTextView.setText(attendee.getPhone());
         }
     }
 
