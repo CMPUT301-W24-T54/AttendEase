@@ -34,6 +34,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -180,7 +181,7 @@ public class BrowseMyEventsTest {
             throw new RuntimeException(e);
         }
 
-        //Intents.init();
+//        Intents.init();
 
         onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
         boolean textFound=false;
@@ -192,8 +193,12 @@ public class BrowseMyEventsTest {
         onView(withId(R.id.Location)).check(matches(withText("Sample text")));
         onView(withId(R.id.description)).check(matches(withText("Sample text")));
         //onView(withId(R.id.description)).check(matches(withText(txt)));
-        //Intents.release();
+//        Intents.release();
         cleanup();
     }
 
+//    @After
+//    public void teardown() {
+//        Intents.release();
+//    }
 }

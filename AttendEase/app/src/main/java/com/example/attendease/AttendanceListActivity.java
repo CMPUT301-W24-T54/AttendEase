@@ -199,7 +199,6 @@ public class AttendanceListActivity extends AppCompatActivity {
                         }
                     }
                 });
-                //checkMilestone(uniqueAttendees.size());
             }
         });
     }

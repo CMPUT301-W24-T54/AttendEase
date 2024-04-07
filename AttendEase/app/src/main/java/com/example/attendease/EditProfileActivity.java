@@ -292,9 +292,6 @@ public class EditProfileActivity extends AppCompatActivity {
             SaveChanges(data);
             if(!ImagePresent){
                 int image_size=100;
-
-                // Generate profile picture and set it to the ImageView
-                //String profileName = editProfileName.getText().toString(); // Example profile name
                 Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(name, image_size);
                 profileImage.setImageBitmap(profilePicture);
             }

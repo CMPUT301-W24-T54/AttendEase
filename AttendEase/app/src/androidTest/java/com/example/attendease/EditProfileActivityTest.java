@@ -16,6 +16,7 @@ import android.view.View;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -42,6 +43,10 @@ public class EditProfileActivityTest {
     public ActivityScenarioRule<EditProfileActivity> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EditProfileActivity.class)
             .putExtra("attendee", attendee));
 
+    @Before
+    public void setup(){
+        Intents.init();
+    }
 
     @Test
     public void testProfileLoads() throws InterruptedException {
@@ -118,6 +123,7 @@ public class EditProfileActivityTest {
     @After
     public void tearDown() throws Exception {
         // Code to delete test data from Firestore
+        Intents.release();
     }
 
 }
