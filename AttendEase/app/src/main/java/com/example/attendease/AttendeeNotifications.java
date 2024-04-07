@@ -175,6 +175,8 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
     protected void onResume() {
         super.onResume();
 
+        bottomNav = findViewById(R.id.attendee_bottom_nav);
+        bottomNav.setSelectedItemId(R.id.nav_bell);
         bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -182,11 +184,14 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                 Log.d("DEBUG", String.format("onNavigationItemSelected: %d", id));
                 if (id == R.id.nav_home) {// Handle click on Home item
                     Log.d("DEBUG", "Home item clicked");
-                    Intent intent = new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class);
+                    Intent intent=new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class);
                     intent.putExtra("attendee", attendee);
                     startActivity(intent);
                 } else if (id == R.id.nav_events) {// Handle click on Events item
                     Log.d("DEBUG", "Events item clicked");
+                    Intent intent=new Intent(AttendeeNotifications.this, BrowseAllEvents.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 } else if (id == R.id.nav_bell) {// Handle click on Bell item
                     Log.d("DEBUG", "Bell item clicked");
                 } else if (id == R.id.nav_profile) {// Handle click on Profile item

@@ -23,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -33,6 +35,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,9 +87,32 @@ public class AttendanceListActivity extends AppCompatActivity {
         // Call the function
         intent = getIntent();
         event = intent.getParcelableExtra("event");
-        eventDocID = event.getEventId();
-        setUpEventName(event, eventDocID);
-        setUpMap();
+        if (event != null) {
+            eventDocID = event.getEventId();
+            setUpEventName(event, eventDocID);
+            setUpMap();
+        } else {
+            Log.e("AttendanceListActivity", "Event object is null.");
+        }
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setSelectedItemId(R.id.nav_events);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                Intent intent = new Intent(this, OrganizerDashboardActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_events) {
+                Intent intent = new Intent(this, OrganizerMyEventsActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_notifications) {
+                Intent intent = new Intent(this, OrganizerNotifications.class);
+                startActivity(intent);
+            }
+            return false;
+        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,10 +207,12 @@ public class AttendanceListActivity extends AppCompatActivity {
     // Calculate check-in count for a specific attendee
     private int calculateCheckInCount(QuerySnapshot queryDocumentSnapshots, String attendeeID) {
         int count = 0;
-        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-            String id = document.getString("attendeeID");
-            if (id != null && id.equals(attendeeID)) {
-                count++;
+        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments() != null) {
+            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                String id = document.getString("attendeeID");
+                if (id != null && id.equals(attendeeID)) {
+                    count++;
+                }
             }
         }
         return count;
@@ -225,6 +254,12 @@ public class AttendanceListActivity extends AppCompatActivity {
         IMapController controller = mapView.getController();
         controller.setZoom(3);
 
+        GeoPoint myLocationGeoPoint = new GeoPoint(53.5409192657743, -113.47904085523885);
+        MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
+        controller.setCenter(myLocationGeoPoint);
+        controller.animateTo(myLocationGeoPoint);
+        controller.setZoom(12);
+        mapView.getOverlays().add(locationOverlay);
         // StackOverflow, NeoKerd, Click listener in open street maps
         // https://stackoverflow.com/questions/67850072/set-onclicklistener-for-mapview-using-open-street-map
 

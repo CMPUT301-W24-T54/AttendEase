@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +50,8 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
     private CollectionReference eventsRef;
     private ArrayList<Event> eventList2 = new ArrayList<>();
 
+    private TextView seeAllEvents;
+    private TextView seeMyEvents;
 
     /**
      * Initializes the activity, setting up the user interface components and loading events
@@ -93,6 +96,16 @@ public class OrganizerDashboardActivity extends AppCompatActivity {
         eventsRef = database.getEventsRef();
         loadEventsFromFirestore();
         setUpCreateEvent();
+
+        seeAllEvents = findViewById(R.id.see_all2);
+
+        seeAllEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrganizerDashboardActivity.this, OrganizerMyEventsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

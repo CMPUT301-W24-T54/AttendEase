@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.protobuf.StringValue;
 
 import java.util.ArrayList;
@@ -45,6 +46,21 @@ public class MsgAdd extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         events_opt.setAdapter(adapter);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
+        bottomNavigationView.setSelectedItemId(R.id.nav_notifications);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, OrganizerDashboardActivity.class));
+                return true;
+            } else if (id == R.id.nav_events) {
+                startActivity(new Intent(this, OrganizerMyEventsActivity.class));
+                return true;
+            } else if (id == R.id.nav_notifications) {
+                startActivity(new Intent(this, OrganizerNotifications.class));
+            }
+            return false;
+        });
     }
 
     @Override

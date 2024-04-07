@@ -33,7 +33,7 @@
                 tools:ignore="ImageContrastCheck,RedundantDescriptionCheck" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/congratulationsTextView"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
@@ -50,7 +50,7 @@
             <Button
                 android:id="@+id/button"
                 android:layout_width="286dp"
-                android:layout_height="49dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/button_black"
                 android:fontFamily="@font/inter_semibold"

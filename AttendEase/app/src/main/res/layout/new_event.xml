@@ -1,134 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/stroke_grey"
-    android:padding="16dp">
+    android:padding="0dp">
 
-    <ImageButton
-        android:id="@+id/buttonGoBack"
-        android:layout_width="53dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="-2dp"
-        android:layout_marginEnd="105dp"
-        android:layout_toStartOf="@+id/tvNewEventHeader"
-        android:backgroundTint="@android:color/transparent"
-        android:gravity="center"
-        android:padding="10dp"
-        android:src="@drawable/cross" />
-
-    <TextView
-        android:id="@+id/tvNewEventHeader"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout9"
+        android:layout_width="411dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="New Event"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvNewEventHeader"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="26dp"
-        android:src="@drawable/nav_image" />
+        <ImageButton
+            android:id="@+id/buttonGoBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:background="#00FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/cross" />
 
-    <TextView
-        android:id="@+id/tvCoverPhotoHeader"
-        android:layout_width="111dp"
-        android:layout_height="29dp"
-        android:layout_below="@+id/tvNewEventHeader"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="231dp"
-        android:layout_toEndOf="@+id/imageView"
-        android:text="Cover Photo"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvNewEventHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:text="New Event"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/buttonGoBack"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/ivCoverPhoto"
-        android:layout_width="245dp"
-        android:layout_height="133dp"
-        android:layout_below="@id/tvNewEventHeader"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="74dp"
-        android:layout_marginEnd="75dp"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_corners"
         android:contentDescription="Event Poster"
-        android:scaleType="centerCrop" />
+        android:scaleType="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout19" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout19"
+        android:layout_width="363dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/nav_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/event_cover"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/btnUploadPhoto"
-        android:layout_width="144dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivCoverPhoto"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/black"
+        android:layout_width="169.5dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/white"
         android:text="Upload Photo"
-        android:textColor="@color/white" />
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="100px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivCoverPhoto"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1px" />
 
     <Button
         android:id="@+id/btnRemovePhoto"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivCoverPhoto"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="25dp"
-        android:backgroundTint="@color/black"
+        android:layout_width="169.5dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="28dp"
+        android:backgroundTint="@color/white"
         android:text="Remove Photo"
-        android:textColor="@color/white" />
-
-    <ImageView
-        android:id="@+id/InfoView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnUploadPhoto"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="17dp"
-        android:src="@drawable/information" />
-
-    <TextView
-        android:id="@+id/tvInfoHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivCoverPhoto"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="89dp"
-        android:layout_toEndOf="@+id/InfoView"
-        android:text="Information"
+        android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="100px"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivCoverPhoto"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1px" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout7"
+        android:layout_width="363dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnUploadPhoto">
+
+        <ImageView
+            android:id="@+id/InfoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/contact"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/information"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/InfoView"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="363dp"
+        android:layout_height="390dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="355dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginBottom="140dp">
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -141,7 +183,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="NAME" />
+                android:fontFamily="@font/inter"
+                android:text="NAME"
+                android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/etEventName"
@@ -156,7 +200,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="ABOUT" />
+                android:fontFamily="@font/inter"
+                android:text="ABOUT"
+                android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/etEventAbout"
@@ -171,7 +217,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="LOCATION" />
+                android:fontFamily="@font/inter"
+                android:text="LOCATION"
+                android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/etEventLocation"
@@ -184,22 +232,28 @@
             <TextView
                 android:id="@+id/tvEventDate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_below="@id/etNameHeader"
-                android:drawableRight="@drawable/nav_events"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/inter"
                 android:gravity="center_vertical"
-                android:hint="Select Date"
-                android:padding="16dp" />
+                android:hint="DATE"
+                android:padding="0dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/tvEventTime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_below="@id/tvEventDate"
-                android:drawableRight="@drawable/time"
+                android:drawablePadding="8dp"
+                android:fontFamily="@font/inter"
                 android:gravity="center_vertical"
-                android:hint="Select Time"
-                android:padding="16dp" />
+                android:hint="TIME"
+                android:padding="0dp"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -218,14 +272,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/inter_semibold"
                     android:gravity="start"
-                    android:text="SIGN-UP LIMIT"
+                    android:text="Sign-Up Limit"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etSignUpLimit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:ems="10"
@@ -242,7 +298,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="GEO-TRACKING"
+                    android:contentDescription="Geo-Tracking"
                     android:src="@drawable/nav_map" />
 
                 <TextView
@@ -250,47 +306,76 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/inter_semibold"
                     android:gravity="start"
-                    android:text="GEO-TRACKING"
+                    android:text="Geo-Tracking"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <CheckBox
                     android:id="@+id/cbGeoTracking"
-                    android:layout_width="wrap_content"
+                    android:layout_width="22dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:buttonTint="@color/black" />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="240dp" />
         </LinearLayout>
     </ScrollView>
 
     <Button
         android:id="@+id/btnGenerateEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivCoverPhoto"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="390dp"
-        android:layout_marginEnd="7dp"
-        android:backgroundTint="@color/black"
-        android:elevation="4dp"
-        android:text="Generate new QR" />
+        android:layout_width="355dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/white"
+        android:text="Generate QR Code"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="100px"
+        app:layout_constraintBottom_toTopOf="@+id/btnReuseQR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1px" />
 
     <Button
         android:id="@+id/btnReuseQR"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivCoverPhoto"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="410dp"
-        android:layout_marginEnd="7dp"
+        android:layout_width="355dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="24dp"
         android:backgroundTint="@color/black"
-        android:elevation="4dp"
-        android:text="Generate old QR" />
+        android:text="Reuse Existing QR Code"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="100px"
+        app:layout_constraintBottom_toTopOf="@+id/organizer_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/organizer_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:contentDescription="@string/bottom_nav_content_description"
+        app:itemHorizontalTranslationEnabled="false"
+        app:itemIconTint="@color/black"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/organizer_bottom_nav" />
 
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,14 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -98,7 +98,6 @@ public class EventDetailsAttendee extends AppCompatActivity {
         descriptionText = findViewById(R.id.description);
         locationText = findViewById(R.id.Location);
         dateText = findViewById(R.id.DateTime);
-        QRCodeImage = findViewById(R.id.QRCodeImageAtt);
         eventPosterImageView = findViewById(R.id.imageView2);
 
         titleText.setText(intent.getStringExtra("title"));
@@ -118,16 +117,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
         } else {
             eventPosterImageView.setImageResource(R.drawable.splash);
         }
-
-        // Load QR code image into ImageView
-        String qrCodeImageUrl = intent.getStringExtra("QR");
-        if (qrCodeImageUrl != null && !qrCodeImageUrl.isEmpty()) {
-            Glide.with(this)
-                    .load(qrCodeImageUrl)
-                    .override(350, 350)
-                    .into(QRCodeImage);
-        }
-
+        
         backButton = findViewById(R.id.imageButton);
         interactButton = findViewById(R.id.signup_or_checkin); // This becomes a check in button if QR Code Scanned
         toggleInteractButton(false);  // Wait to see if they haven't signed up yet
@@ -154,6 +144,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
      * @param canCheckIn   A boolean flag indicating whether the attendee can check in.
      */
     private void setListener(String eventID, boolean canCheckIn) {
+        FirebaseLoadingTestHelper.increment();
         signUpsRef
                 .whereEqualTo("attendeeID", attendee.getDeviceID())
                 .whereEqualTo("eventID", eventID)
@@ -171,6 +162,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
                         }
                     }
                 });
+        FirebaseLoadingTestHelper.decrement();
     }
 
     /**
@@ -199,12 +191,33 @@ public class EventDetailsAttendee extends AppCompatActivity {
                             public void onSuccess(Void unused) {
                                 Log.d("Firestore", "DocumentSnapshot successfully written!");
                                 toggleInteractButton(false);
-                                Toast.makeText(EventDetailsAttendee.this, "Check In successful!", Toast.LENGTH_SHORT).show();
+                                showRemovalDialog();
                                 checkAndGetGeoPoint(unique_id);
                             }
                         });
             }
         });
+    }
+
+    private void showRemovalDialog() {
+        if (!isFinishing()) {
+            View view = LayoutInflater.from(this).inflate(R.layout.congratulations_dialog, null);
+            Button okayButton = view.findViewById(R.id.button);
+
+            TextView milestoneTextView = view.findViewById(R.id.congratulationsTextView);
+            milestoneTextView.setText("Congratulations! You're Checked-In");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(view);
+            Dialog dialog = builder.create();
+            okayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
     }
 
     /**

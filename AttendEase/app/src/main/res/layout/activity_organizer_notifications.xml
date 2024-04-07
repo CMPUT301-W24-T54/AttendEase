@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/stroke_grey">
 
-    <!-- Your existing TextView -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout18"
         android:layout_width="match_parent"
@@ -16,18 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/imageButton9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:background="#00FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/nav_left"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
@@ -36,7 +23,7 @@
             android:layout_marginEnd="131dp"
             android:layout_weight="1"
             android:fontFamily="@font/inter_semibold"
-            android:text="Notifications"
+            android:text="Announcements"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -81,7 +68,7 @@
         android:clickable="false"
         android:fontFamily="@font/inter_semibold"
         android:scaleType="centerCrop"
-        android:text="No Notifications Yet"
+        android:text="No Announcements Yet"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,9 +79,10 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:clickable="false"
         android:scaleType="centerCrop"
-        android:text="You have no notifications right now, come back later"
+        android:text="You have not posted any new announcements yet"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,15 +91,18 @@
 
     <ImageButton
         android:id="@+id/AddButton"
-        style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/rounded_button_background"
+        android:clickable="true"
+        android:contentDescription="@string/plus"
+        android:elevation="4dp"
+        android:focusable="true"
         app:layout_constraintBottom_toTopOf="@+id/organizer_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:srcCompat="@drawable/plus" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/organizer_bottom_nav"

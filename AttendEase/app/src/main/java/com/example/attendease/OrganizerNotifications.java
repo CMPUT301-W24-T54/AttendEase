@@ -10,6 +10,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +41,7 @@ import java.util.Objects;
  * Activity for managing notifications sent by the organizer to attendees.
  * Allows organizers to view, add, and delete notifications.
  */
-public class OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
+public class    OrganizerNotifications extends AppCompatActivity implements ViewMsgDialog.AddMsgDialogListener {
     private ActivityResultLauncher<Intent> addMsgLauncher;
     private ArrayList<Msg> dataList;
     private ListView MsgList;
@@ -128,22 +129,22 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
             dataList.add(new Msg(Title[i], Messages[i]));
         }*/
 
-        BottomNavigationView bottomNavAdminDashboard = findViewById(organizer_bottom_nav);
-        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        BottomNavigationView bottomNavOrganizerNotifications = findViewById(R.id.organizer_bottom_nav);
+        bottomNavOrganizerNotifications.setSelectedItemId(R.id.nav_notifications);
+        bottomNavOrganizerNotifications.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.nav_home) {
-                    startActivity(new Intent(OrganizerNotifications.this, OrganizerDashboardActivity.class));
+                    Intent intent = new Intent(OrganizerNotifications.this, OrganizerDashboardActivity.class);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_events) {
-                    startActivity(new Intent(OrganizerNotifications.this, OrganizerMyEventsActivity.class));
+                    Intent intent = new Intent(OrganizerNotifications.this, OrganizerMyEventsActivity.class);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_notifications) {
-                    // Already on the AdminDashboardActivity, no need to start a new instance
-                    return true;
-                } else if (id == R.id.nav_map) {
-                    //TODO
+                    // Already on the OrganizerNotification, no need to start a new instance
                     return true;
                 }
                 return false;
