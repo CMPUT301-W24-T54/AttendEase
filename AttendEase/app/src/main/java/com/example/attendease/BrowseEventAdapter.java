@@ -71,9 +71,12 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
             Glide.with(view)
                     .load(Url)
                     .into(image);
-        } else {
+        }
+        else {
             image.setImageResource(R.drawable.splash);
         }
+
+
         return view;
     }
 }
