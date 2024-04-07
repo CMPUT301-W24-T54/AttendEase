@@ -160,15 +160,9 @@ public class BrowseAllEvents extends AppCompatActivity {
                                 dataList.add(new_event);
 
                                 break;
-                                /*case REMOVED:
-                                    Log.d(TAG, "Removed document: " + dc.getDocument().getData());
-                                    break;*/
                         }
 
                     }
-
-                    //addCitiesInit();
-
                     eventArrayAdapter.notifyDataSetChanged();
                 }
                 countingIdlingResource.decrement();

@@ -129,14 +129,6 @@ public class EventDetailsAdmin extends AppCompatActivity {
             } else {
                 dateandtimeView.setText("No date provided");
             }
-            /**
-            String coverImageUrl = event.getImageURL();
-            if (coverImageUrl != null && !coverImageUrl.isEmpty()) {
-                Glide.with(this)
-                        .load(coverImageUrl)
-                        .override(500, 500)
-                        .into(eventCover);
-            }*/
             // Check if the event has a valid poster URL and load it; otherwise set a placeholder
             if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null") && !event.getPosterUrl().equals("")) {
                 int image_size=100;
@@ -150,7 +142,6 @@ public class EventDetailsAdmin extends AppCompatActivity {
 
     /**
      * Deletes the event.
-     * TODO: Implement deletion logic.
      */
     private void deleteEvent() {
         eventsRefs.document(event.getEventId()).delete().addOnSuccessListener(aVoid -> {

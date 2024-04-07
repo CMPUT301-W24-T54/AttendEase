@@ -129,7 +129,6 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
                 intent.putExtra("attendee", attendee);
                 intent.putExtra("prevActivity", "AttendeeDashboardActivity");

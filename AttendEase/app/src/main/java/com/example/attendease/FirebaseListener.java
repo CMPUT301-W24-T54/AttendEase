@@ -154,7 +154,6 @@ public class FirebaseListener extends Service{
         getSharedPreferences("MyPrefs", MODE_PRIVATE).edit().putString("TimeStamp", timeStamp).apply();
     }
 
-    //TODO: DELETE THIS FUNCTION!
     private void settime(){
         long currentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -162,7 +161,6 @@ public class FirebaseListener extends Service{
 
     }
 
-    //TODO: DELETE THIS FUNCTION!
     private void eventlist(){
         signInRef.whereEqualTo("attendeeID",deviceid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

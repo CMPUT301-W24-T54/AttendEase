@@ -80,27 +80,14 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         textview.setVisibility(View.INVISIBLE);
         textview2.setVisibility(View.INVISIBLE);
 
-        //Intent intent=getIntent();
-
-        //Attendee attendee= (Attendee) getIntent().getSerializableExtra("Attendee");
-        //need to implements Serializable in Attendee class
-        //attendee.getsignupids
-        /*db = FirebaseFirestore.getInstance();
-        signInRef = db.collection("signIns");
-        eventsRef = db.collection("notifications");
-        realeventsRef = db.collection("events");
-        Log.d("DEBUG", "Deviceid");
-        attendee_Ref=db.collection("attendees").document(deviceID);*/
-        //attendee_Ref=db.collection("attendees").document("atharva");
         eventArray=new ArrayList<>();
 
         MsgList=findViewById(R.id.Msg_list);
         String[] Title = {};
         String[] Messages = {};
         dataList = new ArrayList<Msg>();
-        /*for (int i = 0; i < Title.length; i++) {
-            dataList.add(new Msg(Title[i], Messages[i]));
-        }*/
+
+
         MsgAdapter = new MsgAdapter(this, dataList);
         MsgList.setAdapter(MsgAdapter);
         getallnotifications();
@@ -140,10 +127,6 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
     public void deleteMsg(Msg message, int position){
         MsgAdapter.remove(message);
         MsgAdapter.notifyDataSetChanged();
-        /*HashMap<String, Object> updates = new HashMap<>();
-        ArrayList<String> newArray = new ArrayList<>();
-        newArray.add(message.getUnique_id());
-        updates.put("notification_deleted", newArray);*/
         attendee_Ref.update("notification_deleted", FieldValue.arrayUnion(message.getUnique_id()));
         makeinvisible();
 
@@ -228,12 +211,6 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
             Msg selectedMsg = dataList.get(position);
             new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
             return true;
-            /*Bundle bundle = new Bundle();
-            bundle.putString("selectedMsg",selectedMsg.getMessage());
-            bundle.putString("selectedTitle", selectedMsg.getTitle());
-            NavHostFragment.findNavController(FirstFragment.this)
-                    .navigate(R.id.action_FirstFragment_to_SecondFragment,bundle);*/
-
         });
         MsgList.setOnItemClickListener((parent, views, position, id) ->{
             Msg selectedMsg = dataList.get(position);
@@ -248,23 +225,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
             intent.putExtra("event_name",event_name);
 
             startActivity(intent);
-            //new ViewMsgDialog(selectedMsg,position).show(getSupportFragmentManager(), "View Message");
-            /*Bundle bundle = new Bundle();
-            bundle.putString("selectedMsg",selectedMsg.getMessage());
-            bundle.putString("selectedTitle", selectedMsg.getTitle());
-            NavHostFragment.findNavController(FirstFragment.this)
-                    .navigate(R.id.action_FirstFragment_to_SecondFragment,bundle);*/
-
-
         });
-
-
-
-
-
-
-
-
     }
 
     /**
@@ -360,68 +321,6 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                 }
             }
         });
-        /*eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (querySnapshots != null) {
-                    Log.d("error","isrunning2times");
-                    ArrayList <String> test_array=stringArray;
-                    //cityDataList.clear();
-                    for (DocumentChange doc: querySnapshots.getDocumentChanges()) {
-                        switch (doc.getType()) {
-                            case ADDED:
-                            case MODIFIED:
-                                String Title = doc.getDocument().getString("title");
-                                String Notification = doc.getDocument().getString("message");
-                                String event=doc.getDocument().getString("event");
-                                String event_name=doc.getDocument().getString("event_name");
-                                String Unique_id=doc.getDocument().getId().toString();
-                                if(!eventArray.contains(event)){
-                                    break;
-                                }
-
-
-                                if(stringArray!=null){
-                                    if (stringArray.contains(Unique_id)){
-                                        test_array.remove(Unique_id);
-                                        break;
-                                    }
-                                }
-                                //String sent_by= doc.getDocument().getString("sentBy");
-                                Log.d("Firestore", String.format("City(%s, %s) fetched", Title,
-                                        Notification));
-                                Msg add_Msg=new Msg(Title, Notification,event,event_name);
-                                add_Msg.setUnique_id(Unique_id);
-                                dataList.add(add_Msg);
-                                break;
-                                case REMOVED:
-                                    Log.d(TAG, "Removed document: " + dc.getDocument().getData());
-                                    break;
-                        }
-
-                    }
-                    if(test_array!=null){
-                        for (String test : test_array){
-                            attendee_Ref.update("notification_deleted",FieldValue.arrayRemove(test));
-                        }
-                    }
-
-
-                    makeinvisible();
-
-                    //addCitiesInit();
-                    MsgAdapter.notifyDataSetChanged();
-                    Log.d("idli","decrement");
-
-                }
-
-            }
-        });*/
-
     }
 
     /**
@@ -436,16 +335,9 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                         // Document found where fieldName is equal to desiredValue
                         eventArray.add(doc.getString("eventID"));
                         Log.d("debug",doc.getString("eventID"));
-
-
-
                     }
                     eve();
-
                 }
-
-
-
             }
         });
     }
