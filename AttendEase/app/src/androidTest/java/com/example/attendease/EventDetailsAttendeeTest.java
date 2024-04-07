@@ -45,6 +45,10 @@ public class EventDetailsAttendeeTest {
             .putExtra("posterUrl", "null")
             .putExtra("canCheckIn", true));
 
+    public void setup() {
+
+    }
+
     @Test
     public void testCheckIn() throws InterruptedException {
         Thread.sleep(2000);
