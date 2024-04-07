@@ -75,7 +75,7 @@ public class EditProfileActivity extends AppCompatActivity {
     // ActivityLauncher to get image from gallery
     private ActivityResultLauncher<String> mGetContent;
     private Uri profileUri;
-
+    private BottomNavigationView bottomNav;
     private Boolean ImagePresent=false;
     private Boolean ImageRemoved=false;
 
@@ -122,7 +122,7 @@ public class EditProfileActivity extends AppCompatActivity {
         // Add button listeners
         addListeners();
 
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
         bottomNavAdminDashboard.setSelectedItemId(R.id.nav_profile);
         bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -138,7 +138,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     startActivity(new Intent(EditProfileActivity.this, AttendeeNotifications.class));
                     return true;
                 } else if (id == R.id.nav_profile) {
-                    // Already on the EditProfileActivity, no need to start a new instance
+                    // Already on the AttendeeEditProfileActivity, no need to start a new instance
                     return true;
                 }
                 return false;
