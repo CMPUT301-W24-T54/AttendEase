@@ -3,6 +3,21 @@
   <component name="deploymentTargetDropDown">
     <value>
       <entry key="BrowseMyEventsTest">
+<<<<<<< HEAD
+=======
+        <State />
+      </entry>
+      <entry key="OrganizerMyEventsTest">
+        <State />
+      </entry>
+      <entry key="EventDetailsOrganizerTest">
+        <State />
+      </entry>
+      <entry key="Tests in 'com.example.attendease'">
+        <State />
+      </entry>
+      <entry key="app">
+>>>>>>> edfb8ed920c07a8c168d04daad8bdf19504be9a2
         <State />
       </entry>
       <entry key="EventDetailsSwitchTest">

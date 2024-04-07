@@ -155,14 +155,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
             intent.putExtra("event", event);
             startActivity(intent);
         });
-
-        /*
-        attendeeAdapter.setOnItemClickListener((view, position) -> {
-            Attendee attendee = attendeeList.get(position);
-            Intent intent = new Intent(AdminDashboardActivity.this, AttendeeDetailsAdmin.class);
-            intent.putExtra("attendee", attendee);
-            startActivity(intent);
-        });*/
     }
 
 

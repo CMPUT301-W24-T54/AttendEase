@@ -129,13 +129,19 @@ public class EditProfileActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.nav_home) {
-                    startActivity(new Intent(EditProfileActivity.this, AttendeeDashboardActivity.class));
+                    Intent intent=new Intent(EditProfileActivity.this, AttendeeDashboardActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_events) {
-                    startActivity(new Intent(EditProfileActivity.this, BrowseAllEvents.class));
+                    Intent intent=new Intent(EditProfileActivity.this, BrowseAllEvents.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_bell) {
-                    startActivity(new Intent(EditProfileActivity.this, AttendeeNotifications.class));
+                    Intent intent=new Intent(EditProfileActivity.this, AttendeeNotifications.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_profile) {
                     // Already on the AttendeeEditProfileActivity, no need to start a new instance
@@ -286,9 +292,6 @@ public class EditProfileActivity extends AppCompatActivity {
             SaveChanges(data);
             if(!ImagePresent){
                 int image_size=100;
-
-                // Generate profile picture and set it to the ImageView
-                //String profileName = editProfileName.getText().toString(); // Example profile name
                 Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(name, image_size);
                 profileImage.setImageBitmap(profilePicture);
             }

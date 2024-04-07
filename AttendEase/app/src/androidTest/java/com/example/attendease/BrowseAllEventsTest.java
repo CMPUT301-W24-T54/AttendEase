@@ -49,7 +49,7 @@ public class BrowseAllEventsTest {
     public ActivityScenarioRule<BrowseAllEvents> scenario = new ActivityScenarioRule<BrowseAllEvents>(new Intent(ApplicationProvider.getApplicationContext(), BrowseAllEvents.class).putExtra("attendee", attendee));
     private static final String IDLING_RESOURCE_NAME = "FirebaseLoading";
     private CountingIdlingResource countingIdlingResource;
-    String txt = "Sample text";
+    String txt = "Sample_text";
     DocumentSnapshot documentSnapshot;
 
 

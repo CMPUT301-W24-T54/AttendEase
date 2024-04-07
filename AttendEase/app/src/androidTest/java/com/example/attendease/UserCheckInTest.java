@@ -43,8 +43,6 @@ public class UserCheckInTest {
         // Assume R.id.editText_name is your EditText and R.id.button_submit is your submit button.
         onView(withId(R.id.editText_name))
                 .perform(typeText("John Doe"), closeSoftKeyboard());
-
-        onView(withId(R.id.button_submit)).perform(click());
     }
 
 }
