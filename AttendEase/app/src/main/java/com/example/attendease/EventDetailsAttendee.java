@@ -3,6 +3,7 @@ package com.example.attendease;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -67,7 +68,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private ImageView QRCodeImage;
     private ImageView eventPosterImageView;
-
+    private CountingIdlingResource countingIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,8 @@ public class EventDetailsAttendee extends AppCompatActivity {
         descriptionText.setText(intent.getStringExtra("description"));
         locationText.setText(intent.getStringExtra("location"));
         dateText.setText(intent.getStringExtra("dateTime"));
+
+        countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
 
         // Load the event poster
         String posterUrl = intent.getStringExtra("posterUrl");
@@ -144,7 +147,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
      * @param canCheckIn   A boolean flag indicating whether the attendee can check in.
      */
     private void setListener(String eventID, boolean canCheckIn) {
-        FirebaseLoadingTestHelper.increment();
+        countingIdlingResource.increment();
         signUpsRef
                 .whereEqualTo("attendeeID", attendee.getDeviceID())
                 .whereEqualTo("eventID", eventID)
@@ -162,7 +165,6 @@ public class EventDetailsAttendee extends AppCompatActivity {
                         }
                     }
                 });
-        FirebaseLoadingTestHelper.decrement();
     }
 
     /**
@@ -197,6 +199,7 @@ public class EventDetailsAttendee extends AppCompatActivity {
                         });
             }
         });
+        countingIdlingResource.decrement();
     }
 
     /**
@@ -393,5 +396,9 @@ public class EventDetailsAttendee extends AppCompatActivity {
 //            interactButton.setVisibility(View.VISIBLE);
 //            interactButton.setClickable(true);
 //        }
+    }
+
+    public CountingIdlingResource getCountingIdlingResource() {
+        return countingIdlingResource;
     }
 }
