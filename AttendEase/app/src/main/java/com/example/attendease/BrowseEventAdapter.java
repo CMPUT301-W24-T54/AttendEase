@@ -72,6 +72,9 @@ public class BrowseEventAdapter extends ArrayAdapter<Event> {
                     .into(image);
 
         }
+        else {
+            image.setImageResource(R.drawable.splash);
+        }
 
 
 

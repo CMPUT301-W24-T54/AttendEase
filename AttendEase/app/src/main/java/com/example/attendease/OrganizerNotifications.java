@@ -96,6 +96,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
         String[] Title = {};
         String[] Messages = {};
         dataList = new ArrayList<Msg>();
+        FirebaseLoadingTestHelper.increment();
         eventsRef
                 //.whereEqualTo("sentBy", "name")
                 .whereEqualTo("sentBy", deviceID)
@@ -116,6 +117,7 @@ public class OrganizerNotifications extends AppCompatActivity implements ViewMsg
                             }
                             MsgAdapter = new MsgAdapter(OrganizerNotifications.this, dataList);
                             MsgList.setAdapter(MsgAdapter);
+                            FirebaseLoadingTestHelper.decrement();
                         } else {
                             //Log.d(TAG, "Error getting documents: ", task.getException());
                         }
