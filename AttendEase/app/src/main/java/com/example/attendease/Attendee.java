@@ -13,7 +13,7 @@ public class Attendee implements Serializable{
     private String email;
     private String phone;
     private String image;
-    private boolean geoTrackingEnabled;  // TODO : use this when checking in for maps
+    private boolean geoTrackingEnabled;
     private int checkInCount; // New field for check-in count
     private String url;
 
@@ -62,8 +62,6 @@ public class Attendee implements Serializable{
         this.url = url;
     }
 
-    public void signUp() {}  // TODO Implement signUp functionality on database side
-    public void checkIn() {} // TODO Implement checkIn functionality on database side
 
     /**
      * Gets the device ID associated with this user.

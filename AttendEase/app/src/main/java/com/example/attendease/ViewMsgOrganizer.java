@@ -39,8 +39,6 @@ public class ViewMsgOrganizer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                /*Intent intent=new Intent(View_Msg_Organizer.this,Organizer_Notifications.class);
-                startActivity(intent);*/
             }
         });
 

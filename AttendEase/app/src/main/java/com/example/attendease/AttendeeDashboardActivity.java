@@ -103,14 +103,18 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                     // Already on the AttendeeDashboardActivity, no need to start a new instance
                     return true;
                 } else if (id == R.id.nav_events) {
-                    startActivity(new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class));
+                    Intent intent=new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_bell) {
-                    startActivity(new Intent(AttendeeDashboardActivity.this, AttendeeNotifications.class));
-                    return true;
+                    Intent intent=new Intent(AttendeeDashboardActivity.this, AttendeeNotifications.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 } else if (id == R.id.nav_profile) {
-                    startActivity(new Intent(AttendeeDashboardActivity.this, EditProfileActivity.class));
-                    return true;
+                    Intent intent=new Intent(AttendeeDashboardActivity.this, EditProfileActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 }
                 return false;
             }
@@ -129,7 +133,6 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO check if need to pass Attendee argument
                 Intent intent = new Intent(AttendeeDashboardActivity.this, QRScannerActivity.class);
                 intent.putExtra("attendee", attendee);
                 intent.putExtra("prevActivity", "AttendeeDashboardActivity");

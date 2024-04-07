@@ -43,17 +43,6 @@ public class MsgAdapter extends ArrayAdapter<Msg> {
         TextView provinceName = view.findViewById(R.id.message_text);
         cityName.setText(city.getTitle());
         provinceName.setText(city.getMessage());
-        /*ImageView deleteButton = view.findViewById(R.id.imageButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Remove the message from your data source
-                remove(getItem(position));
-                // Notify the adapter that the data set has changed
-                notifyDataSetChanged();
-            }
-        });*/
-
 
         return view;
     }

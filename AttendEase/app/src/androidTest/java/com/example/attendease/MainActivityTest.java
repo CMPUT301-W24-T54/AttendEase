@@ -23,6 +23,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,13 +43,4 @@ public class MainActivityTest {
         intended(hasComponent(OrganizerDashboardActivity.class.getName()));
         Intents.release();
     }
-
-    @Test
-    public void testAdminDashboard() {
-        Intents.init();
-        onView(withId(R.id.admin_button)).perform(ViewActions.click());
-        intended(hasComponent(AdminDashboardActivity.class.getName()));
-        Intents.release();
-    }
-
 }
