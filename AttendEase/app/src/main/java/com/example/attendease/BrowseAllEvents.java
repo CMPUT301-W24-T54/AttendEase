@@ -38,6 +38,7 @@ public class BrowseAllEvents extends AppCompatActivity {
     private CollectionReference eventsRef;
     private Attendee attendee;
     private CountingIdlingResource countingIdlingResource;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,27 +57,33 @@ public class BrowseAllEvents extends AppCompatActivity {
         eventArrayAdapter =new BrowseEventAdapter(this,dataList);
         eventList.setAdapter(eventArrayAdapter);
         updateDatalist();
-
-        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
-        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_events);
-        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        bottomNav = findViewById(R.id.attendee_bottom_nav);
+        bottomNav.setSelectedItemId(R.id.nav_events);
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id == R.id.nav_home) {
-                    startActivity(new Intent(BrowseAllEvents.this, AttendeeDashboardActivity.class));
-                    return true;
-                } else if (id == R.id.nav_events) {
-                    // Already on the BrowseAllEvents, no need to start a new instance
-                    return true;
-                } else if (id == R.id.nav_bell) {
-                    startActivity(new Intent(BrowseAllEvents.this, AttendeeNotifications.class));
-                    return true;
-                } else if (id == R.id.nav_profile) {
-                    startActivity(new Intent(BrowseAllEvents.this, EditProfileActivity.class));
-                    return true;
+                Log.d("DEBUG", String.format("onNavigationItemSelected: %d", id));
+                if (id == R.id.nav_home) {// Handle click on Home item
+                    Log.d("DEBUG", "Home item clicked");
+                    Intent intent=new Intent(BrowseAllEvents.this, AttendeeDashboardActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+                } else if (id == R.id.nav_events) {// Handle click on Events item
+                    Log.d("DEBUG", "Events item clicked");
+                } else if (id == R.id.nav_bell) {// Handle click on Bell item
+                    Log.d("DEBUG", "Bell item clicked");
+                    Intent intent=new Intent(BrowseAllEvents.this, AttendeeNotifications.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+                } else if (id == R.id.nav_profile) {// Handle click on Profile item
+                    Log.d("DEBUG", "Profile item clicked");
+                    Intent intent = new Intent(BrowseAllEvents.this, EditProfileActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+
                 }
-                return false;
+                return true;
             }
         });
     }
