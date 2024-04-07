@@ -41,6 +41,9 @@ import java.util.List;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents an Admin user's dashboard
+ */
 public class AdminDashboardActivity extends AppCompatActivity {
     private RecyclerView rvAllEvents;
     private RecyclerView rvAllAttendees;
@@ -162,6 +165,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });*/
     }
 
+
+    /**
+     * Helper function that loads events from database
+     */
     private void loadEventsFromFirestore() {
         eventsRef.orderBy("dateTime").limit(4).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -178,6 +185,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Helper function that loads users from database
+     */
     private void loadAttendeesFromFirestore() {
         attendeesRef.limit(4).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -199,6 +209,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Helper function that loads images from database
+     */
     private void loadImagesFromFirestore() {
 
         eventsRef.limit(3).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

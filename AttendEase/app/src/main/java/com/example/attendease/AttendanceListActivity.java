@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -86,9 +87,13 @@ public class AttendanceListActivity extends AppCompatActivity {
         // Call the function
         intent = getIntent();
         event = intent.getParcelableExtra("event");
-        eventDocID = event.getEventId();
-        setUpEventName(event, eventDocID);
-        setUpMap();
+        if (event != null) {
+            eventDocID = event.getEventId();
+            setUpEventName(event, eventDocID);
+            setUpMap();
+        } else {
+            Log.e("AttendanceListActivity", "Event object is null.");
+        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.nav_events);
@@ -199,18 +204,29 @@ public class AttendanceListActivity extends AppCompatActivity {
         });
     }
 
-    // Calculate check-in count for a specific attendee
+    /**
+     * Calculate check-in count for a specific attendee.
+     * @param queryDocumentSnapshots The QuerySnapshot containing check-in data.
+     * @param attendeeID The ID of the attendee to calculate the check-in count for.
+     * @return The check-in count for the specified attendee.
+     */
     private int calculateCheckInCount(QuerySnapshot queryDocumentSnapshots, String attendeeID) {
         int count = 0;
-        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-            String id = document.getString("attendeeID");
-            if (id != null && id.equals(attendeeID)) {
-                count++;
+        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments() != null) {
+            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                String id = document.getString("attendeeID");
+                if (id != null && id.equals(attendeeID)) {
+                    count++;
+                }
             }
         }
         return count;
     }
 
+    /**
+     * Checks if the total number of unique attendees has reached a milestone and displays a dialog if it has.
+     * @param totalUniqueAttendees The total number of unique attendees for the event.
+     */
     private void checkMilestone(int totalUniqueAttendees) {
         // The milestones are hard-coded temporarily
         List<Integer> milestones = Arrays.asList(1, 3, 5, 10, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
@@ -219,7 +235,10 @@ public class AttendanceListActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Displays a milestone dialog congratulating the event organizer on reaching a milestone.
+     * @param attendeeCount The number of attendees for the milestone reached.
+     */
     private void showMilestoneDialog(int attendeeCount) {
         if (!isFinishing()) {
             View view = LayoutInflater.from(this).inflate(R.layout.milestone_dialog, null);
@@ -240,6 +259,10 @@ public class AttendanceListActivity extends AppCompatActivity {
             dialog.show();
         }
     }
+
+    /**
+     * This function sets up the map view and it's settings for displaying the event location.
+     */
     private void setUpMap() {
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setTilesScaledToDpi(true);

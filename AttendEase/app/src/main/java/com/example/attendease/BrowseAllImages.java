@@ -195,6 +195,11 @@ public class BrowseAllImages extends AppCompatActivity {
         imageAdapter.deleteImage(position);
     }
 
+    /**
+     * Helper to parse image url to get event ID and event poster name
+     * @param imageUrl Url to be parsed
+     * @return String array with event ID and poster name
+     */
     public static String[] parseImageUrl(String imageUrl) {
         String[] result = new String[2];
         Pattern pattern = Pattern.compile("%2F([a-zA-Z0-9_-]+)%2F([^?]+)");
@@ -208,6 +213,9 @@ public class BrowseAllImages extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Pop-up dialog for image removal
+     */
     private void showRemovalDialog() {
         if (!isFinishing()) {
             View view = LayoutInflater.from(this).inflate(R.layout.photo_removed_dialog, null);

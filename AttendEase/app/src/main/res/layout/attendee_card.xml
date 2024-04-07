@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="342dp"
-    android:layout_height="70dp"
+    android:layout_height="90dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="8dp"
@@ -31,9 +31,29 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/username"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/attendee_email"
             app:layout_constraintStart_toEndOf="@+id/attendee_profile_photo"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/attendee_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Email"
+            app:layout_constraintBottom_toTopOf="@+id/attendee_phone"
+            app:layout_constraintStart_toEndOf="@+id/attendee_profile_photo"
+            app:layout_constraintTop_toBottomOf="@+id/attendee_username" />
+
+        <TextView
+            android:id="@+id/attendee_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Phone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/attendee_profile_photo"
+            app:layout_constraintTop_toBottomOf="@+id/attendee_email" />
 
         <ImageButton
             android:id="@+id/trash"

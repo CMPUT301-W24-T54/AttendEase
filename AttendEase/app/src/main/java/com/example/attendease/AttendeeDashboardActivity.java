@@ -164,7 +164,9 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
                     Log.d("DEBUG", "Home item clicked");
                 } else if (id == R.id.nav_events) {// Handle click on Events item
                     Log.d("DEBUG", "Events item clicked");
-
+                    Intent intent=new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                 } else if (id == R.id.nav_bell) {// Handle click on Bell item
                     Log.d("DEBUG", "Bell item clicked");
                     Intent intent=new Intent(AttendeeDashboardActivity.this, AttendeeNotifications.class);

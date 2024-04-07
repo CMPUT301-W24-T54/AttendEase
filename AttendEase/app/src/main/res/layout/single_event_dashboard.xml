@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/stroke_grey">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout13"
         android:layout_width="match_parent"
@@ -14,7 +13,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <ImageButton
             android:id="@+id/back_button"
             android:layout_width="24dp"
@@ -27,7 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,9 +37,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/back_button"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="0dp"
@@ -55,7 +50,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout13"
         app:srcCompat="@drawable/item_removed_successfully" />
-
     <TextView
         android:id="@+id/eventName"
         android:layout_width="wrap_content"
@@ -70,7 +64,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
         tools:ignore="MissingConstraints" />
-
     <ScrollView
         android:id="@+id/sv_event_details"
         android:layout_width="0dp"
@@ -81,13 +74,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventName">
-
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/detailsAboutHeader"
                 android:layout_width="49dp"
@@ -97,7 +88,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 tools:ignore="ObsoleteLayoutParam" />
-
             <TextView
                 android:id="@+id/detailsAboutContent"
                 android:layout_width="wrap_content"
@@ -106,7 +96,6 @@
                 android:paddingBottom="10dp"
                 android:text="@string/LoremIpsum"
                 android:textColor="@color/black" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,13 +105,11 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/location_icon"
                     android:src="@drawable/nav_events" />
-
                 <TextView
                     android:id="@+id/location"
                     android:layout_width="0dp"
@@ -133,11 +120,9 @@
                     android:text="@string/location"
                     android:textColor="@color/black" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,13 +132,11 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@string/time"
                     android:src="@drawable/time" />
-
                 <TextView
                     android:id="@+id/dateandtime"
                     android:layout_width="0dp"
@@ -164,18 +147,15 @@
                     android:text="@string/date_time"
                     android:textColor="@color/black" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/neon"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -185,13 +165,11 @@
                     android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp">
-
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:contentDescription="@string/share_event_qr_code"
                         android:src="@drawable/scan" />
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -201,7 +179,6 @@
                         android:text="@string/qr_code"
                         android:textColor="@color/black" />
                 </LinearLayout>
-
                 <ImageView
                     android:id="@+id/QRCodeImage"
                     android:layout_width="wrap_content"
@@ -209,13 +186,10 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingBottom="8dp"
                     android:src="@drawable/scan" />
-
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -225,13 +199,11 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@string/sign_up"
                     android:src="@drawable/sign_up" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -241,7 +213,6 @@
                     android:gravity="start"
                     android:text="Sign Ups"
                     android:textColor="@color/black" />
-
                 <TextView
                     android:id="@+id/signUpsSeeAllButton"
                     android:layout_width="wrap_content"
@@ -257,11 +228,9 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="KeyboardInaccessibleWidget,TouchTargetSizeCheck" />
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -271,24 +240,20 @@
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp">
-
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/attendance_icon"
                     android:src="@drawable/nav_map" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="20dp"
-
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/attendance"
                     android:textColor="@color/black" />
-
                 <TextView
                     android:id="@+id/attendanceSeeAllButton"
                     android:layout_width="wrap_content"
@@ -310,7 +275,6 @@
                 android:layout_height="120dp" />
         </LinearLayout>
     </ScrollView>
-
     <Button
         android:id="@+id/shareQRButton"
         android:layout_width="355dp"
@@ -327,7 +291,6 @@
         app:layout_constraintBottom_toTopOf="@+id/organizer_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/organizer_bottom_nav"
         android:layout_width="match_parent"
@@ -342,5 +305,4 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/organizer_bottom_nav" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,7 +61,7 @@ public class Event implements Parcelable {
         // Default constructor required for calls to DataSnapshot.getValue(Event.class)
     }
 
-    // Getters/Setters //
+    // GETTERS AND SETTERS
     public String getEventId() {
         return eventId;
     }
@@ -151,7 +151,6 @@ public class Event implements Parcelable {
     }
 
     // Notification Methods //
-
     /**
      * Placeholder method for creating and sending notifications to attendees.
      *

@@ -3,9 +3,12 @@ package com.example.attendease;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.protobuf.StringValue;
@@ -102,7 +106,20 @@ public class MsgAdd extends AppCompatActivity {
                 returnIntent.putExtra("Body", body);
                 returnIntent.putExtra("EventName", event_name);
                 setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                View view = LayoutInflater.from(MsgAdd.this).inflate(R.layout.notification_posted_dialog, null);
+                Button okayButton = view.findViewById(R.id.okayButton);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MsgAdd.this);
+                builder.setView(view);
+                Dialog dialog = builder.create();
+                okayButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        finish();
+                    }
+                });
+                dialog.show();
             }
         });
     }
