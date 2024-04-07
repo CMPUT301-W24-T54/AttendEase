@@ -112,16 +112,22 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.nav_home) {
-                    startActivity(new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class));
+                    Intent intent=new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_events) {
-                    startActivity(new Intent(AttendeeNotifications.this, BrowseAllEvents.class));
+                    Intent intent=new Intent(AttendeeNotifications.this, BrowseAllEvents.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_bell) {
                     // Already on the AttendeeNotifications, no need to start a new instance
                     return true;
                 } else if (id == R.id.nav_profile) {
-                    startActivity(new Intent(AttendeeNotifications.this, EditProfileActivity.class));
+                    Intent intent=new Intent(AttendeeNotifications.this, EditProfileActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
                     return true;
                 }
                 return false;
