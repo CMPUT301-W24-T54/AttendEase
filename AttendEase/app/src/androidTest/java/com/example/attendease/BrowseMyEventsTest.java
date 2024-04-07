@@ -153,12 +153,12 @@ public class BrowseMyEventsTest {
     @Test
     public void testNavigationToDifferentPage() {
         setup();
-        /*onIdle();
+        onIdle();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }*/
+        }
         Intents.init();
         //onView(withId(R.id.Event_list)).check(matches(isDisplayed()));
         onData(anything())
