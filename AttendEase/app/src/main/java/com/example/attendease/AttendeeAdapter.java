@@ -43,10 +43,19 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         void onItemClick(View view, int position);
     }
 
+    /**
+     * Sets listeners on Attendee items
+     * @param listener item for which listener is to be set
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
 
+    /**
+     * Adapter constructor
+     * @param context App/Acitvity contetxt
+     * @param attendeeList list to add attendees to
+     */
     public AttendeeAdapter(Context context, List<Attendee> attendeeList) {
         this.context = context;
         this.attendeeList = attendeeList;
@@ -85,6 +94,10 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         notifyDataSetChanged();
     }
 
+    /**
+     * Removes attendee from the list
+     * @param position position of attendee to be removed
+     */
     private void deleteAttendee(int position) {
         String attendeeId = attendeeList.get(position).getDeviceID(); //Unsure?
         String attendeeProfileImage = attendeeList.get(position).getImage();
@@ -145,6 +158,10 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         }
     }
 
+    /**
+     * Removes any foreign key references that may be made
+     * @param documentSnapshot document that is referenced
+     */
     private void deleteReference(DocumentSnapshot documentSnapshot) {
         documentSnapshot.getReference().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -156,6 +173,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         });
     }
 
+    /**
+     * Helper class for the recycler view
+     */
     static class AttendeeViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView profilePhotoImageView;
@@ -173,6 +193,10 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
             trashButton = itemView.findViewById(R.id.trash);
         }
 
+        /**
+         * Helper that binds attendee to card view
+         * @param attendee attendee to be bound to card view
+         */
         void bind(Attendee attendee) {
 //            Glide.with(itemView.getContext()).load(attendee.getImage()).into(profilePhotoImageView);
             // Creates or Retrieves profile picture of the attendee
@@ -195,6 +219,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.Attend
         }
     }
 
+    /**
+     * Pop-up dialog when user is removed
+     */
     private void showRemovalDialog() {
         View view = LayoutInflater.from(context).inflate(R.layout.profile_removed_dialog, null);
         Button okayButton = view.findViewById(R.id.button);
