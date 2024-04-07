@@ -180,6 +180,7 @@ public class NewEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (eventPosterUri != null) {
+                    eventID = generateEventId();
                     uploadEventPoster(eventPosterUri, eventID, new UploadCallback() {
                         @Override
                         public void onSuccess(String imageUrl) {
@@ -631,6 +632,7 @@ public class NewEventActivity extends AppCompatActivity {
      */
     private void uploadEventPoster(Uri posterUri, String eventID, UploadCallback callback) {
         StorageReference posterRef = FirebaseStorage.getInstance().getReference("images/" + eventID + "/eventposter.png");
+        Log.d("DEBUG", "uploadEventPoster: " + "images/" + eventID + "/eventposter.png");
 
         posterRef.putFile(posterUri).addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl().addOnSuccessListener(uri -> {
             posterUrl = uri.toString();
