@@ -7,6 +7,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,6 +40,7 @@ public class BrowseMyEvent extends AppCompatActivity {
 
     private Attendee attendee;
     private String eventID;
+    private BottomNavigationView bottomNav;
 
     private CountingIdlingResource countingIdlingResource;
     @Override
@@ -56,6 +60,36 @@ public class BrowseMyEvent extends AppCompatActivity {
         EventAdapter=new BrowseEventAdapter(this,dataList);
         EventList.setAdapter(EventAdapter);
         updateDatalist();
+
+        bottomNav = findViewById(R.id.attendee_bottom_nav);
+        bottomNav.setSelectedItemId(R.id.nav_events);
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Log.d("DEBUG", String.format("onNavigationItemSelected: %d", id));
+                if (id == R.id.nav_home) {// Handle click on Home item
+                    Log.d("DEBUG", "Home item clicked");
+                    Intent intent=new Intent(BrowseMyEvent.this, AttendeeDashboardActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+                } else if (id == R.id.nav_events) {// Handle click on Events item
+                    Log.d("DEBUG", "Events item clicked");
+                } else if (id == R.id.nav_bell) {// Handle click on Bell item
+                    Log.d("DEBUG", "Bell item clicked");
+                    Intent intent=new Intent(BrowseMyEvent.this, AttendeeNotifications.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+                } else if (id == R.id.nav_profile) {// Handle click on Profile item
+                    Log.d("DEBUG", "Profile item clicked");
+                    Intent intent = new Intent(BrowseMyEvent.this, EditProfileActivity.class);
+                    intent.putExtra("attendee", attendee);
+                    startActivity(intent);
+
+                }
+                return true;
+            }
+        });
     }
 
     @Override
