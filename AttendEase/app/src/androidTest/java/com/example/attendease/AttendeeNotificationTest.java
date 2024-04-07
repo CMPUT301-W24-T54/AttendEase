@@ -50,7 +50,7 @@ public class AttendeeNotificationTest {
     private ActivityScenario<BrowseMyEvent> scenario;
     private static final String IDLING_RESOURCE_NAME = "FirebaseLoading";
     private CountingIdlingResource countingIdlingResource;
-    String txt = "Sample text";
+    String txt = "Sample_text";
     //@Before
     public void setup() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
