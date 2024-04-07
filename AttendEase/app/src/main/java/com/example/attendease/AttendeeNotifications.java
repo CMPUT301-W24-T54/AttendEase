@@ -64,7 +64,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         setContentView(R.layout.attendee_notification);
         countingIdlingResource = new CountingIdlingResource("FirebaseLoading");
         attendee = (Attendee) Objects.requireNonNull(getIntent().getExtras()).get("attendee");
-        deviceID = attendee.getDeviceID();
+        deviceID = attendee.getDeviceID();;
         //deviceID= Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         attendee_Ref=database.getAttendeesRef().document(deviceID);
         realeventsRef = database.getEventsRef();
@@ -254,6 +254,8 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
      * This method fetches notifications from Firestore.
      */
     private void getallnotifications(){
+        FirebaseLoadingTestHelper.increment();
+        Log.d("idli","increment");
         attendee_Ref.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -283,17 +285,14 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
      */
     private void eve(){
         //forattendee only
-        eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        eventsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (querySnapshots != null) {
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots != null) {
+                    Log.d("error","isrunning2times");
                     ArrayList <String> test_array=stringArray;
                     //cityDataList.clear();
-                    for (DocumentChange doc: querySnapshots.getDocumentChanges()) {
+                    for (DocumentChange doc: queryDocumentSnapshots.getDocumentChanges()) {
                         switch (doc.getType()) {
                             case ADDED:
                             case MODIFIED:
@@ -337,9 +336,74 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
 
                     //addCitiesInit();
                     MsgAdapter.notifyDataSetChanged();
+                    Log.d("idli","decrement");
+                    FirebaseLoadingTestHelper.decrement();
+
+
                 }
             }
         });
+        /*eventsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot querySnapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", error.toString());
+                    return;
+                }
+                if (querySnapshots != null) {
+                    Log.d("error","isrunning2times");
+                    ArrayList <String> test_array=stringArray;
+                    //cityDataList.clear();
+                    for (DocumentChange doc: querySnapshots.getDocumentChanges()) {
+                        switch (doc.getType()) {
+                            case ADDED:
+                            case MODIFIED:
+                                String Title = doc.getDocument().getString("title");
+                                String Notification = doc.getDocument().getString("message");
+                                String event=doc.getDocument().getString("event");
+                                String event_name=doc.getDocument().getString("event_name");
+                                String Unique_id=doc.getDocument().getId().toString();
+                                if(!eventArray.contains(event)){
+                                    break;
+                                }
+
+
+                                if(stringArray!=null){
+                                    if (stringArray.contains(Unique_id)){
+                                        test_array.remove(Unique_id);
+                                        break;
+                                    }
+                                }
+                                //String sent_by= doc.getDocument().getString("sentBy");
+                                Log.d("Firestore", String.format("City(%s, %s) fetched", Title,
+                                        Notification));
+                                Msg add_Msg=new Msg(Title, Notification,event,event_name);
+                                add_Msg.setUnique_id(Unique_id);
+                                dataList.add(add_Msg);
+                                break;
+                                case REMOVED:
+                                    Log.d(TAG, "Removed document: " + dc.getDocument().getData());
+                                    break;
+                        }
+
+                    }
+                    if(test_array!=null){
+                        for (String test : test_array){
+                            attendee_Ref.update("notification_deleted",FieldValue.arrayRemove(test));
+                        }
+                    }
+
+
+                    makeinvisible();
+
+                    //addCitiesInit();
+                    MsgAdapter.notifyDataSetChanged();
+                    Log.d("idli","decrement");
+
+                }
+
+            }
+        });*/
 
     }
 
@@ -354,6 +418,7 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         // Document found where fieldName is equal to desiredValue
                         eventArray.add(doc.getString("eventID"));
+                        Log.d("debug",doc.getString("eventID"));
 
 
 

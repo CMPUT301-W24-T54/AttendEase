@@ -41,13 +41,13 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintBottom_toTopOf="@+id/okayButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="TextSizeCheck" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/okayButton"
                 android:layout_width="286dp"
                 android:layout_height="55dp"
                 android:layout_marginBottom="24dp"
