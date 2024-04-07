@@ -92,6 +92,29 @@ public class AttendeeDashboardActivity extends AppCompatActivity {
 
         loadEventsFromFirestore();
         addListeners();
+
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_home);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    // Already on the AttendeeDashboardActivity, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(AttendeeDashboardActivity.this, BrowseAllEvents.class));
+                    return true;
+                } else if (id == R.id.nav_bell) {
+                    startActivity(new Intent(AttendeeDashboardActivity.this, AttendeeNotifications.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(AttendeeDashboardActivity.this, EditProfileActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**

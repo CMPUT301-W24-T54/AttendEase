@@ -1,10 +1,13 @@
 package com.example.attendease;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.StorageReference;
@@ -116,6 +121,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Add button listeners
         addListeners();
+
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_profile);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(EditProfileActivity.this, AttendeeDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(EditProfileActivity.this, BrowseAllEvents.class));
+                    return true;
+                } else if (id == R.id.nav_bell) {
+                    startActivity(new Intent(EditProfileActivity.this, AttendeeNotifications.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    // Already on the EditProfileActivity, no need to start a new instance
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 

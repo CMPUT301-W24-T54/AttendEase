@@ -1,5 +1,6 @@
 package com.example.attendease;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.test.espresso.idling.CountingIdlingResource;
@@ -7,11 +8,14 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -52,6 +56,29 @@ public class BrowseAllEvents extends AppCompatActivity {
         eventArrayAdapter =new BrowseEventAdapter(this,dataList);
         eventList.setAdapter(eventArrayAdapter);
         updateDatalist();
+
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_events);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(BrowseAllEvents.this, AttendeeDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    // Already on the BrowseAllEvents, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_bell) {
+                    startActivity(new Intent(BrowseAllEvents.this, AttendeeNotifications.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(BrowseAllEvents.this, EditProfileActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override

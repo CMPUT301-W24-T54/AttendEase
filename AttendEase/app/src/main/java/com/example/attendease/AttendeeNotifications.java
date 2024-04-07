@@ -94,11 +94,6 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         //attendee_Ref=db.collection("attendees").document("atharva");
         eventArray=new ArrayList<>();
 
-
-
-
-
-
         MsgList=findViewById(R.id.Msg_list);
         String[] Title = {};
         String[] Messages = {};
@@ -110,6 +105,28 @@ public class AttendeeNotifications extends AppCompatActivity implements ViewMsgD
         MsgList.setAdapter(MsgAdapter);
         getallnotifications();
 
+        BottomNavigationView bottomNavAdminDashboard = findViewById(R.id.attendee_bottom_nav);
+        bottomNavAdminDashboard.setSelectedItemId(R.id.nav_bell);
+        bottomNavAdminDashboard.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(AttendeeNotifications.this, AttendeeDashboardActivity.class));
+                    return true;
+                } else if (id == R.id.nav_events) {
+                    startActivity(new Intent(AttendeeNotifications.this, BrowseAllEvents.class));
+                    return true;
+                } else if (id == R.id.nav_bell) {
+                    // Already on the AttendeeNotifications, no need to start a new instance
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(AttendeeNotifications.this, EditProfileActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
 
 
     }
