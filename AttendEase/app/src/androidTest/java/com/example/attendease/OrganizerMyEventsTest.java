@@ -23,6 +23,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RunWith(AndroidJUnit4.class)
@@ -53,6 +55,8 @@ public class OrganizerMyEventsTest {
 
         String androidId = Settings.Secure.getString(InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        CountDownLatch latch = new CountDownLatch(1);
+
         // Count events from Firestore
         firestore.collection("events").whereEqualTo("organizerId", androidId)
                 .get()
@@ -62,9 +66,10 @@ public class OrganizerMyEventsTest {
                     } else {
                         Log.e("Test", "Failed to fetch events from Firestore", task.getException());
                     }
+                    latch.countDown();
                 });
-
-        Thread.sleep(5000);
+        latch.await();
+//        Thread.sleep(5000);
 
         // Launch the activity
         ActivityScenario.launch(OrganizerMyEventsActivity.class);

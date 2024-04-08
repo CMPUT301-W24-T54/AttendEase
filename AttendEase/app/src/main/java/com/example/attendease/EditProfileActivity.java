@@ -30,11 +30,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -210,31 +213,31 @@ public class EditProfileActivity extends AppCompatActivity {
                     editProfilePhone.setText(phone);
                     editProfileEmail.setText(email);
                     geoTrackingCheckBox.setChecked(geoTracking);
+
+                    StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
+
+                    imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            // Successfully downloaded data to bytes array
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                            // Set the bitmap to ImageView
+                            profileImage.setImageBitmap(bitmap);
+                            ImagePresent=true;
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            int image_size=100;
+
+                            // Generate profile picture and set it to the ImageView
+                            String profileName = editProfileName.getText().toString(); // Example profile name
+                            Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
+                            profileImage.setImageBitmap(profilePicture);
+                        }
+                    });
                 }
-            }
-        });
-
-        StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
-
-        imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Successfully downloaded data to bytes array
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                // Set the bitmap to ImageView
-                profileImage.setImageBitmap(bitmap);
-                ImagePresent=true;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                int image_size=100;
-
-                // Generate profile picture and set it to the ImageView
-                String profileName = editProfileName.getText().toString(); // Example profile name
-                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
-                profileImage.setImageBitmap(profilePicture);
             }
         });
     }
