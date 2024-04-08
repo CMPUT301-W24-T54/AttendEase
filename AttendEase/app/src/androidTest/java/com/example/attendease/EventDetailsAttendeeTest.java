@@ -41,7 +41,7 @@ public class EventDetailsAttendeeTest {
     @Rule
     public ActivityScenarioRule<EventDetailsAttendee> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EventDetailsAttendee.class)
             .putExtra("attendee", testAttendee)
-            .putExtra("eventID", "testEvent")
+            .putExtra("eventID", "bd7145c0-2fdb-4796-8098-49d41feb9ed2_1712533095391")
             .putExtra("prevActivity", "QRScannerActivity")
             .putExtra("title","Teset Event")
             .putExtra("description","Event for testing purposes")
@@ -76,7 +76,7 @@ public class EventDetailsAttendeeTest {
 
         checkInsRef
                 .whereEqualTo("attendeeID", deviceID)
-                .whereEqualTo("eventID", "testEvent")
+                .whereEqualTo("eventID", "bd7145c0-2fdb-4796-8098-49d41feb9ed2_1712533095391")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -90,7 +90,7 @@ public class EventDetailsAttendeeTest {
         latch.await(); // Make sure to await the latch countdown
 
         checkInsRef.whereEqualTo("attendeeID", deviceID)
-                .whereEqualTo("eventID", "testEvent")
+                .whereEqualTo("eventID", "bd7145c0-2fdb-4796-8098-49d41feb9ed2_1712533095391")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

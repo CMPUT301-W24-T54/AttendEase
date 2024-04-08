@@ -33,7 +33,7 @@ import org.mockito.MockitoAnnotations;
 public class MapActivityTest {
 
     Event testEvent = new Event(
-            "testEventId",
+            "bd7145c0-2fdb-4796-8098-49d41feb9ed2_1712533095391",
             "Test Event Title",
             "Test Event Description",
             "testOrganizerId",
