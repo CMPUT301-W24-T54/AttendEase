@@ -87,13 +87,16 @@ public class AttendanceListActivity extends AppCompatActivity {
         // Call the function
         intent = getIntent();
         event = intent.getParcelableExtra("event");
-        if (event != null) {
-            eventDocID = event.getEventId();
-            setUpEventName(event, eventDocID);
-            setUpMap();
-        } else {
-            Log.e("AttendanceListActivity", "Event object is null.");
-        }
+        eventDocID = event.getEventId();
+        setUpEventName(event, eventDocID);
+        setUpMap();
+//        if (event != null) {
+//            eventDocID = event.getEventId();
+//            setUpEventName(event, eventDocID);
+//            setUpMap();
+//        } else {
+//            Log.e("AttendanceListActivity", "Event object is null.");
+//        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.organizer_bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.nav_events);
@@ -189,10 +192,10 @@ public class AttendanceListActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             for (QueryDocumentSnapshot document : task.getResult()){
                                 Double fbCount = document.getDouble("countAttendees");
-                                if ((fbCount == null) || (fbCount < attendeeList.size())) {
-                                    checkMilestone(attendeeList.size());
+                                if ((fbCount == null) || (fbCount < uniqueAttendees.size())) {
+                                    checkMilestone(uniqueAttendees.size());
                                     Map<String, Object> user = new HashMap<>();
-                                    user.put("countAttendees", attendeeList.size());
+                                    user.put("countAttendees", uniqueAttendees.size());
                                     eventsRef.document(eventDocID).update(user);
                                 }
                             }
@@ -211,12 +214,18 @@ public class AttendanceListActivity extends AppCompatActivity {
      */
     private int calculateCheckInCount(QuerySnapshot queryDocumentSnapshots, String attendeeID) {
         int count = 0;
-        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments() != null) {
-            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                String id = document.getString("attendeeID");
-                if (id != null && id.equals(attendeeID)) {
-                    count++;
-                }
+//        if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments() != null) {
+//            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+//                String id = document.getString("attendeeID");
+//                if (id != null && id.equals(attendeeID)) {
+//                    count++;
+//                }
+//            }
+//        }
+        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+            String id = document.getString("attendeeID");
+            if (id != null && id.equals(attendeeID)) {
+                count++;
             }
         }
         return count;
