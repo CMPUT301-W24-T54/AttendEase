@@ -74,7 +74,6 @@ public class EventDetailsAdmin extends AppCompatActivity {
         locationView = findViewById(R.id.location);
         dateandtimeView = findViewById(R.id.date_time);
         eventCover = findViewById(R.id.event_cover);
-        qrImage = findViewById(R.id.qr_code_image);
         removeCoverButton = findViewById(R.id.remove_cover_button);
         backButton = findViewById(R.id.nav_left);
         trashButton = findViewById(R.id.trash);
