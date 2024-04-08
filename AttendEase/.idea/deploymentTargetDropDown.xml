@@ -2,6 +2,8 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+<<<<<<< HEAD
+=======
       <entry key="BrowseMyEventsTest">
         <State />
       </entry>
@@ -17,8 +19,22 @@
       <entry key="Tests in 'com.example.attendease'">
         <State />
       </entry>
+>>>>>>> ee3df8fa7a79d4f1e76331105faa84b0e26e4271
       <entry key="app">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\srush\.android\avd\Pixel_6_API_34.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-04-08T17:08:22.525007400Z" />
+        </State>
       </entry>
     </value>
   </component>
