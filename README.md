@@ -1,5 +1,8 @@
 # AttendEase
 
+We Recommend using a Google Pixel 6 Emulator in Android studio when running tests.
+
+
 Libraries Used:
 
 - https://github.com/zxing/zxing - For QR Code Scanning and Generation
