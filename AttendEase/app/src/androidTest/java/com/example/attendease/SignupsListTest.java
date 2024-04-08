@@ -82,6 +82,6 @@ public class SignupsListTest {
 
         latch.await();
 
-        onView(withId(R.id.signupscount)).check(matches(withText("Total: " + count.get())));
+        onView(withId(R.id.signupscount)).check(matches(withText("Total Signups: " + count.get())));
     }
 }

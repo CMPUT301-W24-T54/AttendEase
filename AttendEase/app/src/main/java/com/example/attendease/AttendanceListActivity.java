@@ -288,8 +288,7 @@ public class AttendanceListActivity extends AppCompatActivity {
      * @param totalUniqueAttendees The total number of unique attendees for the event.
      */
     private void checkMilestone(int totalUniqueAttendees) {
-        // The milestones are hard-coded temporarily
-        List<Integer> milestones = Arrays.asList(1, 3, 5, 10, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
+        List<Integer> milestones = Arrays.asList(1, 10, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
         if (milestones.contains(totalUniqueAttendees)) {
             showMilestoneDialog(totalUniqueAttendees);
         }
