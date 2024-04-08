@@ -38,7 +38,7 @@ import java.util.concurrent.CountDownLatch;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EditProfileActivityTest {
-    Attendee attendee = new Attendee("testDevice", "name", "phone", "email", "image", false);
+    Attendee attendee = new Attendee("testDevice", "first last", "phone", "email", "null", false);
     @Rule
     public ActivityScenarioRule<EditProfileActivity> scenario = new ActivityScenarioRule<>(new Intent(ApplicationProvider.getApplicationContext(), EditProfileActivity.class)
             .putExtra("attendee", attendee));
