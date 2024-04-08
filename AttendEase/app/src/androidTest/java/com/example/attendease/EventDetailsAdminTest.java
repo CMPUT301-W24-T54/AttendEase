@@ -72,6 +72,7 @@ public class EventDetailsAdminTest {
         onView(withId(R.id.about_content)).check(matches(isDisplayed()));
         onView(withId(R.id.location)).check(matches(isDisplayed()));
         onView(withId(R.id.date_time)).check(matches(isDisplayed()));
+//        onView(withId(R.id.qr_code_image)).check(matches(isDisplayed()));
         onView(withId(R.id.nav_left)).perform(click());
     }
 
