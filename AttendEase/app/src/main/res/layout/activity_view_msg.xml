@@ -10,53 +10,69 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="18dp">
+        android:padding="0dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
 
 
-        <ImageButton
-            android:id="@+id/Back_button"
-            style="@android:style/Widget.DeviceDefault.ImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:backgroundTint="#02FFFFFF"
-            android:scaleType="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/nav_left" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="330dp"
-            android:layout_height="45dp"
-            android:layout_weight="1"
-            android:text="Details"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="30sp"
-            android:textStyle="bold"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout130"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/Back_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="24dp"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/nav_left"
+                android:text=""
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notification Details"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/event_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_semibold"
-            android:padding="10sp"
-            android:text="sentBy"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/event"
             android:textAlignment="viewStart"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold|italic"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4">
-
-        </TextView>
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout130"
+            tools:ignore="MissingConstraints" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
-            android:layout_width="376dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
             android:background="@drawable/background_curve_notif"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -68,11 +84,10 @@
                 android:id="@+id/Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:fontFamily="@font/inter_semibold"
-                android:padding="10dp"
-                android:paddingStart="10dp"
+                android:padding="16dp"
                 android:text="Title"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -84,10 +99,10 @@
                 android:id="@+id/body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:fontFamily="@font/inter"
-                android:paddingStart="10dp"
-
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
                 android:text="Message"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
