@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.CollectionReference;
@@ -140,67 +141,127 @@ public class AttendanceListActivity extends AppCompatActivity {
      */
 
     private void setUpCheckInsListView(String eventDocID) {
-        checkInsRef.whereEqualTo("eventID", eventDocID).addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (e != null) {
-                Log.e("AttendanceListActivity", "Error getting check-ins", e);
-                return;
-            }
-            if (queryDocumentSnapshots != null) {
-                Set<String> uniqueAttendees = new HashSet<>();
-                attendeeList = new ArrayList<>();
+        checkInsRef.whereEqualTo("eventID", eventDocID).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots != null) {
+                    Set<String> uniqueAttendees = new HashSet<>();
+                    attendeeList = new ArrayList<>();
 
-                // Calculate check-in counts and create Attendee objects
-                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    String attendeeID = document.getString("attendeeID");
-                    uniqueAttendees.add(attendeeID); // Add attendee to set to track uniqueness
-                    int checkInCount = calculateCheckInCount(queryDocumentSnapshots, attendeeID);
-                    attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
-                        String attendeeName = attendeeDocument.getString("name");
-                        String url = attendeeDocument.getString("image");
+                    // Calculate check-in counts and create Attendee objects
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String attendeeID = document.getString("attendeeID");
+                        uniqueAttendees.add(attendeeID); // Add attendee to set to track uniqueness
+                        int checkInCount = calculateCheckInCount(queryDocumentSnapshots, attendeeID);
+                        attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+                            String attendeeName = attendeeDocument.getString("name");
+                            String url = attendeeDocument.getString("image");
 
-                        // Check if the attendee is already in the list
-                        boolean attendeeExists = false;
-                        for (Attendee attendee : attendeeList) {
-                            if (attendee.getName().equals(attendeeName)) {
-                                // Update the existing attendee's check-in count
-                                attendee.setCheckInCount(checkInCount);
-                                attendeeExists = true;
-                                break;
+                            // Check if the attendee is already in the list
+                            boolean attendeeExists = false;
+                            for (Attendee attendee : attendeeList) {
+                                if (attendee.getName().equals(attendeeName)) {
+                                    // Update the existing attendee's check-in count
+                                    attendee.setCheckInCount(checkInCount);
+                                    attendeeExists = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (!attendeeExists) {
-                            // Create a new Attendee object if the attendee is not in the list
-                            Attendee attendee = new Attendee(attendeeName, checkInCount, url);
-                            attendeeList.add(attendee);
-                        }
+                            if (!attendeeExists) {
+                                // Create a new Attendee object if the attendee is not in the list
+                                Attendee attendee = new Attendee(attendeeName, checkInCount, url);
+                                attendeeList.add(attendee);
+                            }
 
-                        ArrayAdapter<Attendee> adapter = new AttendanceListAdapter(this, R.layout.list_item_attendance, attendeeList);
-                        attendanceListView.setAdapter(adapter);
+                            ArrayAdapter<Attendee> adapter = new AttendanceListAdapter(AttendanceListActivity.this, R.layout.list_item_attendance, attendeeList);
+                            attendanceListView.setAdapter(adapter);
 
-                        String totalCountText = "Total: " + attendeeList.size();
-                        attendanceCount.setText(totalCountText);
+                            String totalCountText = "Total: " + attendeeList.size();
+                            attendanceCount.setText(totalCountText);
 
-                    });
+                        });
 
-                }
-                eventsRef.whereEqualTo("eventId", eventDocID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
-                                Double fbCount = document.getDouble("countAttendees");
-                                if ((fbCount == null) || (fbCount < attendeeList.size())) {
-                                    checkMilestone(attendeeList.size());
-                                    Map<String, Object> user = new HashMap<>();
-                                    user.put("countAttendees", attendeeList.size());
-                                    eventsRef.document(eventDocID).update(user);
+                    }
+                    eventsRef.whereEqualTo("eventId", eventDocID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    Double fbCount = document.getDouble("countAttendees");
+                                    if ((fbCount == null) || (fbCount < attendeeList.size())) {
+                                        checkMilestone(attendeeList.size());
+                                        Map<String, Object> user = new HashMap<>();
+                                        user.put("countAttendees", attendeeList.size());
+                                        eventsRef.document(eventDocID).update(user);
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
+//        checkInsRef.whereEqualTo("eventID", eventDocID).addSnapshotListener((queryDocumentSnapshots, e) -> {
+//            if (e != null) {
+//                Log.e("AttendanceListActivity", "Error getting check-ins", e);
+//                return;
+//            }
+//            if (queryDocumentSnapshots != null) {
+//                Set<String> uniqueAttendees = new HashSet<>();
+//                attendeeList = new ArrayList<>();
+//
+//                // Calculate check-in counts and create Attendee objects
+//                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+//                    String attendeeID = document.getString("attendeeID");
+//                    uniqueAttendees.add(attendeeID); // Add attendee to set to track uniqueness
+//                    int checkInCount = calculateCheckInCount(queryDocumentSnapshots, attendeeID);
+//                    attendeesRef.document(attendeeID).get().addOnSuccessListener(attendeeDocument -> {
+//                        String attendeeName = attendeeDocument.getString("name");
+//                        String url = attendeeDocument.getString("image");
+//
+//                        // Check if the attendee is already in the list
+//                        boolean attendeeExists = false;
+//                        for (Attendee attendee : attendeeList) {
+//                            if (attendee.getName().equals(attendeeName)) {
+//                                // Update the existing attendee's check-in count
+//                                attendee.setCheckInCount(checkInCount);
+//                                attendeeExists = true;
+//                                break;
+//                            }
+//                        }
+//                        if (!attendeeExists) {
+//                            // Create a new Attendee object if the attendee is not in the list
+//                            Attendee attendee = new Attendee(attendeeName, checkInCount, url);
+//                            attendeeList.add(attendee);
+//                        }
+//
+//                        ArrayAdapter<Attendee> adapter = new AttendanceListAdapter(this, R.layout.list_item_attendance, attendeeList);
+//                        attendanceListView.setAdapter(adapter);
+//
+//                        String totalCountText = "Total: " + attendeeList.size();
+//                        attendanceCount.setText(totalCountText);
+//
+//                    });
+//
+//                }
+//                eventsRef.whereEqualTo("eventId", eventDocID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()){
+//                            for (QueryDocumentSnapshot document : task.getResult()){
+//                                Double fbCount = document.getDouble("countAttendees");
+//                                if ((fbCount == null) || (fbCount < attendeeList.size())) {
+//                                    checkMilestone(attendeeList.size());
+//                                    Map<String, Object> user = new HashMap<>();
+//                                    user.put("countAttendees", attendeeList.size());
+//                                    eventsRef.document(eventDocID).update(user);
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     /**
