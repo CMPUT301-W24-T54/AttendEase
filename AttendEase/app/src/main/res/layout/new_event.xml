@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout9"
-        android:layout_width="411dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
 
     <ImageView
         android:id="@+id/ivCoverPhoto"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
@@ -59,7 +59,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout19"
-        android:layout_width="363dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
@@ -89,52 +89,81 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/btnUploadPhoto"
-        android:layout_width="169.5dp"
-        android:layout_height="55dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout300"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/white"
-        android:text="Upload Photo"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:cornerRadius="100px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCoverPhoto"
-        app:strokeColor="@color/black"
-        app:strokeWidth="1px" />
-
-    <Button
-        android:id="@+id/btnRemovePhoto"
-        android:layout_width="169.5dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="28dp"
-        android:backgroundTint="@color/white"
-        android:text="Remove Photo"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:cornerRadius="100px"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCoverPhoto"
-        app:strokeColor="@color/black"
-        app:strokeWidth="1px" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivCoverPhoto">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout5"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/btnUploadPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_marginStart="24dp"
+                android:backgroundTint="@color/white"
+                android:text="Upload Photo"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="100px"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="1px" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/btnRemovePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:backgroundTint="@color/white"
+                android:text="Remove Photo"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="100px"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/black"
+                app:strokeWidth="1px" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout7"
-        android:layout_width="363dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUploadPhoto">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout300">
 
         <ImageView
             android:id="@+id/InfoView"
@@ -159,7 +188,7 @@
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="363dp"
+        android:layout_width="0dp"
         android:layout_height="390dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -329,7 +358,7 @@
 
     <Button
         android:id="@+id/btnGenerateEvent"
-        android:layout_width="355dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
@@ -349,7 +378,7 @@
 
     <Button
         android:id="@+id/btnReuseQR"
-        android:layout_width="355dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
@@ -370,6 +399,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:contentDescription="@string/bottom_nav_content_description"
+        app:itemActiveIndicatorStyle="@style/Theme.BottomNavigationView.ActiveIndicator"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"

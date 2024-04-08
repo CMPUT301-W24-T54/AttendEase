@@ -139,7 +139,7 @@
 
     <Button
         android:id="@+id/post_button"
-        android:layout_width="355dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
@@ -162,6 +162,7 @@
         android:layout_marginTop="-2dp"
         android:background="@drawable/bottom_nav_stroke"
         android:contentDescription="@string/bottom_nav_content_description"
+        app:itemActiveIndicatorStyle="@style/Theme.BottomNavigationView.ActiveIndicator"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"
