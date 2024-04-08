@@ -200,7 +200,6 @@ public class EditProfileActivity extends AppCompatActivity {
      * This method retrieves the profile information of the current Attendee user and populates the corresponding views.
      */
     private void populateViews() {
-        CountDownLatch latch = new CountDownLatch(1);
         attendeesRef.document(deviceID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -214,38 +213,31 @@ public class EditProfileActivity extends AppCompatActivity {
                     editProfilePhone.setText(phone);
                     editProfileEmail.setText(email);
                     geoTrackingCheckBox.setChecked(geoTracking);
-                    latch.countDown();
+
+                    StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
+
+                    imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            // Successfully downloaded data to bytes array
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                            // Set the bitmap to ImageView
+                            profileImage.setImageBitmap(bitmap);
+                            ImagePresent=true;
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            int image_size=100;
+
+                            // Generate profile picture and set it to the ImageView
+                            String profileName = editProfileName.getText().toString(); // Example profile name
+                            Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
+                            profileImage.setImageBitmap(profilePicture);
+                        }
+                    });
                 }
-            }
-        });
-
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
-
-        imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Successfully downloaded data to bytes array
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                // Set the bitmap to ImageView
-                profileImage.setImageBitmap(bitmap);
-                ImagePresent=true;
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                int image_size=100;
-
-                // Generate profile picture and set it to the ImageView
-                String profileName = editProfileName.getText().toString(); // Example profile name
-                Bitmap profilePicture = RandomImageGenerator.generateProfilePicture(profileName, image_size);
-                profileImage.setImageBitmap(profilePicture);
             }
         });
     }
