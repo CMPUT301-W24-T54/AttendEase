@@ -176,7 +176,7 @@ public class AttendanceListActivity extends AppCompatActivity {
                             ArrayAdapter<Attendee> adapter = new AttendanceListAdapter(AttendanceListActivity.this, R.layout.list_item_attendance, attendeeList);
                             attendanceListView.setAdapter(adapter);
 
-                            String totalCountText = "Total: " + attendeeList.size();
+                            String totalCountText = "Total Attendees: " + attendeeList.size();
                             attendanceCount.setText(totalCountText);
 
                         });
