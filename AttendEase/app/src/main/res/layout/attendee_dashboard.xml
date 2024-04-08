@@ -120,10 +120,12 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvMyEvents"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:elevation="4dp"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/my_events"
                     tools:ignore="NotSibling"
                     tools:listitem="@layout/event_card_large" />
