@@ -128,7 +128,7 @@ public class SignupsListActivity extends AppCompatActivity {
                                 signUpsListView.setAdapter(adapter);
 
                                 // Updates the signupscount TextView with the count of attendees
-                                String totalCountText = "Total: " + attendeeList.size();
+                                String totalCountText = "Total Signups: " + attendeeList.size();
                                 signUpsCount.setText(totalCountText);
                             });
                         }

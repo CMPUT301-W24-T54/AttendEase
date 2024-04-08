@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,12 +51,22 @@ public class MapActivity extends AppCompatActivity {
     private MyLocationNewOverlay locationOverlay;
     private Event event;
     private ArrayList<Marker> markerList = new ArrayList<>();
+    private ImageButton mapBack;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeComponents();
         populateMapWithMarkers(checkInsRef, attendeesRef);
+        mapBack = findViewById(R.id.back_button);
+
+        mapBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
