@@ -15,17 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/imageButton7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:background="#00FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/nav_left" />
-
         <TextView
             android:id="@+id/admin_all_events"
             android:layout_width="wrap_content"
@@ -65,6 +54,7 @@
         android:layout_marginTop="-2dp"
         android:background="@drawable/bottom_nav_stroke"
         android:contentDescription="@string/bottom_nav_content_description"
+        app:itemActiveIndicatorStyle="@style/Theme.BottomNavigationView.ActiveIndicator"
         app:itemHorizontalTranslationEnabled="false"
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"
