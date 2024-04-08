@@ -5,10 +5,13 @@
       <entry key="BrowseMyEventsTest">
         <State />
       </entry>
-      <entry key="OrganizerMyEventsTest">
+      <entry key="EventDetailsAttendeeTest">
         <State />
       </entry>
       <entry key="EventDetailsOrganizerTest">
+        <State />
+      </entry>
+      <entry key="MapActivityTest">
         <State />
       </entry>
       <entry key="Tests in 'com.example.attendease'">
