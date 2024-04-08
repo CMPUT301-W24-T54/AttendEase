@@ -24,9 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -77,7 +74,6 @@ public class EventDetailsAdmin extends AppCompatActivity {
         locationView = findViewById(R.id.location);
         dateandtimeView = findViewById(R.id.date_time);
         eventCover = findViewById(R.id.event_cover);
-        qrImage = findViewById(R.id.qr_code_image);
         removeCoverButton = findViewById(R.id.remove_cover_button);
         backButton = findViewById(R.id.nav_left);
         trashButton = findViewById(R.id.trash);
@@ -135,12 +131,8 @@ public class EventDetailsAdmin extends AppCompatActivity {
             // Check if the event has a valid poster URL and load it; otherwise set a placeholder
             if (event.getPosterUrl() != null && !event.getPosterUrl().equals("null") && !event.getPosterUrl().equals("")) {
                 int image_size=100;
-                int cornerRadius = 24;
-                Glide.with(this)
-                        .load(event.getPosterUrl())
-                        .apply(new RequestOptions()
-                                .transform(new CenterCrop(), new RoundedCorners(cornerRadius)))
-                        .into(eventCover);
+                Bitmap CoverPhoto = RandomImageGenerator.generateProfilePicture(event.getPosterUrl(), image_size);
+                eventCover.setImageBitmap(CoverPhoto);
             } else {
                 eventCover.setImageResource(R.drawable.splash);
             }
