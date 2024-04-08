@@ -30,11 +30,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -197,6 +200,7 @@ public class EditProfileActivity extends AppCompatActivity {
      * This method retrieves the profile information of the current Attendee user and populates the corresponding views.
      */
     private void populateViews() {
+        CountDownLatch latch = new CountDownLatch(1);
         attendeesRef.document(deviceID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -210,9 +214,16 @@ public class EditProfileActivity extends AppCompatActivity {
                     editProfilePhone.setText(phone);
                     editProfileEmail.setText(email);
                     geoTrackingCheckBox.setChecked(geoTracking);
+                    latch.countDown();
                 }
             }
         });
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         StorageReference imageRef = storageRef.child("images/" + deviceID + "/profile.png");
 
