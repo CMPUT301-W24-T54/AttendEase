@@ -58,7 +58,7 @@ All android phones with API greater than API 24 (i.e most phones in the past sev
 ## Wiki Page and Acknowledgments:
 
 <!-- MAKE JAVADOCS PUBLIC AND ADD HERE! -->
-[See our Wiki page here!](github.com/CMPUT301-W24-T54/AttendEase/wiki)
+[See our Wiki page here!](https://github.com/CMPUT301-W24-T54/AttendEase/wiki)
 
 Libraries Used:
 - https://github.com/zxing/zxing - For QR Code Scanning and Generation
