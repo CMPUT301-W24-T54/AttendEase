@@ -79,6 +79,6 @@ Reference Links:
 
 ## Demonstration Video:
 
-https://github.com/CMPUT301-W24-T54/AttendEase/assets/151209547/4125f1d6-55f7-4ad6-abb4-312ba2617c7e
+https://github.com/CMPUT301-W24-T54/AttendEase/assets/151209547/2b553c7f-3f9e-45b7-995a-5fdd98f9d27e
 
 
