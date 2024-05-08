@@ -7,7 +7,7 @@ An android app designed for seamless event organization and attendee management.
 - [Team Members](#team-members)
 - [About The Project](#about-the-project)
 - [Compatibility](#compatibility)
-- [Languages and Frameworks](#languages-and-frameworks)
+- [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Wiki Page and Acknowledgments](#wiki-page-and-acknowledgments)
 - [Demonstration Video](#demonstration-video)
@@ -34,7 +34,7 @@ This project is part of the University of Alberta CMPUT 301 course built by Team
 
 All android phones with API greater than API 24 (i.e most phones in the past several years)
 
-## Languages and Frameworks
+## Tech Stack:
 
 <img src = "https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white"/> <img src = "https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/> <img src = "https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black"/>
 
